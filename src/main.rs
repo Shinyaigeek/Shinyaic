@@ -1,11 +1,11 @@
-use crate::parser::parser::Parser;
+use crate::html::parser::parser::Parser;
 
-mod parser;
+mod html;
 
 fn main() {
     let mut parser = Parser {
         pos: 0,
-        input: "<html><head></head><body><p>hoge</p><p>asdf</p></body></html>".to_string()
+        input: "<html><head></head><body><p>hoge</p><p>asdf</p></body></html>".to_string(),
     };
 
     let dom = parser.parse();
