@@ -13,7 +13,7 @@ pub struct Parser {
 impl Parser {
     pub fn parse(&mut self) -> DOMNode {
         let program = self.parse_node();
-        DOMNode::elem(HTMLElements::HTML_ELEMENT, HashMap::new(), vec![program])
+        program
     }
 
     fn eat_opening_tag(&mut self) -> (HTMLElements, HashMap<String, String>) {
@@ -174,5 +174,46 @@ impl Parser {
         }
 
         nodes
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parser_works() {
+        let mut parser = Parser {
+            pos: 0,
+            input: "<html><head></head><body><p>hoge</p><p>asdf</p></body></html>".to_string(),
+        };
+
+        let dom = parser.parse();
+
+        let expected_dom = DOMNode::elem(
+            HTMLElements::HTML_ELEMENT,
+            HashMap::new(),
+            vec![
+                DOMNode::elem(HTMLElements::HEAD_ELEMENT, HashMap::new(), vec![]),
+                DOMNode::elem(
+                    HTMLElements::BODY_ELEMENT,
+                    HashMap::new(),
+                    vec![
+                        DOMNode::elem(
+                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HashMap::new(),
+                            vec![DOMNode::text(String::from("hoge"))],
+                        ),
+                        DOMNode::elem(
+                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HashMap::new(),
+                            vec![DOMNode::text(String::from("asdf"))],
+                        ),
+                    ],
+                ),
+            ],
+        );
+
+        assert_eq!(dom, expected_dom);
     }
 }

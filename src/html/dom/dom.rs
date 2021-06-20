@@ -9,8 +9,8 @@ pub enum NodeType {
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct DOMNode {
-    children: Vec<DOMNode>,
     node_type: NodeType,
+    children: Vec<DOMNode>,
 }
 
 impl DOMNode {
