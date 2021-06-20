@@ -167,22 +167,10 @@ impl Parser {
     fn parse_nodes(&mut self) -> Vec<DOMNode> {
         // input: <head></head><body><div>hello</div></body>    <ul>`<`li>1</li><li>1</li><li>1</li></ul>
         let mut nodes: Vec<DOMNode> = vec![];
-        println!("hohohohoh");
-
-        println!(
-            "{:?}, {:?}",
-            self.peek_start_with("</".to_string()),
-            self.pos
-        );
 
         // 終了条件: eof or </
         while !self.peek_start_with("</".to_string()) && !(self.input.len() <= self.pos) {
-            println!("node: {:?}", nodes);
             nodes.push(self.parse_node());
-            println!("node: {:?}", nodes);
-            if nodes.len() > 2 {
-                // panic!("debugger")
-            }
         }
 
         nodes
