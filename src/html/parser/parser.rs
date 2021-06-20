@@ -1,4 +1,7 @@
 use crate::html::dom::dom::DOMNode;
+use crate::html::dom::elements::elements::{
+    HTMLElements, ANCHOR_ELEMENT, BODY_ELEMENT, HEAD_ELEMENT, HTML_ELEMENT, PARAGRAPH_ELEMENT,
+};
 use std::collections::HashMap;
 use std::vec::Vec;
 
@@ -9,12 +12,11 @@ pub struct Parser {
 
 impl Parser {
     pub fn parse(&mut self) -> DOMNode {
-        // 渡されるもの: <head></head><body><div>hello</div></body>
         let program = self.parse_node();
-        DOMNode::elem("html".to_string(), HashMap::new(), vec![program])
+        DOMNode::elem(HTMLElements::HTML_ELEMENT, HashMap::new(), vec![program])
     }
 
-    fn eat_opening_tag(&mut self) -> (String, HashMap<String, String>) {
+    fn eat_opening_tag(&mut self) -> (HTMLElements, HashMap<String, String>) {
         // `<`li id="id1" `>`</li> -> li
         let init_pos = self.input.as_bytes()[self.pos];
         if init_pos != b'<' {
@@ -41,7 +43,45 @@ impl Parser {
             tag.push(next_token);
         }
 
-        (String::from_utf8(tag).unwrap(), attributes)
+        let tag = String::from_utf8(tag).unwrap();
+        let tag: &str = &tag;
+
+        let tag = match tag {
+            HTML_ELEMENT => HTMLElements::HTML_ELEMENT,
+            HEAD_ELEMENT => HTMLElements::HEAD_ELEMENT,
+            BODY_ELEMENT => HTMLElements::BODY_ELEMENT,
+            PARAGRAPH_ELEMENT => HTMLElements::PARAGRAPH_ELEMENT,
+            ANCHOR_ELEMENT => HTMLElements::ANCHOR_ELEMENT,
+            _ => panic!("there is no element, {:?}", tag),
+        };
+
+        (tag, attributes)
+    }
+
+    fn eat_closing_tag(&mut self) {
+        let init_pos = self.eat();
+        if init_pos != b'<' {
+            panic!(
+                "eat_closing_tag was invoked not in < but in {:?}",
+                init_pos as char
+            )
+        }
+
+        let should_slash = self.eat();
+        if should_slash != b'/' {
+            panic!(
+                "eat_closing_tag was invoked not in / but in {:?}",
+                should_slash as char
+            )
+        }
+
+        loop {
+            let token = self.eat();
+
+            if token == b'>' {
+                break;
+            }
+        }
     }
 
     fn eat_element_attributes(&mut self) -> HashMap<String, String> {
@@ -101,13 +141,6 @@ impl Parser {
     fn parse_text(&mut self) -> DOMNode {
         let mut text = String::from("");
 
-        println!("------------------------");
-        println!("{:?}", self.input.as_bytes()[self.pos] as char);
-        println!("{:?}", self.input.as_bytes()[self.pos + 1] as char);
-        println!("{:?}", self.input.as_bytes()[self.pos + 2] as char);
-        println!("{:?}", self.peek_start_with("<".to_string()));
-        println!("------------------------");
-
         while !self.peek_start_with("<".to_string()) {
             let c = self.eat();
             text.push(c as char);
@@ -125,12 +158,9 @@ impl Parser {
             return self.parse_text();
         }
         let (target_tag_name, attributes) = self.eat_opening_tag();
-        let node = DOMNode::elem(target_tag_name.clone(), attributes, self.parse_nodes());
+        let node = DOMNode::elem(target_tag_name, attributes, self.parse_nodes());
 
-        // eat_closing_tag();
-        self.pos += 3 + target_tag_name.len();
-        println!("aaa{:?}", self.pos);
-        println!("aaa{:?}", node);
+        self.eat_closing_tag();
         node
     }
 

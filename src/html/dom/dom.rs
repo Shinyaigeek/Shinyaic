@@ -1,3 +1,4 @@
+use crate::html::dom::elements::elements::HTMLElements;
 use std::collections::HashMap;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -21,7 +22,7 @@ impl DOMNode {
     }
 
     pub fn elem(
-        tag_name: String,
+        tag_name: HTMLElements,
         attributes: HashMap<String, String>,
         children: Vec<DOMNode>,
     ) -> Self {
@@ -37,8 +38,7 @@ impl DOMNode {
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct ElementType {
-    // TODO できればenum
-    tag_name: String,
+    tag_name: HTMLElements,
     attributes: HashMap<String, String>,
 }
 
