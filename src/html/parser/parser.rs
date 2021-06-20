@@ -38,6 +38,7 @@ impl Parser {
 
             if next_token == b' ' {
                 attributes = self.eat_element_attributes();
+                break;
             }
 
             tag.push(next_token);
@@ -86,10 +87,6 @@ impl Parser {
 
     fn eat_element_attributes(&mut self) -> HashMap<String, String> {
         // <li ` `id="asdf"`>`
-        let init_pos = self.input.as_bytes()[self.pos];
-        if init_pos != b' ' {
-            panic!("pick_tag_name was invoked not in ` ` but in {:?}", init_pos)
-        }
 
         let mut attributes: HashMap<String, String> = HashMap::new();
         let mut key = String::from("");
@@ -114,7 +111,7 @@ impl Parser {
                 } else if next_token == b' ' || next_token == b'=' {
                     // do nothing
                 } else {
-                    value.push(next_token as char);
+                    key.push(next_token as char);
                 }
             }
         }
@@ -202,6 +199,46 @@ mod tests {
                         DOMNode::elem(
                             HTMLElements::PARAGRAPH_ELEMENT,
                             HashMap::new(),
+                            vec![DOMNode::text(String::from("hoge"))],
+                        ),
+                        DOMNode::elem(
+                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HashMap::new(),
+                            vec![DOMNode::text(String::from("asdf"))],
+                        ),
+                    ],
+                ),
+            ],
+        );
+
+        assert_eq!(dom, expected_dom);
+    }
+
+    #[test]
+    fn parser_works_with_attributes() {
+        let mut parser = Parser {
+            pos: 0,
+            input: "<html><head></head><body><p id=\"fuga\">hoge</p><p>asdf</p></body></html>"
+                .to_string(),
+        };
+
+        let dom = parser.parse();
+
+        let mut id: HashMap<String, String> = HashMap::new();
+        id.insert("id".to_string(), "fuga".to_string());
+
+        let expected_dom = DOMNode::elem(
+            HTMLElements::HTML_ELEMENT,
+            HashMap::new(),
+            vec![
+                DOMNode::elem(HTMLElements::HEAD_ELEMENT, HashMap::new(), vec![]),
+                DOMNode::elem(
+                    HTMLElements::BODY_ELEMENT,
+                    HashMap::new(),
+                    vec![
+                        DOMNode::elem(
+                            HTMLElements::PARAGRAPH_ELEMENT,
+                            id,
                             vec![DOMNode::text(String::from("hoge"))],
                         ),
                         DOMNode::elem(
