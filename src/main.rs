@@ -1,5 +1,7 @@
+use crate::css::cssom::cssom::CSSOM;
 use crate::html::parser::parser::Parser;
 
+mod css;
 mod html;
 
 fn main() {
