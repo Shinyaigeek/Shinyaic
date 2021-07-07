@@ -1,3 +1,3 @@
 pub mod cssom;
-mod declarations;
-mod selector;
+pub mod declarations;
+pub mod selector;

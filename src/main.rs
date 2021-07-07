@@ -1,4 +1,5 @@
 use crate::css::cssom::cssom::CSSOM;
+use crate::css::parser::parser::Parser as CSSParser;
 use crate::html::parser::parser::Parser;
 
 mod css;
@@ -13,4 +14,13 @@ fn main() {
     let dom = parser.parse();
     println!("------");
     println!("{:?}", dom);
+
+    let mut parser = CSSParser {
+        pos: 0,
+        input: ".css { width: 80px; }".to_string(),
+    };
+
+    let cssom = parser.parse();
+    println!("------");
+    println!("{:?}", cssom);
 }

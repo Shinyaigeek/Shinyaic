@@ -3,11 +3,12 @@ use crate::css::cssom::selector::Selector;
 use std::collections::HashSet;
 
 // Selector: #id .class tagname, Declaration HashSet<key, value> width: 100px, padding: auto
-pub type CSSOM<'a> = HashSet<StylingRule<'a>>;
+pub type CSSOM = Vec<StylingRule>;
 
-pub struct StylingRule<'a> {
-    selector: Vec<Selector<'a>>,
-    declarations: Declarations<'a>,
+#[derive(Debug, PartialEq, Clone, Eq)]
+pub struct StylingRule {
+    pub selector: Vec<Selector>,
+    pub declarations: Declarations,
 }
 
 // CSSOM
