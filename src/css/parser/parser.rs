@@ -14,6 +14,8 @@ impl Parser {
 
         loop {
             let selector = self.parse_selector();
+            //  eat {
+            self.eat();
 
             let declarations = self.parse_declarations();
 
@@ -54,8 +56,16 @@ impl Parser {
         let mut selectors = Vec::<Selector>::new();
         let mut selector_children = Vec::<SelectorChildren>::new();
 
+        let selector_elm = self.parse_selector_elm();
+
         loop {
-            let selector_elm = self.parse_selector_elm();
+            if self.peek() == b'{' {
+                selectors.push(Selector {
+                    elm: selector_elm.clone(),
+                    children: selector_children,
+                });
+                break
+            }
             self.goto_next_token();
             // * " "と" ,"を分けるためにこうするしかなかった...
 
@@ -70,29 +80,31 @@ impl Parser {
 
             if separation_char == b'{' {
                 selectors.push(Selector {
-                    elm: selector_elm,
+                    elm: selector_elm.clone(),
                     children: vec![],
                 });
-                self.eat();
                 break;
             } else if separation_char == b',' {
                 selectors.push(Selector {
-                    elm: selector_elm,
+                    elm: selector_elm.clone(),
                     children: selector_children,
                 });
-                self.eat();
                 selector_children = Vec::<SelectorChildren>::new();
             } else if separation_char == b' ' {
+                self.eat();
                 selector_children.push(SelectorChildren::descendant_combinator(
                     self.parse_selector(),
                 ));
             } else if separation_char == b'>' {
+                self.eat();
                 selector_children.push(SelectorChildren::child_combinator(self.parse_selector()));
             } else if separation_char == b'+' {
+                self.eat();
                 selector_children.push(SelectorChildren::adjacent_sibling_combinator(
                     self.parse_selector(),
                 ));
             } else if separation_char == b'~' {
+                self.eat();
                 selector_children.push(SelectorChildren::general_sibling_combinator(
                     self.parse_selector(),
                 ));
@@ -109,6 +121,7 @@ impl Parser {
 
     // "."clas"s" { width: 80px }
     fn parse_selector_elm(&mut self) -> SelectorElm {
+        self.goto_next_token();
         let first_char_selector_elm = self.eat().clone();
 
         let mut elm = String::from("");
