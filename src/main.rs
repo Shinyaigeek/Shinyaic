@@ -4,6 +4,7 @@ use crate::html::parser::parser::Parser;
 
 mod css;
 mod html;
+mod render_tree;
 
 fn main() {
     let mut parser = Parser {
@@ -14,6 +15,24 @@ fn main() {
     let dom = parser.parse();
     println!("------");
     println!("{:?}", dom);
+
+    let mut parser = CSSParser {
+        pos: 0,
+        input: ".css > #child { width: 80px; }".to_string(),
+    };
+
+    let cssom = parser.parse();
+    println!("------");
+    println!("{:?}", cssom);
+
+    let mut parser = CSSParser {
+        pos: 0,
+        input: ".css #child { width: 80px; }".to_string(),
+    };
+
+    let cssom = parser.parse();
+    println!("------");
+    println!("{:?}", cssom);
 
     let mut parser = CSSParser {
         pos: 0,
