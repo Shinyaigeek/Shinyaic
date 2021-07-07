@@ -9,8 +9,8 @@ pub enum NodeType {
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct DOMNode {
-    node_type: NodeType,
-    children: Vec<DOMNode>,
+    pub node_type: NodeType,
+    pub children: Vec<DOMNode>,
 }
 
 impl DOMNode {
@@ -38,7 +38,7 @@ impl DOMNode {
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct ElementType {
-    tag_name: HTMLElements,
+    pub tag_name: HTMLElements,
     attributes: HashMap<String, String>,
 }
 

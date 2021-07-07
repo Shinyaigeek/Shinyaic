@@ -1,6 +1,7 @@
 use crate::css::cssom::cssom::CSSOM;
 use crate::css::parser::parser::Parser as CSSParser;
 use crate::html::parser::parser::Parser;
+use crate::render_tree::render_tree::RenderTree;
 
 mod css;
 mod html;
@@ -42,4 +43,8 @@ fn main() {
     let cssom = parser.parse();
     println!("------");
     println!("{:?}", cssom);
+
+    let render_tree = RenderTree::new(dom, cssom);
+
+    println!("{:?}", render_tree.constructor());
 }

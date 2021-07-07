@@ -64,7 +64,7 @@ impl Parser {
                     elm: selector_elm.clone(),
                     children: selector_children,
                 });
-                break
+                break;
             }
             self.goto_next_token();
             // * " "と" ,"を分けるためにこうするしかなかった...

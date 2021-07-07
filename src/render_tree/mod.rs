@@ -1,2 +1,2 @@
-pub mod render_tree;
 mod render_object;
+pub mod render_tree;
