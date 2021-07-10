@@ -44,7 +44,8 @@ fn main() {
     println!("------");
     println!("{:?}", cssom);
 
-    let render_tree = RenderTree::new(dom, cssom);
+    let mut render_tree = RenderTree::new(dom, cssom);
+    render_tree.constructor();
 
-    println!("{:?}", render_tree.constructor());
+    println!("{:?}", render_tree.tree);
 }

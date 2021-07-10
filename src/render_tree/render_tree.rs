@@ -6,7 +6,7 @@ use crate::render_tree::render_object::RenderObject;
 pub struct RenderTree {
     dom: DOMNode,
     cssom: CSSOM,
-    tree: RenderObject,
+    pub tree: RenderObject,
 }
 
 impl RenderTree {
@@ -18,7 +18,7 @@ impl RenderTree {
         }
     }
 
-    pub fn constructor(&self) -> RenderObject {
+    pub fn constructor(&mut self) {
         // TODO dom.rsでやる
         let dom = match &self.dom.node_type {
             NodeType::dom_node(element_type) => {
@@ -33,9 +33,9 @@ impl RenderTree {
             }
             NodeType::text_node(text) => &self.dom,
         };
-        let render_tree = RenderTree::traverse_single_dom(dom.clone());
+        let render_tree_under_viewport = RenderTree::traverse_single_dom(dom.clone());
 
-        render_tree
+        self.tree.push_child(render_tree_under_viewport);
     }
 
     //  TODO 名前変える
