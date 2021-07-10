@@ -33,13 +33,13 @@ impl RenderTree {
             }
             NodeType::text_node(text) => &self.dom,
         };
-        let render_tree_under_viewport = RenderTree::traverse_single_dom(dom.clone());
+        let render_tree_under_viewport = self.traverse_single_dom(dom.clone());
 
         self.tree.push_child(render_tree_under_viewport);
     }
 
     //  TODO 名前変える
-    fn traverse_single_dom(dom_node: DOMNode) -> RenderObject {
+    fn traverse_single_dom(&self, dom_node: DOMNode) -> RenderObject {
         match dom_node.node_type {
             NodeType::text_node(txt) => RenderObject::init_with_text(txt),
             NodeType::dom_node(element_type) => {
@@ -58,7 +58,7 @@ impl RenderTree {
                 } else {
                     for child in dom_node.children {
                         if RenderObject::can_init_element(&child) {
-                            raw_render_object.push_child(RenderTree::traverse_single_dom(child))
+                            raw_render_object.push_child(self.traverse_single_dom(child))
                         }
                     }
 
