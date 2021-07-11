@@ -200,6 +200,7 @@ impl Parser {
     }
 
     fn parse_declaration_key(&mut self) -> String {
+        self.goto_next_token();
         let mut key = String::from("");
 
         loop {
@@ -216,6 +217,7 @@ impl Parser {
     }
 
     fn parse_declaration_value(&mut self) -> String {
+        self.goto_next_token();
         let mut value = String::from("");
 
         loop {
@@ -229,5 +231,31 @@ impl Parser {
         }
 
         value
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn it_can_parse_a_simple_css() {
+        let css = "body { color: red; }";
+        let mut parser = Parser {
+            pos: 0,
+            input: String::from(css),
+        };
+        let result = parser.parse();
+        let mut declarations = HashMap::new();
+        declarations.insert("color".to_string(), "red".to_string());
+        assert_eq!(
+            result,
+            vec![StylingRule {
+                selector: vec![Selector {
+                    elm: SelectorElm::tag_name("body".to_string()),
+                    children: vec![],
+                }],
+                declarations
+            }]
+        );
     }
 }
