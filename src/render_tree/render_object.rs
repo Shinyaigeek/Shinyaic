@@ -39,7 +39,9 @@ impl RenderObject {
             NodeType::dom_node(element_type) => element_type,
         };
         let tag = &element_type.tag_name;
-        tag == &HTMLElements::BODY_ELEMENT || tag == &HTMLElements::DIV_ELEMENT || tag == &HTMLElements::PARAGRAPH_ELEMENT
+        tag == &HTMLElements::BODY_ELEMENT
+            || tag == &HTMLElements::DIV_ELEMENT
+            || tag == &HTMLElements::PARAGRAPH_ELEMENT
     }
 
     pub fn change_kind(&mut self, target: &str) -> Self {

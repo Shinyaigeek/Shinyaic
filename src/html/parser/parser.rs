@@ -1,6 +1,7 @@
 use crate::html::dom::dom::DOMNode;
 use crate::html::dom::elements::elements::{
-    HTMLElements, ANCHOR_ELEMENT, BODY_ELEMENT, HEAD_ELEMENT, HTML_ELEMENT, PARAGRAPH_ELEMENT,
+    HTMLElements, ANCHOR_ELEMENT, BODY_ELEMENT, DIV_ELEMENT, HEAD_ELEMENT, HTML_ELEMENT,
+    PARAGRAPH_ELEMENT,
 };
 use std::collections::HashMap;
 use std::vec::Vec;
@@ -53,6 +54,7 @@ impl Parser {
             BODY_ELEMENT => HTMLElements::BODY_ELEMENT,
             PARAGRAPH_ELEMENT => HTMLElements::PARAGRAPH_ELEMENT,
             ANCHOR_ELEMENT => HTMLElements::ANCHOR_ELEMENT,
+            DIV_ELEMENT => HTMLElements::DIV_ELEMENT,
             _ => panic!("there is no element, {:?}", tag),
         };
 
@@ -252,5 +254,18 @@ mod tests {
         );
 
         assert_eq!(dom, expected_dom);
+    }
+
+    #[test]
+    fn html_parser_works_with_children() {
+        let mut parser = Parser {
+            pos: 0,
+            input:
+                "<html><head></head><body><div><p>hoge</p><p>fuga</p><p>bar</p></div></body></html>"
+                    .to_string(),
+        };
+
+        let dom = parser.parse();
+        assert_eq!(dom.children[1].children[0].children.len(), 3);
     }
 }
