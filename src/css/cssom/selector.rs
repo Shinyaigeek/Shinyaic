@@ -13,7 +13,6 @@ pub enum SelectorChildren {
     child_combinator(Vec<Selector>),
     general_sibling_combinator(Vec<Selector>),
     adjacent_sibling_combinator(Vec<Selector>),
-    column_combinator(Vec<Selector>),
 }
 
 #[derive(Debug, PartialEq, Clone, Eq, Hash)]

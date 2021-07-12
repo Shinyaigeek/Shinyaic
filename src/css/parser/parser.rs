@@ -91,7 +91,6 @@ impl Parser {
                 });
                 selector_children = Vec::<SelectorChildren>::new();
             } else if separation_char == b' ' {
-                self.eat();
                 selector_children.push(SelectorChildren::descendant_combinator(
                     self.parse_selector(),
                 ));
@@ -253,6 +252,46 @@ mod tests {
                 selector: vec![Selector {
                     elm: SelectorElm::tag_name("body".to_string()),
                     children: vec![],
+                }],
+                declarations
+            }]
+        );
+    }
+
+    #[test]
+    fn it_can_parse_selector_with_combinator() {
+        let css = "body > div + p ~ a div { color: red; }";
+        let mut parser = Parser {
+            pos: 0,
+            input: String::from(css),
+        };
+        let result = parser.parse();
+        let mut declarations = HashMap::new();
+        declarations.insert("color".to_string(), "red".to_string());
+        assert_eq!(
+            result,
+            vec![StylingRule {
+                selector: vec![Selector {
+                    elm: SelectorElm::tag_name("body".to_string()),
+                    children: vec![SelectorChildren::child_combinator(vec![Selector {
+                        elm: SelectorElm::tag_name("div".to_string()),
+                        children: vec![SelectorChildren::adjacent_sibling_combinator(vec![
+                            Selector {
+                                elm: SelectorElm::tag_name("p".to_string()),
+                                children: vec![SelectorChildren::general_sibling_combinator(vec![
+                                    Selector {
+                                        elm: SelectorElm::tag_name("a".to_string()),
+                                        children: vec![SelectorChildren::descendant_combinator(
+                                            vec![Selector {
+                                                elm: SelectorElm::tag_name("div".to_string()),
+                                                children: vec![],
+                                            }]
+                                        )]
+                                    }
+                                ])]
+                            }
+                        ])]
+                    }])]
                 }],
                 declarations
             }]
