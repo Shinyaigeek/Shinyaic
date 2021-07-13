@@ -297,4 +297,27 @@ mod tests {
             }]
         );
     }
+
+    #[test]
+    fn it_can_parse_multiple_declarations() {
+        let css = "body { color: red; background: white; }";
+        let mut parser = Parser {
+            pos: 0,
+            input: String::from(css),
+        };
+        let result = parser.parse();
+        let mut declarations = HashMap::new();
+        declarations.insert("color".to_string(), "red".to_string());
+        declarations.insert("background".to_string(), "white".to_string());
+        assert_eq!(
+            result,
+            vec![StylingRule {
+                selector: vec![Selector {
+                    elm: SelectorElm::tag_name("body".to_string()),
+                    children: vec![],
+                }],
+                declarations
+            }]
+        );
+    }
 }
