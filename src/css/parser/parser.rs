@@ -56,7 +56,7 @@ impl Parser {
         let mut selectors = Vec::<Selector>::new();
         let mut selector_children = Vec::<SelectorChildren>::new();
 
-        let selector_elm = self.parse_selector_elm();
+        let mut selector_elm = self.parse_selector_elm();
 
         loop {
             if self.peek() == b'{' {
@@ -85,10 +85,12 @@ impl Parser {
                 });
                 break;
             } else if separation_char == b',' {
+                self.eat();
                 selectors.push(Selector {
                     elm: selector_elm.clone(),
                     children: selector_children,
                 });
+                selector_elm = self.parse_selector_elm();
                 selector_children = Vec::<SelectorChildren>::new();
             } else if separation_char == b' ' {
                 selector_children.push(SelectorChildren::descendant_combinator(
@@ -300,7 +302,7 @@ mod tests {
 
     #[test]
     fn it_can_parse_multi_selector() {
-        let css = ".class1, .class1 { color: red; }";
+        let css = ".class1, .class2 { color: red; }";
         let mut parser = Parser {
             pos: 0,
             input: String::from(css),
@@ -310,22 +312,19 @@ mod tests {
         declarations.insert("color".to_string(), "red".to_string());
         assert_eq!(
             result,
-            vec![
-                StylingRule {
-                    selector: vec![Selector {
+            vec![StylingRule {
+                selector: vec![
+                    Selector {
                         elm: SelectorElm::class("class1".to_string()),
                         children: vec![],
-                    }],
-                    declarations: declarations.clone(),
-                },
-                StylingRule {
-                    selector: vec![Selector {
+                    },
+                    Selector {
                         elm: SelectorElm::class("class2".to_string()),
                         children: vec![],
-                    }],
-                    declarations,
-                }
-            ]
+                    }
+                ],
+                declarations: declarations.clone(),
+            }]
         );
     }
 
