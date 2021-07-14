@@ -299,6 +299,37 @@ mod tests {
     }
 
     #[test]
+    fn it_can_parse_multi_selector() {
+        let css = ".class1, .class1 { color: red; }";
+        let mut parser = Parser {
+            pos: 0,
+            input: String::from(css),
+        };
+        let result = parser.parse();
+        let mut declarations = HashMap::new();
+        declarations.insert("color".to_string(), "red".to_string());
+        assert_eq!(
+            result,
+            vec![
+                StylingRule {
+                    selector: vec![Selector {
+                        elm: SelectorElm::class("class1".to_string()),
+                        children: vec![],
+                    }],
+                    declarations: declarations.clone(),
+                },
+                StylingRule {
+                    selector: vec![Selector {
+                        elm: SelectorElm::class("class2".to_string()),
+                        children: vec![],
+                    }],
+                    declarations,
+                }
+            ]
+        );
+    }
+
+    #[test]
     fn it_can_parse_multiple_declarations() {
         let css = "body { color: red; background: white; }";
         let mut parser = Parser {
