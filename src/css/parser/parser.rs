@@ -182,6 +182,9 @@ impl Parser {
             let cur_char = self.peek();
 
             if cur_char == b'}' {
+                if !self.is_eof() {
+                    self.eat();
+                }
                 break;
             }
 
@@ -348,6 +351,42 @@ mod tests {
                 }],
                 declarations
             }]
+        );
+    }
+
+    #[test]
+    fn it_can_parse_multiple_styles() {
+        let css = "body { color: red; background: white; } p { color: blue; }";
+        let mut parser = Parser {
+            pos: 0,
+            input: String::from(css),
+        };
+        let result = parser.parse();
+        let mut declarations_body = HashMap::new();
+        declarations_body.insert("color".to_string(), "red".to_string());
+        declarations_body.insert("background".to_string(), "white".to_string());
+
+        let mut declarations_p = HashMap::new();
+        declarations_p.insert("color".to_string(), "blue".to_string());
+
+        assert_eq!(
+            result,
+            vec![
+                StylingRule {
+                    selector: vec![Selector {
+                        elm: SelectorElm::tag_name("body".to_string()),
+                        children: vec![],
+                    }],
+                    declarations: declarations_body.clone(),
+                },
+                StylingRule {
+                    selector: vec![Selector {
+                        elm: SelectorElm::tag_name("p".to_string()),
+                        children: vec![],
+                    }],
+                    declarations: declarations_p.clone(),
+                }
+            ]
         );
     }
 }
