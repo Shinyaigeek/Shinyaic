@@ -48,10 +48,10 @@ impl Selector {
             };
         }
 
-        for &child in self.children {
+        for child in self.children {
             match child {
                 SelectorChildren::descendant_combinator(children) => {
-                    for &descendant in children {
+                    for descendant in children {
                         for child_elm in elm.children {
                             if descendant.matches(&child_elm, &elm) {
                                 return true;
@@ -66,7 +66,7 @@ impl Selector {
                     }
                 }
                 SelectorChildren::child_combinator(children) => {
-                    for &child in children {
+                    for child in children {
                         for child_elm in elm.children {
                             if child.matches(&child_elm, &elm) {
                                 return true;
@@ -75,7 +75,7 @@ impl Selector {
                     }
                 }
                 SelectorChildren::general_sibling_combinator(children) => {
-                    for &general_sibling in children {
+                    for general_sibling in children {
                         for sibling_elm in parent_elm.children {
                             if general_sibling.matches(&sibling_elm, &parent_elm) {
                                 return true;
@@ -84,8 +84,12 @@ impl Selector {
                     }
                 }
                 SelectorChildren::adjacent_sibling_combinator(children) => {
-                    for &adjacent_sibling in children {
-                        let elm_idx = elm.children.index_of(&adjacent_sibling.elm.tag_name);
+                    for adjacent_sibling in children {
+                        let elm_idx = parent_elm.children.iter().position(|x| &x == &elm);
+                        let elm_idx = match elm_idx {
+                            Some(idx) => idx,
+                            None => panic!("on adjacent_sibling_combinator matches, elm idx should be existed but none")
+                        };
                         let big_brother_sibling_elm = elm[elm_idx + 1];
                         let little_brother_sibling_elm = elm[elm_idx - 1];
                         for sibling_elm in parent_elm.children {
