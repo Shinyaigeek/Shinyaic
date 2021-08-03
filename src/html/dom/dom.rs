@@ -39,7 +39,7 @@ impl DOMNode {
 #[derive(Debug, PartialEq, Clone)]
 pub struct ElementType {
     pub tag_name: HTMLElements,
-    attributes: HashMap<String, String>,
+    pub attributes: HashMap<String, String>,
 }
 
 impl ElementType {
