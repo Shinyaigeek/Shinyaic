@@ -90,14 +90,12 @@ impl Selector {
                             Some(idx) => idx,
                             None => panic!("on adjacent_sibling_combinator matches, elm idx should be existed but none")
                         };
-                        let big_brother_sibling_elm = elm[elm_idx + 1];
-                        let little_brother_sibling_elm = elm[elm_idx - 1];
-                        for sibling_elm in parent_elm.children {
-                            if big_brother_sibling_elm.matches(&sibling_elm, &parent_elm)
-                                || little_brother_sibling_elm.matches(&sibling_elm, &parent_elm)
-                            {
-                                return true;
-                            }
+                        let big_brother_sibling_elm = parent_elm.children[elm_idx + 1];
+                        let little_brother_sibling_elm = parent_elm.children[elm_idx - 1];
+                        if adjacent_sibling.matches(&big_brother_sibling_elm, &parent_elm)
+                            || adjacent_sibling.matches(&little_brother_sibling_elm, &parent_elm)
+                        {
+                            return true;
                         }
                     }
                 }
