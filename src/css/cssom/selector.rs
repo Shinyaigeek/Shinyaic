@@ -33,9 +33,15 @@ impl Selector {
         };
         if self.children.len() == 0 {
             return match self.elm {
-                SelectorElm::id(id) => id == element_type.attributes.get("id"),
+                SelectorElm::id(id) => {
+                    &id == element_type.attributes.get("id").unwrap_or(&"".to_string())
+                }
                 SelectorElm::class(class) => {
-                    class == element_type.attributes.get("class")
+                    &class
+                        == element_type
+                            .attributes
+                            .get("class")
+                            .unwrap_or(&"".to_string())
                 }
                 SelectorElm::tag_name(tag_name) => tag_name == element_type.tag_name,
                 SelectorElm::asterisk(asterisk) => true,
