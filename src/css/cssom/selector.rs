@@ -25,7 +25,7 @@ pub struct Selector {
 
 impl Selector {
     pub fn matches(self, elm: &DOMNode, parent_elm: &DOMNode) -> bool {
-        let element_type = match elm.node_type {
+        let element_type = match &elm.node_type {
             NodeType::text_node(text_node) => {
                 return false;
             }
@@ -43,7 +43,9 @@ impl Selector {
                             .get("class")
                             .unwrap_or(&"".to_string())
                 }
-                SelectorElm::tag_name(tag_name) => tag_name == element_type.tag_name.to_string(),
+                SelectorElm::tag_name(tag_name) => {
+                    tag_name == element_type.clone().tag_name.to_string()
+                }
                 SelectorElm::asterisk(asterisk) => true,
             };
         }
@@ -52,12 +54,12 @@ impl Selector {
             match child {
                 SelectorChildren::descendant_combinator(children) => {
                     for descendant in children {
-                        for child_elm in elm.children {
-                            if descendant.matches(&child_elm, &elm) {
+                        for child_elm in elm.clone().children {
+                            if descendant.clone().matches(&child_elm, &elm) {
                                 return true;
                             } else {
-                                for grandchild_elm in child_elm.children {
-                                    if descendant.matches(&grandchild_elm, &child_elm) {
+                                for grandchild_elm in child_elm.clone().children {
+                                    if descendant.clone().matches(&grandchild_elm, &child_elm) {
                                         return true;
                                     }
                                 }
@@ -67,8 +69,8 @@ impl Selector {
                 }
                 SelectorChildren::child_combinator(children) => {
                     for child in children {
-                        for child_elm in elm.children {
-                            if child.matches(&child_elm, &elm) {
+                        for child_elm in elm.clone().children {
+                            if child.clone().matches(&child_elm, &elm) {
                                 return true;
                             }
                         }
@@ -76,8 +78,8 @@ impl Selector {
                 }
                 SelectorChildren::general_sibling_combinator(children) => {
                     for general_sibling in children {
-                        for sibling_elm in parent_elm.children {
-                            if general_sibling.matches(&sibling_elm, &parent_elm) {
+                        for sibling_elm in parent_elm.clone().children {
+                            if general_sibling.clone().matches(&sibling_elm, &parent_elm) {
                                 return true;
                             }
                         }
@@ -90,10 +92,14 @@ impl Selector {
                             Some(idx) => idx,
                             None => panic!("on adjacent_sibling_combinator matches, elm idx should be existed but none")
                         };
-                        let big_brother_sibling_elm = parent_elm.children[elm_idx + 1];
-                        let little_brother_sibling_elm = parent_elm.children[elm_idx - 1];
-                        if adjacent_sibling.matches(&big_brother_sibling_elm, &parent_elm)
-                            || adjacent_sibling.matches(&little_brother_sibling_elm, &parent_elm)
+                        let big_brother_sibling_elm = parent_elm.children[elm_idx + 1].clone();
+                        let little_brother_sibling_elm = parent_elm.children[elm_idx - 1].clone();
+                        if adjacent_sibling
+                            .clone()
+                            .matches(&big_brother_sibling_elm, &parent_elm)
+                            || adjacent_sibling
+                                .clone()
+                                .matches(&little_brother_sibling_elm, &parent_elm)
                         {
                             return true;
                         }
