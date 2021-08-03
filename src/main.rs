@@ -19,25 +19,7 @@ fn main() {
 
     let mut parser = CSSParser {
         pos: 0,
-        input: ".css > #child { width: 80px; }".to_string(),
-    };
-
-    let cssom = parser.parse();
-    println!("------");
-    println!("{:?}", cssom);
-
-    let mut parser = CSSParser {
-        pos: 0,
-        input: ".css #child { width: 80px; }".to_string(),
-    };
-
-    let cssom = parser.parse();
-    println!("------");
-    println!("{:?}", cssom);
-
-    let mut parser = CSSParser {
-        pos: 0,
-        input: ".css { width: 80px; }".to_string(),
+        input: "p { width: 80px; }".to_string(),
     };
 
     let cssom = parser.parse();

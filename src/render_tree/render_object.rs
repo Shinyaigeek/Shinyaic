@@ -1,9 +1,11 @@
+use crate::css::cssom::cssom::StylingRule;
 use crate::html::dom::dom::{DOMNode, ElementType, NodeType};
 use crate::html::dom::elements::elements::HTMLElements;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct _RenderObject {
     pub children: Vec<RenderObject>,
+    pub style: Vec<StylingRule>,
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -16,7 +18,10 @@ pub enum RenderObject {
 
 impl RenderObject {
     pub fn new() -> Self {
-        Self::ViewPort(_RenderObject { children: vec![] })
+        Self::ViewPort(_RenderObject {
+            children: vec![],
+            style: vec![],
+        })
     }
 
     pub fn init_with_text(txt: String) -> Self {
@@ -25,9 +30,15 @@ impl RenderObject {
 
     pub fn init_with_element(element_type: ElementType) -> Option<Self> {
         match element_type.tag_name {
-            HTMLElements::BODY_ELEMENT => Some(Self::Scroll(_RenderObject { children: vec![] })),
+            HTMLElements::BODY_ELEMENT => Some(Self::Scroll(_RenderObject {
+                children: vec![],
+                style: vec![],
+            })),
             HTMLElements::DIV_ELEMENT | HTMLElements::PARAGRAPH_ELEMENT => {
-                Some(Self::Block(_RenderObject { children: vec![] }))
+                Some(Self::Block(_RenderObject {
+                    children: vec![],
+                    style: vec![],
+                }))
             }
             _ => None,
         }
@@ -45,18 +56,20 @@ impl RenderObject {
     }
 
     pub fn change_kind(&mut self, target: &str) -> Self {
-        let children = match self {
+        let (children, style) = match self {
             Self::Text(_) => {
                 panic!("RenderObject::change_kind should not be called with text")
             }
             Self::ViewPort(render_object)
             | Self::Scroll(render_object)
-            | Self::Block(render_object) => render_object.children.clone(),
+            | Self::Block(render_object) => {
+                (render_object.children.clone(), render_object.style.clone())
+            }
         };
         match target {
-            "view_port" => Self::ViewPort(_RenderObject { children }),
-            "scroll" => Self::Scroll(_RenderObject { children }),
-            "block" => Self::Block(_RenderObject { children }),
+            "view_port" => Self::ViewPort(_RenderObject { children, style }),
+            "scroll" => Self::Scroll(_RenderObject { children, style }),
+            "block" => Self::Block(_RenderObject { children, style }),
             _ => {
                 panic!("RenderObject::change_kind should be viewport or scroll or block")
             }

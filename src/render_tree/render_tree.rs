@@ -43,8 +43,8 @@ impl RenderTree {
         match dom_node.node_type {
             NodeType::text_node(txt) => RenderObject::init_with_text(txt),
             NodeType::dom_node(element_type) => {
-                println!("element: {:?}", element_type);
-                let mut raw_render_object = RenderObject::init_with_element(element_type);
+                let mut raw_render_object =
+                    RenderObject::init_with_element(element_type);
                 let mut raw_render_object = match raw_render_object {
                     Some(raw_render_object) => raw_render_object,
                     //  TODO
