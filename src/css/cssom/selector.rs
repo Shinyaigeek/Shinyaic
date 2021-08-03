@@ -43,7 +43,7 @@ impl Selector {
                             .get("class")
                             .unwrap_or(&"".to_string())
                 }
-                SelectorElm::tag_name(tag_name) => tag_name == element_type.tag_name,
+                SelectorElm::tag_name(tag_name) => tag_name == element_type.tag_name.to_string(),
                 SelectorElm::asterisk(asterisk) => true,
             };
         }
