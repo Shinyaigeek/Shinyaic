@@ -55,7 +55,13 @@ impl Selector {
                         for child_elm in elm.children {
                             if descendant.matches(&child_elm, &elm) {
                                 return true;
-                            };
+                            } else {
+                                for grandchild_elm in child_elm.children {
+                                    if descendant.matches(&grandchild_elm, &child_elm) {
+                                        return true;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -70,8 +76,8 @@ impl Selector {
                 }
                 SelectorChildren::general_sibling_combinator(children) => {
                     for &general_sibling in children {
-                        for child_elm in elm.children {
-                            if general_sibling.matches(&child_elm, &elm) {
+                        for sibling_elm in parent_elm.children {
+                            if general_sibling.matches(&sibling_elm, &parent_elm) {
                                 return true;
                             }
                         }
@@ -79,8 +85,13 @@ impl Selector {
                 }
                 SelectorChildren::adjacent_sibling_combinator(children) => {
                     for &adjacent_sibling in children {
-                        for child_elm in elm.children {
-                            if adjacent_sibling.matches(&child_elm, &elm) {
+                        let elm_idx = elm.children.index_of(&adjacent_sibling.elm.tag_name);
+                        let big_brother_sibling_elm = elm[elm_idx + 1];
+                        let little_brother_sibling_elm = elm[elm_idx - 1];
+                        for sibling_elm in parent_elm.children {
+                            if big_brother_sibling_elm.matches(&sibling_elm, &parent_elm)
+                                || little_brother_sibling_elm.matches(&sibling_elm, &parent_elm)
+                            {
                                 return true;
                             }
                         }
