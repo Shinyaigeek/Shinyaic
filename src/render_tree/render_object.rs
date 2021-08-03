@@ -93,4 +93,15 @@ impl RenderObject {
             | Self::Block(render_object) => render_object.children.push(child),
         };
     }
+
+    pub fn replace_style(&mut self, rules: Vec<StylingRule>) {
+        match self {
+            Self::Text(_) => {
+                panic!("RenderObject::replace_style should not be called with text")
+            }
+            Self::ViewPort(render_object)
+            | Self::Scroll(render_object)
+            | Self::Block(render_object) => render_object.style = rules,
+        };
+    }
 }

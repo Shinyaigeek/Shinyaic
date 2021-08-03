@@ -40,7 +40,7 @@ impl RenderTree {
 
     //  TODO 名前変える
     fn traverse_single_dom(&self, dom_node: DOMNode) -> RenderObject {
-        match dom_node.node_type {
+        match dom_node.clone().node_type {
             NodeType::text_node(txt) => RenderObject::init_with_text(txt),
             NodeType::dom_node(element_type) => {
                 let mut raw_render_object = RenderObject::init_with_element(element_type);
@@ -51,6 +51,18 @@ impl RenderTree {
                         panic!("traverse_single_dom")
                     }
                 };
+
+                let mut style = vec![];
+
+                for style_rule in &self.cssom {
+                    //  TODO これだと body p {} は p ではなく <body><p /></body> な body にマッチしてしまう
+                    if style_rule.clone().matches(&dom_node, &dom_node) {
+                        style.push(style_rule.clone());
+                    }
+                }
+
+                raw_render_object.replace_style(style);
+
                 // TODO 後で消す
                 if dom_node.children.len() == 0 {
                     raw_render_object
