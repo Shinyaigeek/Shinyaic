@@ -1,5 +1,6 @@
 use crate::css::cssom::declarations::Declarations;
 use crate::css::cssom::selector::Selector;
+use crate::html::dom::dom::{DOMNode, ElementType, NodeType};
 use std::collections::HashSet;
 
 // Selector: #id .class tagname, Declaration HashSet<key, value> width: 100px, padding: auto
@@ -9,6 +10,17 @@ pub type CSSOM = Vec<StylingRule>;
 pub struct StylingRule {
     pub selector: Vec<Selector>,
     pub declarations: Declarations,
+}
+
+impl StylingRule {
+    pub fn matches(self, element: &DOMNode) -> bool {
+        for selector in self.selector {
+            if selector.matches(element) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 // CSSOM
