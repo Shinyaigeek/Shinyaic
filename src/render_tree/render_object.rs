@@ -55,6 +55,13 @@ impl RenderObject {
             || tag == &HTMLElements::PARAGRAPH_ELEMENT
     }
 
+    pub fn can_init_text(dom_node: &DOMNode) -> bool {
+        match &dom_node.node_type {
+            NodeType::text_node(_) => true,
+            NodeType::dom_node(element_type) => false,
+        }
+    }
+
     pub fn change_kind(&mut self, target: &str) -> Self {
         let (children, style) = match self {
             Self::Text(_) => {

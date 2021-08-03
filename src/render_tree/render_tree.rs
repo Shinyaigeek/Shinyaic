@@ -43,8 +43,7 @@ impl RenderTree {
         match dom_node.node_type {
             NodeType::text_node(txt) => RenderObject::init_with_text(txt),
             NodeType::dom_node(element_type) => {
-                let mut raw_render_object =
-                    RenderObject::init_with_element(element_type);
+                let mut raw_render_object = RenderObject::init_with_element(element_type);
                 let mut raw_render_object = match raw_render_object {
                     Some(raw_render_object) => raw_render_object,
                     //  TODO
@@ -58,6 +57,8 @@ impl RenderTree {
                 } else {
                     for child in dom_node.children {
                         if RenderObject::can_init_element(&child) {
+                            raw_render_object.push_child(self.traverse_single_dom(child))
+                        } else if RenderObject::can_init_text(&child) {
                             raw_render_object.push_child(self.traverse_single_dom(child))
                         }
                     }
