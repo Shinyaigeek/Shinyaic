@@ -13,9 +13,9 @@ pub struct StylingRule {
 }
 
 impl StylingRule {
-    pub fn matches(self, element: &DOMNode) -> bool {
+    pub fn matches(self, element: &DOMNode, parent_elm: &DOMNode) -> bool {
         for selector in self.selector {
-            if selector.matches(element) {
+            if selector.matches(element, parent_elm) {
                 return true;
             }
         }
