@@ -24,60 +24,62 @@ pub struct Selector {
 }
 
 impl Selector {
-    pub fn matches(self, elm: &DOMNode) -> bool {
+    pub fn matches(self, elm: &DOMNode, parent_elm: &DOMNode) -> bool {
         let element_type = match elm.node_type {
             NodeType::text_node(text_node) => {
                 return false;
-            },
-            NodeType::dom_node(element_type) => {
-                element_type
             }
+            NodeType::dom_node(element_type) => element_type,
         };
         if self.children.len() == 0 {
             return match self.elm {
                 SelectorElm::id(id) => id == element_type.attributes.get("id".to_string()),
-                SelectorElm::class(class) => class == element_type.attributes.get("class".to_string()),
+                SelectorElm::class(class) => {
+                    class == element_type.attributes.get("class".to_string())
+                }
                 SelectorElm::tag_name(tag_name) => tag_name == element_type.tag_name,
-                SelectorElm::asterisk(asterisk) => {
-                    true
-                },
-            }
+                SelectorElm::asterisk(asterisk) => true,
+            };
         }
 
         for &child in self.children {
             match child {
-                SelectorChildren::descendant_combinator(children) => { 
+                SelectorChildren::descendant_combinator(children) => {
                     for &descendant in children {
-                        for child in elm.children {
-                            return descendant.matches(child);
+                        for child_elm in elm.children {
+                            if descendant.matches(&child_elm, &elm) {
+                                return true;
+                            };
                         }
                     }
-                    return false;
-                },
+                }
                 SelectorChildren::child_combinator(children) => {
                     for &child in children {
                         for child_elm in elm.children {
-                            return child.matches(child_elm);
+                            if child.matches(&child_elm, &elm) {
+                                return true;
+                            }
                         }
                     }
-                    return false;
-                },
+                }
                 SelectorChildren::general_sibling_combinator(children) => {
-                    for &sibling in elm.children {
-                        for child in children {
-                            return child.matches(sibling);
+                    for &general_sibling in children {
+                        for child_elm in elm.children {
+                            if general_sibling.matches(&child_elm, &elm) {
+                                return true;
+                            }
                         }
                     }
-                    return false;
-                },
+                }
                 SelectorChildren::adjacent_sibling_combinator(children) => {
-                    for &sibling in elm.children {
-                        for child in children {
-                            return child.matches(sibling);
+                    for &adjacent_sibling in children {
+                        for child_elm in elm.children {
+                            if adjacent_sibling.matches(&child_elm, &elm) {
+                                return true;
+                            }
                         }
                     }
-                    return false;
-                },
+                }
             }
         }
 
