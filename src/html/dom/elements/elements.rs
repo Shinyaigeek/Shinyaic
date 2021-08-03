@@ -14,3 +14,18 @@ pub enum HTMLElements {
     ANCHOR_ELEMENT,
     DIV_ELEMENT,
 }
+
+impl HTMLElements {
+    pub fn to_string(self) -> String {
+        let tag_str = match self {
+            HTMLElements::HTML_ELEMENT => "html",
+            HTMLElements::BODY_ELEMENT => "body",
+            HTMLElements::HEAD_ELEMENT => "head",
+            HTMLElements::PARAGRAPH_ELEMENT => "p",
+            HTMLElements::ANCHOR_ELEMENT => "a",
+            HTMLElements::DIV_ELEMENT => "div",
+        };
+
+        tag_str.to_string()
+    }
+}
