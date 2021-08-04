@@ -24,6 +24,30 @@ pub struct Selector {
 }
 
 impl Selector {
+    pub fn is_one_node_tree(&self) -> bool {
+        let children = self.children;
+        children.len() == 0
+    }
+
+    pub fn pop_root_node_from_tree(&self) -> Vec<Selector> {
+        let mut res = vec![];
+
+        for child in self.children {
+            match child {
+                SelectorChildren::descendant_combinator(children)
+                | SelectorChildren::child_combinator(children)
+                | SelectorChildren::general_sibling_combinator(children)
+                | SelectorChildren::adjacent_sibling_combinator(children) => {
+                    for child in children {
+                        res.push(child);
+                    }
+                }
+            };
+        }
+
+        res
+    }
+
     pub fn matches(self, elm: &DOMNode, parent_elm: &DOMNode) -> bool {
         let element_type = match &elm.node_type {
             NodeType::text_node(text_node) => {
