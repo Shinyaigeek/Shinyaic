@@ -21,6 +21,7 @@ impl RenderTree {
 
     pub fn constructor(&mut self) {
         // TODO dom.rsでやる
+        // TODO styled DOM と Rendering Tree で分けた方が良い
         let dom = match &self.dom.node_type {
             NodeType::dom_node(element_type) => {
                 match element_type.tag_name {
@@ -38,6 +39,8 @@ impl RenderTree {
 
         self.tree.push_child(render_tree_under_viewport);
     }
+
+    pub fn layouting(&mut self, window_with: u32, window_height: u32) {}
 
     //  TODO 名前変える
     fn traverse_single_dom(
