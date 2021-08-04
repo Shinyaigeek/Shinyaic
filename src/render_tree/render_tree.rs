@@ -2,6 +2,7 @@ use crate::css::cssom::cssom::{StylingRule, CSSOM};
 use crate::css::cssom::selector::Selector;
 use crate::html::dom::dom::{DOMNode, NodeType};
 use crate::html::dom::elements::elements::HTMLElements;
+use crate::render_tree::rectangle::Rectangle;
 use crate::render_tree::render_object::RenderObject;
 
 pub struct RenderTree {
@@ -38,9 +39,33 @@ impl RenderTree {
         let render_tree_under_viewport = self.traverse_single_dom(dom.clone(), vec![]);
 
         self.tree.push_child(render_tree_under_viewport);
+
+        self.layouting(300.0, 300.0);
     }
 
-    pub fn layouting(&mut self, window_with: u32, window_height: u32) {}
+    pub fn layouting(&mut self, window_with: f32, window_height: f32) {
+        let mut root_node = match self.tree {
+            RenderObject::ViewPort(ref mut viewport) => viewport,
+            _ => panic!("TODO"),
+        };
+
+        root_node.rectangle = Rectangle::new(0.0, 0.0, window_with, window_height);
+        let mut big_brother = None;
+        let parent = self.tree.clone();
+        let mut i = 0;
+
+        let mut root_node = match self.tree {
+            RenderObject::ViewPort(ref mut viewport) => viewport,
+            _ => panic!("TODO"),
+        };
+
+        while i < root_node.children.len() {
+            let mut child = root_node.children.get_mut(i).unwrap();
+            child.layouting_node(parent.clone(), big_brother);
+            big_brother = Some(child.clone());
+            i += 1;
+        }
+    }
 
     //  TODO 名前変える
     fn traverse_single_dom(

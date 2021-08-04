@@ -19,7 +19,7 @@ fn main() {
 
     let mut parser = CSSParser {
         pos: 0,
-        input: "body p { width: 80px; }".to_string(),
+        input: "body p { width: 80; height: 90; }".to_string(),
     };
 
     let cssom = parser.parse();

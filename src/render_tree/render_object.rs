@@ -27,9 +27,59 @@ impl RenderObject {
         })
     }
 
+    pub fn layouting_node(&mut self, parent_node: Self, big_brother_node: Option<Self>) {
+        let big_brother_node = match big_brother_node {
+            Some(big_brother_node_) => Some(big_brother_node_),
+            None => None,
+        };
+
+        let parent_rectangle = match parent_node {
+            Self::Text(_) => panic!("TODO"),
+            Self::Scroll(parent_node) | Self::ViewPort(parent_node) | Self::Block(parent_node) => {
+                parent_node.rectangle
+            }
+        };
+
+        let big_brother_rectangle = match big_brother_node {
+            None => None,
+            Some(big_brother_node_) => match big_brother_node_ {
+                Self::Text(_) => panic!("TODO"),
+                Self::Scroll(big_brother)
+                | Self::ViewPort(big_brother)
+                | Self::Block(big_brother) => Some(big_brother.rectangle),
+            },
+        };
+
+        self.calc_rectangle(&parent_rectangle, &big_brother_rectangle);
+
+        let parent = self.clone();
+
+        match self {
+            Self::Text(_) => return,
+            Self::Block(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => {
+                let mut big_brother_node: Option<Self> = None;
+
+                let mut i = 0;
+
+                while i < rendering_object.children.len() {
+                    let mut child = rendering_object.children.get_mut(i).unwrap();
+                    child.layouting_node(parent.clone(), big_brother_node);
+                    big_brother_node = Some(child.clone());
+                    i += 1;
+                }
+            }
+        }
+    }
+
     // TODO position absoluteの時など, big_brotherがparentに入らなさそうな時
     // TODO font size == 高さと見做してするけど, のちになんとかした方が良さそう
-    pub fn calc_rectangle(&mut self, parent_rect: &Rectangle, big_brother_rect: &Rectangle) {
+    pub fn calc_rectangle(
+        &mut self,
+        parent_rect: &Rectangle,
+        big_brother_rect: &Option<Rectangle>,
+    ) {
         let width = self.calc_width(&parent_rect.width);
         let height = self.calc_height(&parent_rect.height);
 
@@ -42,7 +92,22 @@ impl RenderObject {
             | Self::ViewPort(rendering_object) => rendering_object,
         };
 
+        // TODO
         rendering_object.rectangle = Rectangle::new(0.0, 0.0, width, height);
+
+        let x = self.calc_x(&parent_rect, &big_brother_rect);
+        let y = self.calc_y(&parent_rect, &big_brother_rect);
+
+        let rendering_object = match self {
+            Self::Text(text) => {
+                return;
+            }
+            Self::Block(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => rendering_object,
+        };
+
+        rendering_object.rectangle = Rectangle::new(x, y, width, height);
     }
 
     fn calc_width(&self, parent_width: &f32) -> f32 {
