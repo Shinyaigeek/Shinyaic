@@ -30,6 +30,9 @@ impl RenderObject {
     // TODO position absoluteの時など, big_brotherがparentに入らなさそうな時
     // TODO font size == 高さと見做してするけど, のちになんとかした方が良さそう
     pub fn calc_rectangle(&mut self, parent_rect: &Rectangle, big_brother_rect: &Rectangle) {
+        let width = self.calc_width(&parent_rect.width);
+        let height = self.calc_height(&parent_rect.height);
+
         let rendering_object = match self {
             Self::Text(text) => {
                 return;
@@ -38,6 +41,8 @@ impl RenderObject {
             | Self::Scroll(rendering_object)
             | Self::ViewPort(rendering_object) => rendering_object,
         };
+
+        rendering_object.rectangle = Rectangle::new(0.0, 0.0, width, height);
     }
 
     fn calc_width(&self, parent_width: &f32) -> f32 {
@@ -70,13 +75,75 @@ impl RenderObject {
             }
         }
 
-        let mut width = 0.0;
+        let width = match self {
+            // TODO
+            Self::Text(text) => {
+                return 0.0;
+            }
+            Self::Block(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => parent_width,
+        };
 
-        for child in rendering_object.clone().children {
-            width += child.calc_width(&rendering_object.rectangle.width);
+        width.clone()
+    }
+
+    fn calc_height(&self, parent_height: &f32) -> f32 {
+        let rendering_object = match self {
+            // TODO
+            Self::Text(text) => {
+                return 0.0;
+            }
+            Self::Block(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => rendering_object,
+        };
+
+        for style in rendering_object.clone().style {
+            if style.declarations.get(&"height".to_string()).is_some() {
+                let raw_height = style
+                    .declarations
+                    .get(&"height".to_string())
+                    .unwrap()
+                    .parse::<f32>();
+
+                match raw_height {
+                    Ok(height) => {
+                        return height;
+                    }
+                    Err(e) => {
+                        panic!(e);
+                    }
+                }
+            }
         }
 
-        width
+        let mut height = 0.0;
+
+        for child in rendering_object.clone().children {
+            height += child.calc_height(&rendering_object.rectangle.height);
+        }
+
+        height
+    }
+
+    fn calc_x(&self, parent_rect: &Rectangle, big_brother_rect: &Option<Rectangle>) -> f32 {
+        let big_brother_rect = match big_brother_rect {
+            Some(big_brother_rect) => big_brother_rect,
+            None => {
+                return parent_rect.x;
+            }
+        };
+
+        let x = match self {
+            // TODO
+            Self::Text(text) => parent_rect.x,
+            Self::Block(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => parent_rect.x,
+        };
+
+        x
     }
 
     pub fn init_with_text(txt: String) -> Self {
