@@ -118,11 +118,21 @@ impl RenderObject {
             }
         }
 
-        let mut height = 0.0;
-
-        for child in rendering_object.clone().children {
-            height += child.calc_height(&rendering_object.rectangle.height);
-        }
+        let height = match self {
+            // TODO
+            Self::Text(text) => {
+                return 0.0;
+            }
+            Self::Block(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => {
+                let mut height = 0.0;
+                for child in rendering_object.clone().children {
+                    height += child.calc_height(&rendering_object.rectangle.height);
+                }
+                height
+            }
+        };
 
         height
     }
