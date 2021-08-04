@@ -1,11 +1,13 @@
 use crate::css::cssom::cssom::StylingRule;
 use crate::html::dom::dom::{DOMNode, ElementType, NodeType};
 use crate::html::dom::elements::elements::HTMLElements;
+use crate::render_tree::rectangle::Rectangle;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct _RenderObject {
     pub children: Vec<RenderObject>,
     pub style: Vec<StylingRule>,
+    pub rectangle: Rectangle,
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -21,6 +23,7 @@ impl RenderObject {
         Self::ViewPort(_RenderObject {
             children: vec![],
             style: vec![],
+            rectangle: Rectangle::new(0, 0, 0, 0),
         })
     }
 
@@ -33,11 +36,13 @@ impl RenderObject {
             HTMLElements::BODY_ELEMENT => Some(Self::Scroll(_RenderObject {
                 children: vec![],
                 style: vec![],
+                rectangle: Rectangle::new(0, 0, 0, 0),
             })),
             HTMLElements::DIV_ELEMENT | HTMLElements::PARAGRAPH_ELEMENT => {
                 Some(Self::Block(_RenderObject {
                     children: vec![],
                     style: vec![],
+                    rectangle: Rectangle::new(0, 0, 0, 0),
                 }))
             }
             _ => None,
@@ -63,20 +68,34 @@ impl RenderObject {
     }
 
     pub fn change_kind(&mut self, target: &str) -> Self {
-        let (children, style) = match self {
+        let (children, style, rectangle) = match self {
             Self::Text(_) => {
                 panic!("RenderObject::change_kind should not be called with text")
             }
             Self::ViewPort(render_object)
             | Self::Scroll(render_object)
-            | Self::Block(render_object) => {
-                (render_object.children.clone(), render_object.style.clone())
-            }
+            | Self::Block(render_object) => (
+                render_object.children.clone(),
+                render_object.style.clone(),
+                render_object.rectangle.clone(),
+            ),
         };
         match target {
-            "view_port" => Self::ViewPort(_RenderObject { children, style }),
-            "scroll" => Self::Scroll(_RenderObject { children, style }),
-            "block" => Self::Block(_RenderObject { children, style }),
+            "view_port" => Self::ViewPort(_RenderObject {
+                children,
+                style,
+                rectangle,
+            }),
+            "scroll" => Self::Scroll(_RenderObject {
+                children,
+                style,
+                rectangle,
+            }),
+            "block" => Self::Block(_RenderObject {
+                children,
+                style,
+                rectangle,
+            }),
             _ => {
                 panic!("RenderObject::change_kind should be viewport or scroll or block")
             }
