@@ -1,4 +1,5 @@
-use crate::css::cssom::cssom::CSSOM;
+use crate::css::cssom::cssom::{StylingRule, CSSOM};
+use crate::css::cssom::selector::Selector;
 use crate::html::dom::dom::{DOMNode, NodeType};
 use crate::html::dom::elements::elements::HTMLElements;
 use crate::render_tree::render_object::RenderObject;
@@ -33,13 +34,17 @@ impl RenderTree {
             }
             NodeType::text_node(text) => &self.dom,
         };
-        let render_tree_under_viewport = self.traverse_single_dom(dom.clone());
+        let render_tree_under_viewport = self.traverse_single_dom(dom.clone(), vec![]);
 
         self.tree.push_child(render_tree_under_viewport);
     }
 
     //  TODO 名前変える
-    fn traverse_single_dom(&self, dom_node: DOMNode) -> RenderObject {
+    fn traverse_single_dom(
+        &self,
+        dom_node: DOMNode,
+        children_styles: Vec<(Selector, StylingRule)>,
+    ) -> RenderObject {
         match dom_node.clone().node_type {
             NodeType::text_node(txt) => RenderObject::init_with_text(txt),
             NodeType::dom_node(element_type) => {
@@ -54,10 +59,43 @@ impl RenderTree {
 
                 let mut style = vec![];
 
+                let mut passed_children_styles = vec![];
+
+                for child_style_rule in children_styles {
+                    let selector = child_style_rule.0;
+                    let styling_rule = child_style_rule.1;
+
+                    if (selector.clone().matches(&dom_node, &dom_node)) {
+                        if selector.is_one_node_tree() {
+                            style.push(styling_rule);
+                        } else {
+                            let popped_selectors = selector.pop_root_node_from_tree();
+                            for popped_selector in popped_selectors {
+                                passed_children_styles
+                                    .push((popped_selector, styling_rule.clone()));
+                            }
+                        }
+                    }
+                }
+
                 for style_rule in &self.cssom {
-                    //  TODO これだと body p {} は p ではなく <body><p /></body> な body にマッチしてしまう
+                    // TODO これだと body p {} は p ではなく <body><p /></body> な body にマッチしてしまう
+                    // TODO: FIXME 第二引数の parent_elm に自Nodeを渡してしまっているが, css selector tree の root node の兄弟要素を結合子で指定し得ないので動いている, がミスリーディングなコードである
                     if style_rule.clone().matches(&dom_node, &dom_node) {
-                        style.push(style_rule.clone());
+                        let matched_styling_rule_selectors = style_rule.clone().selector;
+                        for matched_styling_rule_selector in matched_styling_rule_selectors {
+                            if matched_styling_rule_selector.clone().is_one_node_tree() {
+                                style.push(style_rule.clone());
+                            } else {
+                                let popped_selectors = matched_styling_rule_selector
+                                    .clone()
+                                    .pop_root_node_from_tree();
+                                for popped_selector in popped_selectors {
+                                    passed_children_styles
+                                        .push((popped_selector, style_rule.clone()));
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -69,9 +107,13 @@ impl RenderTree {
                 } else {
                     for child in dom_node.children {
                         if RenderObject::can_init_element(&child) {
-                            raw_render_object.push_child(self.traverse_single_dom(child))
+                            raw_render_object.push_child(
+                                self.traverse_single_dom(child, passed_children_styles.clone()),
+                            )
                         } else if RenderObject::can_init_text(&child) {
-                            raw_render_object.push_child(self.traverse_single_dom(child))
+                            raw_render_object.push_child(
+                                self.traverse_single_dom(child, passed_children_styles.clone()),
+                            )
                         }
                     }
 
