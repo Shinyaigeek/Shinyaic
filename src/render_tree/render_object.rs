@@ -156,6 +156,25 @@ impl RenderObject {
         x
     }
 
+    fn calc_y(&self, parent_rect: &Rectangle, big_brother_rect: &Option<Rectangle>) -> f32 {
+        let big_brother_rect = match big_brother_rect {
+            Some(big_brother_rect) => big_brother_rect,
+            None => {
+                return parent_rect.y;
+            }
+        };
+
+        let y = match self {
+            // TODO
+            Self::Text(text) => parent_rect.y,
+            Self::Block(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => parent_rect.y + parent_rect.height,
+        };
+
+        y
+    }
+
     pub fn init_with_text(txt: String) -> Self {
         Self::Text(txt)
     }
