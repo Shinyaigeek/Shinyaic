@@ -25,14 +25,13 @@ pub struct Selector {
 
 impl Selector {
     pub fn is_one_node_tree(&self) -> bool {
-        let children = self.children;
-        children.len() == 0
+        self.children.len() == 0
     }
 
     pub fn pop_root_node_from_tree(&self) -> Vec<Selector> {
         let mut res = vec![];
 
-        for child in self.children {
+        for child in self.children.clone() {
             match child {
                 SelectorChildren::descendant_combinator(children)
                 | SelectorChildren::child_combinator(children)
