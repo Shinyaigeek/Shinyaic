@@ -66,6 +66,8 @@ impl RenderObject {
                 while i < rendering_object.children.len() {
                     let mut child = rendering_object.children.get_mut(i).unwrap();
                     child.layouting_node(parent.clone(), big_brother_node);
+                    println!("child: {:?}", child);
+                    println!("---------");
                     big_brother_node = Some(child.clone());
                     i += 1;
                 }
@@ -253,7 +255,7 @@ impl RenderObject {
             Self::Text(text) => parent_rect.y,
             Self::Block(rendering_object)
             | Self::Scroll(rendering_object)
-            | Self::ViewPort(rendering_object) => parent_rect.y + parent_rect.height,
+            | Self::ViewPort(rendering_object) => big_brother_rect.y + big_brother_rect.height,
         };
 
         y

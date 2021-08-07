@@ -3,6 +3,8 @@
 use crate::css::cssom::cssom::CSSOM;
 use crate::css::parser::parser::Parser as CSSParser;
 use crate::html::parser::parser::Parser;
+use crate::paint::window_canvas::{create_block, create_text};
+use crate::paint::wrapper::Wrapper;
 use crate::render_tree::rectangle::Rectangle;
 use crate::render_tree::render_object::RenderObject;
 use crate::render_tree::render_tree::RenderTree;
@@ -11,7 +13,8 @@ use iced::{
     HorizontalAlignment, Image, Length, Radio, Row, Sandbox, Scrollable, Settings, Slider, Space,
     Text, TextInput,
 };
-pub fn paint(render_tree: RenderTree) {
+use iced_native::Font;
+pub fn paint() {
     let mut settings = Settings::default();
     settings.window.size = (300, 300);
     Window::run(settings);
@@ -21,13 +24,13 @@ pub fn paint(render_tree: RenderTree) {
 pub struct Window {
     scroll: scrollable::State,
     debug: bool,
-    render_tree: RenderTree,
+    render_tree: Vec<RenderObject>,
 }
 
 fn prepare() -> RenderTree {
     let mut parser = Parser {
         pos: 0,
-        input: "<html><head></head><body><p>hoge</p><p>asdf</p></body></html>".to_string(),
+        input: "<html><head></head><body><p id=\"id1\">hello browser!</p><p id=\"id2\"></p><p id=\"id3\"></p></body></html>".to_string(),
     };
 
     let dom = parser.parse();
@@ -36,7 +39,10 @@ fn prepare() -> RenderTree {
 
     let mut parser = CSSParser {
         pos: 0,
-        input: "body p { width: 80; height: 90; }".to_string(),
+        input: "#id1 { width: 120; height: 90; background: rgba(255, 0, 0, 1); }
+        #id2 { width: 120; height: 90; background: rgba(0, 255, 0, 1); }
+        #id3 { width: 120; height: 90; background: rgba(0, 0, 255, 1); }"
+            .to_string(),
     };
 
     let cssom = parser.parse();
@@ -53,10 +59,11 @@ impl Sandbox for Window {
     type Message = Message;
     fn new() -> Window {
         let render_tree = prepare();
+        let rendering_objects = render_tree.prepare_iterator();
         Window {
             scroll: scrollable::State::new(),
             debug: false,
-            render_tree,
+            render_tree: rendering_objects,
         }
     }
 
@@ -71,24 +78,70 @@ impl Sandbox for Window {
     fn view(&mut self) -> Element<Message> {
         let Window { scroll, .. } = self;
 
-        // let mut wrapper = Wrapper::new(300, 300);
+        let mut wrapper = Wrapper::new(300.0, 300.0);
 
-        // for item in &self.render_tree {
-        // wrapper.items.push(match item {
-        //     DisplayCommand::SolidColor(color, rect) => {
-        //         painter::create_block(color.clone(), rect.clone())
-        //     }
-        //     DisplayCommand::Text(text, color, rect, font) => painter::create_text(
-        //         text.into(),
-        //         color.clone(),
-        //         rect.clone(),
-        //         font.clone(),
-        //         font_context,
-        //     ),
-        // });
-        // }
+        for item in &self.render_tree {
+            println!("-----------------");
+            println!("item: {:?}", item);
+            match item {
+                RenderObject::Text(text) => {
+                    wrapper.items.push(create_text(
+                        text.to_string(),
+                        Color::new(0.0, 0.0, 0.0, 1.0),
+                        Rectangle {
+                            x: 0.0,
+                            y: 0.0,
+                            width: 300.0,
+                            height: 300.0,
+                        },
+                        Font::default(),
+                    ));
+                }
+                RenderObject::ViewPort(rendering_object)
+                | RenderObject::Block(rendering_object)
+                | RenderObject::Scroll(rendering_object) => {
+                    let mut background_color = Color::new(1.0, 1.0, 1.0, 1.0);
+                    for style in &rendering_object.style {
+                        if style.declarations.get(&"background".to_string()).is_some() {
+                            let mut raw_background_color = style
+                                .declarations
+                                .get(&"background".to_string())
+                                .unwrap()
+                                .clone();
+                            raw_background_color.retain(|c| {
+                                c == ','
+                                    || c == '.'
+                                    || c == '1'
+                                    || c == '0'
+                                    || c == '2'
+                                    || c == '3'
+                                    || c == '4'
+                                    || c == '5'
+                                    || c == '6'
+                                    || c == '7'
+                                    || c == '8'
+                                    || c == '9'
+                            });
 
-        let scrollable = Scrollable::new(scroll);
+                            let colors = &raw_background_color;
+                            let colors: Vec<&str> = colors.split(",").collect();
+                            background_color = Color::from_rgba8(
+                                colors[0].parse::<u8>().unwrap(),
+                                colors[1].parse::<u8>().unwrap(),
+                                colors[2].parse::<u8>().unwrap(),
+                                colors[3].parse::<f32>().unwrap(),
+                            );
+                        }
+                    }
+                    wrapper.items.push(create_block(
+                        background_color,
+                        rendering_object.rectangle.clone(),
+                    ));
+                }
+            };
+        }
+
+        let scrollable = Scrollable::new(scroll).push(wrapper);
 
         Container::new(scrollable)
             .height(Length::Fill)

@@ -12,28 +12,28 @@ mod paint;
 mod render_tree;
 
 fn main() {
-    let mut parser = Parser {
-        pos: 0,
-        input: "<html><head></head><body><p>hoge</p><p>asdf</p></body></html>".to_string(),
-    };
+    // let mut parser = Parser {
+    //     pos: 0,
+    //     input: "<html><head></head><body><p>hoge</p><p>asdf</p></body></html>".to_string(),
+    // };
 
-    let dom = parser.parse();
-    println!("------");
-    println!("{:?}", dom);
+    // let dom = parser.parse();
+    // println!("------");
+    // println!("{:?}", dom);
 
-    let mut parser = CSSParser {
-        pos: 0,
-        input: "body p { width: 80; height: 90; }".to_string(),
-    };
+    // let mut parser = CSSParser {
+    //     pos: 0,
+    //     input: "body p { width: 80; height: 90; }".to_string(),
+    // };
 
-    let cssom = parser.parse();
-    println!("------");
-    println!("{:?}", cssom);
+    // let cssom = parser.parse();
+    // println!("------");
+    // println!("{:?}", cssom);
 
-    let mut render_tree = RenderTree::new(dom, cssom);
-    render_tree.constructor();
+    // let mut render_tree = RenderTree::new(dom, cssom);
+    // render_tree.constructor();
 
-    println!("{:?}", render_tree.tree);
+    // println!("{:?}", render_tree.tree);
 
-    paint(render_tree);
+    paint();
 }
