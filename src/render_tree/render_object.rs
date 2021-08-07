@@ -73,6 +73,25 @@ impl RenderObject {
         }
     }
 
+    pub fn prepare_iterator(&self, iterator: &mut Vec<Self>) {
+        iterator.push(self.clone());
+
+        let rendering_object = match self {
+            Self::Text(text) => {
+                return;
+            }
+            Self::Block(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => rendering_object,
+        };
+
+        if rendering_object.children.len() > 0 {
+            for child in &rendering_object.children {
+                child.prepare_iterator(iterator);
+            }
+        }
+    }
+
     // TODO position absoluteの時など, big_brotherがparentに入らなさそうな時
     // TODO font size == 高さと見做してするけど, のちになんとかした方が良さそう
     pub fn calc_rectangle(

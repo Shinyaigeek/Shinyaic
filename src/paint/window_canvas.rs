@@ -1,6 +1,8 @@
 use crate::render_tree::rectangle::Rectangle as RenderObjectRectangle;
 use iced_graphics::Primitive;
-use iced_native::{Background, Color, Point, Rectangle, Size, Font, HorizontalAlignment, VerticalAlignment};
+use iced_native::{
+    Background, Color, Font, HorizontalAlignment, Point, Rectangle, Size, VerticalAlignment,
+};
 
 pub fn create_block(color: Color, rect: RenderObjectRectangle) -> Primitive {
     Primitive::Quad {
@@ -24,7 +26,7 @@ pub fn create_text(
     content: String,
     color: Color,
     rect: RenderObjectRectangle,
-    font: Font
+    font: Font,
 ) -> Primitive {
     Primitive::Text {
         content,

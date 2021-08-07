@@ -20,6 +20,13 @@ impl RenderTree {
         }
     }
 
+    pub fn prepare_iterator(&self) -> Vec<RenderObject> {
+        let mut iterator = vec![];
+        self.tree.prepare_iterator(&mut iterator);
+
+        iterator
+    }
+
     pub fn constructor(&mut self) {
         // TODO dom.rsでやる
         // TODO styled DOM と Rendering Tree で分けた方が良い

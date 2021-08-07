@@ -69,6 +69,7 @@ impl Sandbox for Window {
         // let mut wrapper = Wrapper::new(300, 300);
 
         // for item in &self.render_tree {
+        // println!("item {:?}", item);
         // wrapper.items.push(match item {
         //     DisplayCommand::SolidColor(color, rect) => {
         //         painter::create_block(color.clone(), rect.clone())
