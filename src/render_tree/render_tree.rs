@@ -1,9 +1,12 @@
 use crate::css::cssom::cssom::{StylingRule, CSSOM};
-use crate::css::cssom::selector::Selector;
+use crate::css::cssom::selector::{Selector, SelectorElm};
+use crate::css::parser::parser::Parser as CSSParser;
 use crate::html::dom::dom::{DOMNode, NodeType};
 use crate::html::dom::elements::elements::HTMLElements;
+use crate::html::parser::parser::Parser as HTMLParser;
 use crate::render_tree::rectangle::Rectangle;
-use crate::render_tree::render_object::RenderObject;
+use crate::render_tree::render_object::{RenderObject, _RenderObject};
+use std::collections::HashMap;
 
 pub struct RenderTree {
     dom: DOMNode,
@@ -156,5 +159,116 @@ impl RenderTree {
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_render_tree() {
+        let mut parser = HTMLParser {
+            pos: 0,
+            input: "<html><head></head><body><p id=\"id1\">hello browser!</p><p id=\"id2\"></p><p id=\"id3\"></p></body></html>".to_string(),
+        };
+
+        let dom = parser.parse();
+
+        let mut parser = CSSParser {
+            pos: 0,
+            input: "#id1 { width: 120; height: 90; background: rgba(255, 0, 0, 1); margin: 0; }#id2 { width: 120; height: 90; background: rgba(0, 255, 0, 1); margin: 0; }#id3 { width: 120; height: 90; background: rgba(0, 0, 255, 1); margin: 0; }".to_string(),
+        };
+
+        let cssom = parser.parse();
+
+        let mut render_tree = RenderTree::new(dom, cssom);
+        render_tree.constructor();
+
+        let mut base_style = HashMap::new();
+        base_style.insert("width".to_string(), "120".to_string());
+        base_style.insert("height".to_string(), "90".to_string());
+        base_style.insert("margin".to_string(), "0".to_string());
+
+        let mut style_1 = base_style.clone();
+        style_1.insert("background".to_string(), "rgba(255, 0, 0, 1)".to_string());
+
+        let mut style_2 = base_style.clone();
+        style_2.insert("background".to_string(), "rgba(0, 255, 0, 1)".to_string());
+
+        let mut style_3 = base_style.clone();
+        style_3.insert("background".to_string(), "rgba(0, 0, 255, 1)".to_string());
+
+        assert_eq!(
+            render_tree.tree,
+            RenderObject::ViewPort(_RenderObject {
+                rectangle: Rectangle {
+                    x: 0.0,
+                    y: 0.0,
+                    width: 300.0,
+                    height: 300.0,
+                },
+                children: vec![RenderObject::Scroll(_RenderObject {
+                    rectangle: Rectangle {
+                        x: 0.0,
+                        y: 0.0,
+                        width: 300.0,
+                        height: 270.0,
+                    },
+                    children: vec![
+                        RenderObject::Block(_RenderObject {
+                            rectangle: Rectangle {
+                                x: 0.0,
+                                y: 0.0,
+                                width: 120.0,
+                                height: 90.0,
+                            },
+                            children: vec![RenderObject::Text("hello browser!".to_string()),],
+                            style: vec![StylingRule {
+                                selector: vec![Selector {
+                                    elm: SelectorElm::id("id1".to_string()),
+                                    children: vec![]
+                                }],
+                                declarations: style_1
+                            }]
+                        },),
+                        RenderObject::Block(_RenderObject {
+                            rectangle: Rectangle {
+                                x: 0.0,
+                                y: 90.0,
+                                width: 120.0,
+                                height: 90.0,
+                            },
+                            children: vec![],
+                            style: vec![StylingRule {
+                                selector: vec![Selector {
+                                    elm: SelectorElm::id("id2".to_string()),
+                                    children: vec![]
+                                }],
+                                declarations: style_2
+                            }]
+                        },),
+                        RenderObject::Block(_RenderObject {
+                            rectangle: Rectangle {
+                                x: 0.0,
+                                y: 180.0,
+                                width: 120.0,
+                                height: 90.0,
+                            },
+                            children: vec![],
+                            style: vec![StylingRule {
+                                selector: vec![Selector {
+                                    elm: SelectorElm::id("id3".to_string()),
+                                    children: vec![]
+                                }],
+                                declarations: style_3
+                            }]
+                        },),
+                    ],
+                    style: vec![]
+                },)],
+                style: vec![],
+            })
+        );
     }
 }
