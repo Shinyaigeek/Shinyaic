@@ -137,3 +137,28 @@ impl Selector {
 // .class
 // .class, .class2
 // .class > .class2
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::html::dom::elements::elements::HTMLElements;
+    use std::collections::HashMap;
+
+    #[test]
+    fn test_selector_match_simple_node() {
+        let selector = Selector {
+            elm: SelectorElm::tag_name("div".to_string()),
+            children: vec![],
+        };
+
+        let elm = DOMNode {
+            node_type: NodeType::dom_node(ElementType {
+                tag_name: HTMLElements::DIV_ELEMENT,
+                attributes: HashMap::new(),
+            }),
+            children: vec![],
+        };
+
+        assert!(selector.matches(&elm, &elm));
+    }
+}
