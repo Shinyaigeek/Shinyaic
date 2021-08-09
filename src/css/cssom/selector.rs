@@ -161,4 +161,57 @@ mod test {
 
         assert!(selector.matches(&elm, &elm));
     }
+
+    #[test]
+    fn test_selector_match_nested_nodes_with_descent_combinator() {
+        let selector = Selector {
+            elm: SelectorElm::tag_name("div".to_string()),
+            children: vec![SelectorChildren::descendant_combinator(vec![Selector {
+                elm: SelectorElm::id("hoge".to_string()),
+                children: vec![],
+            }])],
+        };
+
+        let mut attributes = HashMap::new();
+        attributes.insert("id".to_string(), "hoge".to_string());
+
+        let elm = DOMNode {
+            node_type: NodeType::dom_node(ElementType {
+                tag_name: HTMLElements::DIV_ELEMENT,
+                attributes: HashMap::new(),
+            }),
+            children: vec![DOMNode {
+                node_type: NodeType::dom_node(ElementType {
+                    tag_name: HTMLElements::DIV_ELEMENT,
+                    attributes: attributes.clone(),
+                }),
+                children: vec![],
+            }],
+        };
+
+        assert!(selector.clone().matches(&elm, &elm));
+
+        // * matches with descent combinator
+        let elm = DOMNode {
+            node_type: NodeType::dom_node(ElementType {
+                tag_name: HTMLElements::DIV_ELEMENT,
+                attributes: HashMap::new(),
+            }),
+            children: vec![DOMNode {
+                node_type: NodeType::dom_node(ElementType {
+                    tag_name: HTMLElements::PARAGRAPH_ELEMENT,
+                    attributes: HashMap::new(),
+                }),
+                children: vec![DOMNode {
+                    node_type: NodeType::dom_node(ElementType {
+                        tag_name: HTMLElements::DIV_ELEMENT,
+                        attributes,
+                    }),
+                    children: vec![],
+                }],
+            }],
+        };
+
+        assert!(selector.matches(&elm, &elm));
+    }
 }
