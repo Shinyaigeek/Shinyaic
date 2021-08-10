@@ -81,8 +81,6 @@ impl Sandbox for Window {
         let mut wrapper = Wrapper::new(300.0, 300.0);
 
         for item in &self.render_tree {
-            println!("-----------------");
-            println!("item: {:?}", item);
             match item {
                 RenderObject::Text(text) => {
                     wrapper.items.push(create_text(
