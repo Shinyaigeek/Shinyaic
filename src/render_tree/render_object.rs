@@ -290,6 +290,13 @@ impl RenderObject {
                     style: vec![],
                     rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
                 }))
+            },
+            HTMLElements::ANCHOR_ELEMENT | HTMLElements::SPAN_ELEMENT => {
+                Some(Self::Inline(_RenderObject {
+                    children: vec![],
+                    style: vec![],
+                    rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
+                }))
             }
             _ => None,
         }
