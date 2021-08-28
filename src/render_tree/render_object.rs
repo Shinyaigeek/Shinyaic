@@ -15,6 +15,7 @@ pub enum RenderObject {
     ViewPort(_RenderObject),
     Scroll(_RenderObject),
     Block(_RenderObject),
+    Inline(_RenderObject),
     Text(String),
 }
 
@@ -35,7 +36,7 @@ impl RenderObject {
 
         let parent_rectangle = match parent_node {
             Self::Text(_) => panic!("TODO"),
-            Self::Scroll(parent_node) | Self::ViewPort(parent_node) | Self::Block(parent_node) => {
+            Self::Scroll(parent_node) | Self::ViewPort(parent_node) | Self::Block(parent_node) | Self::Inline(parent_node) => {
                 parent_node.rectangle
             }
         };
@@ -46,6 +47,7 @@ impl RenderObject {
                 Self::Text(_) => panic!("TODO"),
                 Self::Scroll(big_brother)
                 | Self::ViewPort(big_brother)
+                | Self::Inline(big_brother)
                 | Self::Block(big_brother) => Some(big_brother.rectangle),
             },
         };
@@ -57,6 +59,7 @@ impl RenderObject {
         match self {
             Self::Text(_) => return,
             Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
             | Self::Scroll(rendering_object)
             | Self::ViewPort(rendering_object) => {
                 let mut big_brother_node: Option<Self> = None;
@@ -83,6 +86,7 @@ impl RenderObject {
                 return;
             }
             Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
             | Self::Scroll(rendering_object)
             | Self::ViewPort(rendering_object) => rendering_object,
         };
@@ -109,6 +113,7 @@ impl RenderObject {
                 return;
             }
             Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
             | Self::Scroll(rendering_object)
             | Self::ViewPort(rendering_object) => rendering_object,
         };
@@ -124,6 +129,7 @@ impl RenderObject {
                 return;
             }
             Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
             | Self::Scroll(rendering_object)
             | Self::ViewPort(rendering_object) => rendering_object,
         };
@@ -138,6 +144,7 @@ impl RenderObject {
                 return 0.0;
             }
             Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
             | Self::Scroll(rendering_object)
             | Self::ViewPort(rendering_object) => rendering_object,
         };
@@ -167,6 +174,7 @@ impl RenderObject {
                 return 0.0;
             }
             Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
             | Self::Scroll(rendering_object)
             | Self::ViewPort(rendering_object) => parent_width,
         };
@@ -181,6 +189,7 @@ impl RenderObject {
                 return 0.0;
             }
             Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
             | Self::Scroll(rendering_object)
             | Self::ViewPort(rendering_object) => rendering_object,
         };
@@ -210,6 +219,7 @@ impl RenderObject {
                 return 0.0;
             }
             Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
             | Self::Scroll(rendering_object)
             | Self::ViewPort(rendering_object) => {
                 let mut height = 0.0;
@@ -235,6 +245,7 @@ impl RenderObject {
             // TODO
             Self::Text(text) => parent_rect.x,
             Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
             | Self::Scroll(rendering_object)
             | Self::ViewPort(rendering_object) => parent_rect.x,
         };
@@ -254,6 +265,7 @@ impl RenderObject {
             // TODO
             Self::Text(text) => parent_rect.y,
             Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
             | Self::Scroll(rendering_object)
             | Self::ViewPort(rendering_object) => big_brother_rect.y + big_brother_rect.height,
         };
@@ -307,6 +319,7 @@ impl RenderObject {
                 panic!("RenderObject::change_kind should not be called with text")
             }
             Self::ViewPort(render_object)
+            | Self::Inline(render_object)
             | Self::Scroll(render_object)
             | Self::Block(render_object) => (
                 render_object.children.clone(),
@@ -343,6 +356,7 @@ impl RenderObject {
             }
             Self::ViewPort(render_object)
             | Self::Scroll(render_object)
+            | Self::Inline(render_object)
             | Self::Block(render_object) => render_object.children.push(child),
         };
     }
@@ -354,6 +368,7 @@ impl RenderObject {
             }
             Self::ViewPort(render_object)
             | Self::Scroll(render_object)
+            | Self::Inline(render_object)
             | Self::Block(render_object) => render_object.style = rules,
         };
     }

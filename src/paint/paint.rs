@@ -97,6 +97,7 @@ impl Sandbox for Window {
                 }
                 RenderObject::ViewPort(rendering_object)
                 | RenderObject::Block(rendering_object)
+                | RenderObject::Inline(rendering_object)
                 | RenderObject::Scroll(rendering_object) => {
                     let mut background_color = Color::new(1.0, 1.0, 1.0, 1.0);
                     for style in &rendering_object.style {
@@ -172,6 +173,7 @@ impl DisplayList {
             RenderObject::Text(_) => panic!("todo"),
             RenderObject::ViewPort(render_object)
             | RenderObject::Scroll(render_object)
+            | RenderObject::Inline(render_object)
             | RenderObject::Block(render_object) => render_object,
         };
         match render_object {
@@ -189,6 +191,7 @@ impl DisplayList {
             }
             RenderObject::ViewPort(render_object)
             | RenderObject::Scroll(render_object)
+            | RenderObject::Inline(render_object)
             | RenderObject::Block(render_object) => {
                 self.list.push(DisplayCommand::SolidColor(
                     Color {
