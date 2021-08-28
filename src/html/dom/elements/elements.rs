@@ -4,6 +4,17 @@ pub const HEAD_ELEMENT: &str = "head";
 pub const PARAGRAPH_ELEMENT: &str = "p";
 pub const ANCHOR_ELEMENT: &str = "a";
 pub const DIV_ELEMENT: &str = "div";
+pub const SPAN_ELEMENT: &str = "span";
+pub const IMG_ELEMENT: &str = "img";
+pub const TABLE_ELEMENT: &str = "table";
+pub const TR_ELEMENT: &str = "tr";
+pub const TD_ELEMENT: &str = "td";
+pub const TH_ELEMENT: &str = "th";
+pub const FORM_ELEMENT: &str = "form";
+pub const INPUT_ELEMENT: &str = "input";
+pub const BUTTON_ELEMENT: &str = "button";
+pub const SELECT_ELEMENT: &str = "select";
+pub const OPTION_ELEMENT: &str = "option";
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum HTMLElements {
@@ -13,6 +24,17 @@ pub enum HTMLElements {
     PARAGRAPH_ELEMENT,
     ANCHOR_ELEMENT,
     DIV_ELEMENT,
+    SPAN_ELEMENT,
+    IMG_ELEMENT,
+    TABLE_ELEMENT,
+    TR_ELEMENT,
+    TD_ELEMENT,
+    TH_ELEMENT,
+    FORM_ELEMENT,
+    INPUT_ELEMENT,
+    BUTTON_ELEMENT,
+    SELECT_ELEMENT,
+    OPTION_ELEMENT,
 }
 
 impl HTMLElements {
@@ -24,6 +46,17 @@ impl HTMLElements {
             HTMLElements::PARAGRAPH_ELEMENT => "p",
             HTMLElements::ANCHOR_ELEMENT => "a",
             HTMLElements::DIV_ELEMENT => "div",
+            HTMLElements::SPAN_ELEMENT => "span",
+            HTMLElements::IMG_ELEMENT => "img",
+            HTMLElements::TABLE_ELEMENT => "table",
+            HTMLElements::TR_ELEMENT => "tr",
+            HTMLElements::TD_ELEMENT => "td",
+            HTMLElements::TH_ELEMENT => "th",
+            HTMLElements::FORM_ELEMENT => "form",
+            HTMLElements::INPUT_ELEMENT => "input",
+            HTMLElements::BUTTON_ELEMENT => "button",
+            HTMLElements::SELECT_ELEMENT => "select",
+            HTMLElements::OPTION_ELEMENT => "option",
         };
 
         tag_str.to_string()
