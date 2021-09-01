@@ -1,0 +1,3 @@
+[submodule "konnnyaku"]
+	path = konnnyaku
+	url = https://github.com/Shinyaigeek/konnnyaku
