@@ -84,7 +84,26 @@ impl Sandbox for Window {
             }
             Message::UrlSearchBarSubmit(url) => {
                 println!("{}", url);
+                let response = Client::get(url);
+                let body = response.body;
+                let mut parser = Parser {
+                    pos: 0,
+                    input: body,
+                };
+                let dom = parser.parse();
+                println!("------");
+                println!("{:?}", dom);
+                let mut parser = CSSParser {
+                    pos: 0,
+                    input: "".to_string(),
+                };
+                let cssom = parser.parse();
+                println!("------");
+                println!("{:?}", cssom);
+                let mut render_tree = RenderTree::new(dom, cssom);
+                render_tree.constructor();
 
+                self.render_tree = render_tree.prepare_iterator();
             }
         }
     }
