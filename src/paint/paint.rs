@@ -98,7 +98,8 @@ impl Sandbox for Window {
             "url",
             urlSearchBarText,
             Message::UrlSearchBarTextInputChanged,
-        ).padding(10);
+        )
+        .padding(10);
 
         for item in &self.render_tree {
             match item {
@@ -108,7 +109,7 @@ impl Sandbox for Window {
                         Color::new(0.0, 0.0, 0.0, 1.0),
                         Rectangle {
                             x: 0.0,
-                            y: 0.0,
+                            y: 45.0,
                             width: 300.0,
                             height: 300.0,
                         },

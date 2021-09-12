@@ -7,7 +7,7 @@ use iced_native::{
 pub fn create_block(color: Color, rect: RenderObjectRectangle) -> Primitive {
     Primitive::Quad {
         bounds: Rectangle::new(
-            Point::new(rect.x, rect.y),
+            Point::new(rect.x, 45.0 + rect.y),
             Size::new(rect.width, rect.height),
         ),
         background: Background::Color(color),
