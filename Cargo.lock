@@ -9,6 +9,7 @@ dependencies = [
  "iced",
  "iced_graphics",
  "iced_native",
+ "konnnyaku-client",
 ]
 
 [[package]]
@@ -1192,6 +1193,17 @@ dependencies = [
  "winapi 0.2.8",
  "winapi-build",
 ]
+
+[[package]]
+name = "konnnyaku-client"
+version = "0.1.0"
+dependencies = [
+ "konnnyaku-common",
+]
+
+[[package]]
+name = "konnnyaku-common"
+version = "0.1.0"
 
 [[package]]
 name = "lazy_static"

@@ -25,6 +25,8 @@ pub struct Window {
     scroll: scrollable::State,
     debug: bool,
     render_tree: Vec<RenderObject>,
+    urlSearchBarTextValue: text_input::State,
+    urlSearchBarText: String,
 }
 
 fn prepare() -> RenderTree {
@@ -64,6 +66,8 @@ impl Sandbox for Window {
             scroll: scrollable::State::new(),
             debug: false,
             render_tree: rendering_objects,
+            urlSearchBarTextValue: text_input::State::new(),
+            urlSearchBarText: "".to_string(),
         }
     }
 
@@ -72,13 +76,29 @@ impl Sandbox for Window {
     }
 
     fn update(&mut self, event: Message) {
-        match event {}
+        match event {
+            Message::UrlSearchBarTextInputChanged(text) => {
+                self.urlSearchBarText = text;
+            }
+        }
     }
 
     fn view(&mut self) -> Element<Message> {
-        let Window { scroll, .. } = self;
+        let Window {
+            scroll,
+            urlSearchBarText,
+            urlSearchBarTextValue,
+            ..
+        } = self;
 
         let mut wrapper = Wrapper::new(300.0, 300.0);
+
+        let urlSearchBar = TextInput::new(
+            urlSearchBarTextValue,
+            "url",
+            urlSearchBarText,
+            Message::UrlSearchBarTextInputChanged,
+        );
 
         for item in &self.render_tree {
             match item {
@@ -140,7 +160,7 @@ impl Sandbox for Window {
             };
         }
 
-        let scrollable = Scrollable::new(scroll).push(wrapper);
+        let scrollable = Scrollable::new(scroll).push(urlSearchBar).push(wrapper);
 
         Container::new(scrollable)
             .height(Length::Fill)
@@ -150,7 +170,9 @@ impl Sandbox for Window {
 }
 
 #[derive(Debug, Clone)]
-pub enum Message {}
+pub enum Message {
+    UrlSearchBarTextInputChanged(String),
+}
 
 enum DisplayCommand {
     Text(String, Color, Rectangle),

@@ -36,9 +36,10 @@ impl RenderObject {
 
         let parent_rectangle = match parent_node {
             Self::Text(_) => panic!("TODO"),
-            Self::Scroll(parent_node) | Self::ViewPort(parent_node) | Self::Block(parent_node) | Self::Inline(parent_node) => {
-                parent_node.rectangle
-            }
+            Self::Scroll(parent_node)
+            | Self::ViewPort(parent_node)
+            | Self::Block(parent_node)
+            | Self::Inline(parent_node) => parent_node.rectangle,
         };
 
         let big_brother_rectangle = match big_brother_node {
@@ -290,7 +291,7 @@ impl RenderObject {
                     style: vec![],
                     rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
                 }))
-            },
+            }
             HTMLElements::ANCHOR_ELEMENT | HTMLElements::SPAN_ELEMENT => {
                 Some(Self::Inline(_RenderObject {
                     children: vec![],
