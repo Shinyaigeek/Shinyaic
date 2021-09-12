@@ -14,6 +14,8 @@ use iced::{
     Text, TextInput,
 };
 use iced_native::Font;
+use konnnyaku_client::Client;
+
 pub fn paint() {
     let mut settings = Settings::default();
     settings.window.size = (300, 300);
@@ -80,8 +82,9 @@ impl Sandbox for Window {
             Message::UrlSearchBarTextInputChanged(text) => {
                 self.urlSearchBarText = text;
             }
-            Message::UrlSearchBarSubmit(text) => {
-                println!("{}", text);
+            Message::UrlSearchBarSubmit(url) => {
+                println!("{}", url);
+
             }
         }
     }
