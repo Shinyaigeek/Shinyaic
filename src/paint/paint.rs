@@ -80,6 +80,9 @@ impl Sandbox for Window {
             Message::UrlSearchBarTextInputChanged(text) => {
                 self.urlSearchBarText = text;
             }
+            Message::UrlSearchBarSubmit(text) => {
+                println!("{}", text);
+            }
         }
     }
 
@@ -99,7 +102,8 @@ impl Sandbox for Window {
             urlSearchBarText,
             Message::UrlSearchBarTextInputChanged,
         )
-        .padding(10);
+        .padding(10)
+        .on_submit(Message::UrlSearchBarSubmit(urlSearchBarText.to_string()));
 
         for item in &self.render_tree {
             match item {
@@ -173,6 +177,7 @@ impl Sandbox for Window {
 #[derive(Debug, Clone)]
 pub enum Message {
     UrlSearchBarTextInputChanged(String),
+    UrlSearchBarSubmit(String),
 }
 
 enum DisplayCommand {
