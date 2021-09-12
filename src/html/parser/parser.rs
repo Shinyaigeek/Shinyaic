@@ -17,6 +17,7 @@ impl Parser {
             || self.peek_start_with("<!doctype".to_string()))
         {
             self.parse_doctype();
+            self.eat_whitespace();
         }
         let program = self.parse_node();
 
@@ -137,6 +138,23 @@ impl Parser {
         self.input.as_bytes()[self.pos - 1]
     }
 
+    pub fn eat_whitespace(&mut self) {
+        loop {
+            if (self.pos >= self.input.len()) {
+                break;
+            }
+
+            let next_ch = self.peek();
+
+            // EOF or breakline or whitespace or tab
+            if !(next_ch == 0 || next_ch == b'\n' || next_ch == b' ' || next_ch == b'\t') {
+                break;
+            }
+
+            self.eat();
+        }
+    }
+
     fn peek(&self) -> u8 {
         self.input.as_bytes()[self.pos]
     }
@@ -177,6 +195,7 @@ impl Parser {
     }
 
     fn parse_node(&mut self) -> DOMNode {
+        self.eat_whitespace();
         // `<`li></LI`>`
         if self.input.as_bytes()[self.pos] != b'<' {
             // text node
@@ -186,10 +205,12 @@ impl Parser {
         let node = DOMNode::elem(target_tag_name, attributes, self.parse_nodes());
 
         self.eat_closing_tag();
+        self.eat_whitespace();
         node
     }
 
     fn parse_nodes(&mut self) -> Vec<DOMNode> {
+        self.eat_whitespace();
         // input: <head></head><body><div>hello</div></body>    <ul>`<`li>1</li><li>1</li><li>1</li></ul>
         let mut nodes: Vec<DOMNode> = vec![];
 
@@ -197,6 +218,7 @@ impl Parser {
         while !self.peek_start_with("</".to_string()) && !(self.input.len() <= self.pos) {
             nodes.push(self.parse_node());
         }
+        self.eat_whitespace();
 
         nodes
     }
@@ -247,6 +269,50 @@ mod tests {
         let mut parser = Parser {
             pos: 0,
             input: "<!DOCTYPE html><html><head></head><body><p>hoge</p><p>asdf</p></body></html>"
+                .to_string(),
+        };
+
+        let dom = parser.parse();
+
+        let expected_dom = DOMNode::elem(
+            HTMLElements::HTML_ELEMENT,
+            HashMap::new(),
+            vec![
+                DOMNode::elem(HTMLElements::HEAD_ELEMENT, HashMap::new(), vec![]),
+                DOMNode::elem(
+                    HTMLElements::BODY_ELEMENT,
+                    HashMap::new(),
+                    vec![
+                        DOMNode::elem(
+                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HashMap::new(),
+                            vec![DOMNode::text(String::from("hoge"))],
+                        ),
+                        DOMNode::elem(
+                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HashMap::new(),
+                            vec![DOMNode::text(String::from("asdf"))],
+                        ),
+                    ],
+                ),
+            ],
+        );
+
+        assert_eq!(dom, expected_dom);
+    }
+
+    #[test]
+    fn parse_html_with_breakline() {
+        let mut parser = Parser {
+            pos: 0,
+            input: "<html>
+<head>
+</head>
+<body>
+    <p>hoge</p>
+    <p>asdf</p>
+</body>
+</html>"
                 .to_string(),
         };
 
