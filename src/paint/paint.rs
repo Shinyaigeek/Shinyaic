@@ -98,7 +98,7 @@ impl Sandbox for Window {
             "url",
             urlSearchBarText,
             Message::UrlSearchBarTextInputChanged,
-        );
+        ).padding(10);
 
         for item in &self.render_tree {
             match item {
