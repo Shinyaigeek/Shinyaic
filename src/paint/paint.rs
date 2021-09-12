@@ -93,9 +93,14 @@ impl Sandbox for Window {
                 let dom = parser.parse();
                 println!("------");
                 println!("{:?}", dom);
+                // TODO link の css をちゃんと読む
                 let mut parser = CSSParser {
                     pos: 0,
-                    input: "".to_string(),
+                    input:
+                        "#id1 { width: 120; height: 90; background: rgba(255, 0, 0, 1); margin: 0; }
+                    #id2 { width: 120; height: 90; background: rgba(0, 255, 0, 1); margin: 0; }
+                    #id3 { width: 120; height: 90; background: rgba(0, 0, 255, 1); margin: 0; }"
+                            .to_string(),
                 };
                 let cssom = parser.parse();
                 println!("------");
