@@ -13,7 +13,13 @@ pub struct Parser {
 
 impl Parser {
     pub fn parse(&mut self) -> DOMNode {
+        if (self.peek_start_with("<!DOCTYPE".to_string())
+            || self.peek_start_with("<!doctype".to_string()))
+        {
+            self.parse_doctype();
+        }
         let program = self.parse_node();
+
         program
     }
 
@@ -155,6 +161,21 @@ impl Parser {
 
     fn consume_comment(&mut self) {}
 
+    // TODO 暫定的にpeekをdoctypeの次まで進めるだけ
+    fn parse_doctype(&mut self) {
+        if (self.eat() != b'<') {
+            panic!("parse_doctype was invoked not in < but in {:?}", self.eat());
+        }
+
+        loop {
+            let ch = self.eat();
+
+            if ch == b'>' {
+                break;
+            }
+        }
+    }
+
     fn parse_node(&mut self) -> DOMNode {
         // `<`li></LI`>`
         if self.input.as_bytes()[self.pos] != b'<' {
@@ -190,6 +211,43 @@ mod tests {
         let mut parser = Parser {
             pos: 0,
             input: "<html><head></head><body><p>hoge</p><p>asdf</p></body></html>".to_string(),
+        };
+
+        let dom = parser.parse();
+
+        let expected_dom = DOMNode::elem(
+            HTMLElements::HTML_ELEMENT,
+            HashMap::new(),
+            vec![
+                DOMNode::elem(HTMLElements::HEAD_ELEMENT, HashMap::new(), vec![]),
+                DOMNode::elem(
+                    HTMLElements::BODY_ELEMENT,
+                    HashMap::new(),
+                    vec![
+                        DOMNode::elem(
+                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HashMap::new(),
+                            vec![DOMNode::text(String::from("hoge"))],
+                        ),
+                        DOMNode::elem(
+                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HashMap::new(),
+                            vec![DOMNode::text(String::from("asdf"))],
+                        ),
+                    ],
+                ),
+            ],
+        );
+
+        assert_eq!(dom, expected_dom);
+    }
+
+    #[test]
+    fn parse_html_with_doctype() {
+        let mut parser = Parser {
+            pos: 0,
+            input: "<!DOCTYPE html><html><head></head><body><p>hoge</p><p>asdf</p></body></html>"
+                .to_string(),
         };
 
         let dom = parser.parse();
