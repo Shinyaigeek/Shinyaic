@@ -141,8 +141,8 @@ impl Sandbox for Window {
                         Rectangle {
                             x: 0.0,
                             y: 45.0,
-                            width: 300.0,
-                            height: 300.0,
+                            width: 700.0,
+                            height: 700.0,
                         },
                         Font::default(),
                     ));
