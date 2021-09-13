@@ -285,7 +285,7 @@ impl RenderObject {
                 style: vec![],
                 rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
             })),
-            HTMLElements::DIV_ELEMENT | HTMLElements::PARAGRAPH_ELEMENT => {
+            HTMLElements::DIV_ELEMENT | HTMLElements::PARAGRAPH_ELEMENT | HTMLElements::H1_ELEMENT => {
                 Some(Self::Block(_RenderObject {
                     children: vec![],
                     style: vec![],
@@ -312,6 +312,9 @@ impl RenderObject {
         tag == &HTMLElements::BODY_ELEMENT
             || tag == &HTMLElements::DIV_ELEMENT
             || tag == &HTMLElements::PARAGRAPH_ELEMENT
+            || tag == &HTMLElements::ANCHOR_ELEMENT
+            || tag == &HTMLElements::SPAN_ELEMENT
+            || tag == &HTMLElements::H1_ELEMENT
     }
 
     pub fn can_init_text(dom_node: &DOMNode) -> bool {
