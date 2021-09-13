@@ -208,11 +208,14 @@ impl Parser {
             return self.parse_text();
         }
         let (target_tag_name, attributes) = self.eat_opening_tag();
-        let node = DOMNode::elem(target_tag_name.clone(), attributes, self.parse_nodes());
-
-        if (target_tag_name.need_closing_tag()) {
+        let node = if(!target_tag_name.need_closing_tag()) {
+            DOMNode::elem(target_tag_name, attributes, vec![])
+        }else{
+            let node = DOMNode::elem(target_tag_name.clone(), attributes, self.parse_nodes());
             self.eat_closing_tag();
-        }
+            node
+        };
+
         self.eat_whitespace();
         node
     }
