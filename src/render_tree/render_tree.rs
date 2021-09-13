@@ -31,7 +31,6 @@ impl RenderTree {
     }
 
     pub fn constructor(&mut self) {
-
         let head = match &self.dom.node_type {
             NodeType::dom_node(element_type) => {
                 match element_type.tag_name {
@@ -94,6 +93,29 @@ impl RenderTree {
     }
 
     fn handle_head(&mut self, head: &DOMNode) {
+        for head_el in head.children.clone() {
+            println!("head_el: {:?}", head_el);
+            match head_el.node_type {
+                NodeType::dom_node(element_type) => match element_type.tag_name {
+                    HTMLElements::STYLE_ELEMENT => {
+                        let style_text = head_el.children[0].clone();
+                        let style_text = match style_text.node_type {
+                            NodeType::text_node(text) => text,
+                            _ => panic!("TODO"),
+                        };
+                        let mut parser = CSSParser {
+                            pos: 0,
+                            input: style_text,
+                        };
+                        let mut cssom = parser.parse();
+                        println!("cssom: {:?}", cssom);
+                        self.cssom.append(&mut cssom);
+                    }
+                    _ => (),
+                },
+                _ => (),
+            }
+        }
     }
 
     //  TODO 名前変える
