@@ -17,6 +17,9 @@ pub const SELECT_ELEMENT: &str = "select";
 pub const OPTION_ELEMENT: &str = "option";
 pub const TITLE_ELEMENT: &str = "title";
 pub const META_ELEMENT: &str = "meta";
+pub const STYLE_ELEMENT: &str = "style";
+pub const SCRIPT_ELEMENT: &str = "script";
+pub const H1_ELEMENT: &str = "h1";
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum HTMLElements {
@@ -39,6 +42,9 @@ pub enum HTMLElements {
     OPTION_ELEMENT,
     TITLE_ELEMENT,
     META_ELEMENT,
+    STYLE_ELEMENT,
+    SCRIPT_ELEMENT,
+    H1_ELEMENT,
 }
 
 impl HTMLElements {
@@ -63,6 +69,9 @@ impl HTMLElements {
             HTMLElements::OPTION_ELEMENT => "option",
             HTMLElements::TITLE_ELEMENT => "title",
             HTMLElements::META_ELEMENT => "meta",
+            HTMLElements::STYLE_ELEMENT => "style",
+            HTMLElements::SCRIPT_ELEMENT => "script",
+            HTMLElements::H1_ELEMENT => "h1",
         };
 
         tag_str.to_string()

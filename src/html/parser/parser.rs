@@ -1,8 +1,8 @@
 use crate::html::dom::dom::DOMNode;
 use crate::html::dom::elements::elements::{
-    HTMLElements, ANCHOR_ELEMENT, BODY_ELEMENT, DIV_ELEMENT, HEAD_ELEMENT, HTML_ELEMENT,
-    META_ELEMENT, PARAGRAPH_ELEMENT, SPAN_ELEMENT, TABLE_ELEMENT, TD_ELEMENT, TH_ELEMENT,
-    TITLE_ELEMENT, TR_ELEMENT,
+    HTMLElements, ANCHOR_ELEMENT, BODY_ELEMENT, DIV_ELEMENT, H1_ELEMENT, HEAD_ELEMENT,
+    HTML_ELEMENT, META_ELEMENT, PARAGRAPH_ELEMENT, SCRIPT_ELEMENT, SPAN_ELEMENT, STYLE_ELEMENT,
+    TABLE_ELEMENT, TD_ELEMENT, TH_ELEMENT, TITLE_ELEMENT, TR_ELEMENT,
 };
 use std::collections::HashMap;
 use std::vec::Vec;
@@ -70,6 +70,9 @@ impl Parser {
             TD_ELEMENT => HTMLElements::TD_ELEMENT,
             TITLE_ELEMENT => HTMLElements::TITLE_ELEMENT,
             META_ELEMENT => HTMLElements::META_ELEMENT,
+            STYLE_ELEMENT => HTMLElements::STYLE_ELEMENT,
+            SCRIPT_ELEMENT => HTMLElements::SCRIPT_ELEMENT,
+            H1_ELEMENT => HTMLElements::H1_ELEMENT,
             _ => panic!("there is no element, {:?}", tag),
         };
 
