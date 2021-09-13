@@ -1,8 +1,8 @@
 use crate::html::dom::dom::DOMNode;
 use crate::html::dom::elements::elements::{
     HTMLElements, ANCHOR_ELEMENT, BODY_ELEMENT, DIV_ELEMENT, HEAD_ELEMENT, HTML_ELEMENT,
-    PARAGRAPH_ELEMENT, SPAN_ELEMENT, TABLE_ELEMENT, TD_ELEMENT, TH_ELEMENT, TITLE_ELEMENT,
-    TR_ELEMENT,
+    META_ELEMENT, PARAGRAPH_ELEMENT, SPAN_ELEMENT, TABLE_ELEMENT, TD_ELEMENT, TH_ELEMENT,
+    TITLE_ELEMENT, TR_ELEMENT,
 };
 use std::collections::HashMap;
 use std::vec::Vec;
@@ -69,6 +69,7 @@ impl Parser {
             TH_ELEMENT => HTMLElements::TH_ELEMENT,
             TD_ELEMENT => HTMLElements::TD_ELEMENT,
             TITLE_ELEMENT => HTMLElements::TITLE_ELEMENT,
+            META_ELEMENT => HTMLElements::META_ELEMENT,
             _ => panic!("there is no element, {:?}", tag),
         };
 
@@ -204,9 +205,11 @@ impl Parser {
             return self.parse_text();
         }
         let (target_tag_name, attributes) = self.eat_opening_tag();
-        let node = DOMNode::elem(target_tag_name, attributes, self.parse_nodes());
+        let node = DOMNode::elem(target_tag_name.clone(), attributes, self.parse_nodes());
 
-        self.eat_closing_tag();
+        if (target_tag_name.need_closing_tag()) {
+            self.eat_closing_tag();
+        }
         self.eat_whitespace();
         node
     }

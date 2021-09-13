@@ -16,6 +16,7 @@ pub const BUTTON_ELEMENT: &str = "button";
 pub const SELECT_ELEMENT: &str = "select";
 pub const OPTION_ELEMENT: &str = "option";
 pub const TITLE_ELEMENT: &str = "title";
+pub const META_ELEMENT: &str = "meta";
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum HTMLElements {
@@ -37,6 +38,7 @@ pub enum HTMLElements {
     SELECT_ELEMENT,
     OPTION_ELEMENT,
     TITLE_ELEMENT,
+    META_ELEMENT,
 }
 
 impl HTMLElements {
@@ -60,8 +62,16 @@ impl HTMLElements {
             HTMLElements::SELECT_ELEMENT => "select",
             HTMLElements::OPTION_ELEMENT => "option",
             HTMLElements::TITLE_ELEMENT => "title",
+            HTMLElements::META_ELEMENT => "meta",
         };
 
         tag_str.to_string()
+    }
+
+    pub fn need_closing_tag(&self) -> bool {
+        match self {
+            Self::META_ELEMENT => false,
+            _ => true,
+        }
     }
 }
