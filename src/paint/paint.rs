@@ -18,7 +18,7 @@ use konnnyaku_client::Client;
 
 pub fn paint() {
     let mut settings = Settings::default();
-    settings.window.size = (300, 300);
+    settings.window.size = (700, 700);
     Window::run(settings);
 }
 
@@ -121,7 +121,7 @@ impl Sandbox for Window {
             ..
         } = self;
 
-        let mut wrapper = Wrapper::new(300.0, 300.0);
+        let mut wrapper = Wrapper::new(700.0, 700.0);
 
         let urlSearchBar = TextInput::new(
             urlSearchBarTextValue,
