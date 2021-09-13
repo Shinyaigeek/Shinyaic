@@ -31,6 +31,22 @@ impl RenderTree {
     }
 
     pub fn constructor(&mut self) {
+
+        let head = match &self.dom.node_type {
+            NodeType::dom_node(element_type) => {
+                match element_type.tag_name {
+                    // TODO htmlにもstyleが来るので, skipはまずい
+                    HTMLElements::HTML_ELEMENT => {
+                        // TODO　一旦<html>の下には<head>と<body>がこの順序で来ると仮定
+                        &self.dom.children[0]
+                    }
+                    _ => &self.dom,
+                }
+            }
+            NodeType::text_node(text) => &self.dom,
+        };
+        self.handle_head(&head.clone());
+
         // TODO dom.rsでやる
         // TODO styled DOM と Rendering Tree で分けた方が良い
         let dom = match &self.dom.node_type {
@@ -77,15 +93,39 @@ impl RenderTree {
         }
     }
 
+    fn handle_head(&mut self, head: &DOMNode) {
+    }
+
     //  TODO 名前変える
     fn traverse_single_dom(
-        &self,
+        &mut self,
         dom_node: DOMNode,
         children_styles: Vec<(Selector, StylingRule)>,
     ) -> RenderObject {
         match dom_node.clone().node_type {
             NodeType::text_node(txt) => RenderObject::init_with_text(txt),
             NodeType::dom_node(element_type) => {
+                match element_type.tag_name {
+                    HTMLElements::STYLE_ELEMENT => {
+                        let css_text = dom_node.clone().children[0].clone();
+                        let css_text = match css_text.node_type {
+                            NodeType::text_node(txt) => txt,
+                            _ => panic!("text in style tag should be raw style"),
+                        };
+
+                        let mut css_parser = CSSParser {
+                            pos: 0,
+                            input: css_text,
+                        };
+
+                        let mut cssom = css_parser.parse();
+
+                        self.cssom.append(&mut cssom);
+                    }
+                    _ => {
+                        // do nothing
+                    }
+                };
                 let mut raw_render_object = RenderObject::init_with_element(element_type);
                 let mut raw_render_object = match raw_render_object {
                     Some(raw_render_object) => raw_render_object,
