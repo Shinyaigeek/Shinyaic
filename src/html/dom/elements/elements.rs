@@ -15,6 +15,7 @@ pub const INPUT_ELEMENT: &str = "input";
 pub const BUTTON_ELEMENT: &str = "button";
 pub const SELECT_ELEMENT: &str = "select";
 pub const OPTION_ELEMENT: &str = "option";
+pub const TITLE_ELEMENT: &str = "title";
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum HTMLElements {
@@ -35,6 +36,7 @@ pub enum HTMLElements {
     BUTTON_ELEMENT,
     SELECT_ELEMENT,
     OPTION_ELEMENT,
+    TITLE_ELEMENT,
 }
 
 impl HTMLElements {
@@ -57,6 +59,7 @@ impl HTMLElements {
             HTMLElements::BUTTON_ELEMENT => "button",
             HTMLElements::SELECT_ELEMENT => "select",
             HTMLElements::OPTION_ELEMENT => "option",
+            HTMLElements::TITLE_ELEMENT => "title",
         };
 
         tag_str.to_string()
