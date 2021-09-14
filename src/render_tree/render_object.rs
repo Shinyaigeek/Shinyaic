@@ -208,7 +208,7 @@ impl RenderObject {
                         return height;
                     }
                     Err(e) => {
-                        panic!(e);
+                        panic!("{:?}", e);
                     }
                 }
             }

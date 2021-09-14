@@ -169,8 +169,6 @@ impl Parser {
         self.input[self.pos..].starts_with(&value)
     }
 
-    fn go_to_next_left_tag(&mut self) {}
-
     fn parse_text(&mut self) -> DOMNode {
         let mut text = String::from("");
 
@@ -181,8 +179,6 @@ impl Parser {
 
         DOMNode::text(text)
     }
-
-    fn consume_comment(&mut self) {}
 
     // TODO 暫定的にpeekをdoctypeの次まで進めるだけ
     fn parse_doctype(&mut self) {
