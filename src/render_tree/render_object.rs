@@ -163,7 +163,7 @@ impl RenderObject {
                         return width;
                     }
                     Err(e) => {
-                        panic!(e);
+                        panic!("{}", e);
                     }
                 }
             }
