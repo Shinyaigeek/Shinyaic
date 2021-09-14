@@ -3,10 +3,10 @@ use crate::html::dom::dom::{DOMNode, ElementType, NodeType};
 // TODO SelectorElmは正しいのか？, 属性selecytor
 #[derive(Debug, PartialEq, Clone, Eq, Hash)]
 pub enum SelectorElm {
-    id(String),
-    class(String),
-    tag_name(String),
-    asterisk(String),
+    Id(String),
+    Class(String),
+    TagName(String),
+    Asterisk(String),
 }
 
 #[derive(Debug, PartialEq, Clone, Eq, Hash)]
@@ -56,20 +56,20 @@ impl Selector {
         };
         if self.children.len() == 0 {
             return match self.elm {
-                SelectorElm::id(id) => {
+                SelectorElm::Id(id) => {
                     &id == element_type.attributes.get("id").unwrap_or(&"".to_string())
                 }
-                SelectorElm::class(class) => {
+                SelectorElm::Class(class) => {
                     &class
                         == element_type
                             .attributes
                             .get("class")
                             .unwrap_or(&"".to_string())
                 }
-                SelectorElm::tag_name(tag_name) => {
+                SelectorElm::TagName(tag_name) => {
                     tag_name == element_type.clone().tag_name.to_string()
                 }
-                SelectorElm::asterisk(asterisk) => true,
+                SelectorElm::Asterisk(asterisk) => true,
             };
         }
 
@@ -147,7 +147,7 @@ mod test {
     #[test]
     fn test_selector_match_simple_node() {
         let selector = Selector {
-            elm: SelectorElm::tag_name("div".to_string()),
+            elm: SelectorElm::TagName("div".to_string()),
             children: vec![],
         };
 
@@ -165,9 +165,9 @@ mod test {
     #[test]
     fn test_selector_match_nested_nodes_with_descent_combinator() {
         let selector = Selector {
-            elm: SelectorElm::tag_name("div".to_string()),
+            elm: SelectorElm::TagName("div".to_string()),
             children: vec![SelectorChildren::descendant_combinator(vec![Selector {
-                elm: SelectorElm::id("hoge".to_string()),
+                elm: SelectorElm::Id("hoge".to_string()),
                 children: vec![],
             }])],
         };
@@ -218,9 +218,9 @@ mod test {
     #[test]
     fn test_selector_match_nested_nodes_with_child_combinator() {
         let selector = Selector {
-            elm: SelectorElm::tag_name("div".to_string()),
+            elm: SelectorElm::TagName("div".to_string()),
             children: vec![SelectorChildren::child_combinator(vec![Selector {
-                elm: SelectorElm::id("hoge".to_string()),
+                elm: SelectorElm::Id("hoge".to_string()),
                 children: vec![],
             }])],
         };

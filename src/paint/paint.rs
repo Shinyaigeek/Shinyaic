@@ -9,9 +9,8 @@ use crate::render_tree::rectangle::Rectangle;
 use crate::render_tree::render_object::RenderObject;
 use crate::render_tree::render_tree::RenderTree;
 use iced::{
-    button, scrollable, slider, text_input, Button, Checkbox, Color, Column, Container, Element,
-    HorizontalAlignment, Image, Length, Radio, Row, Sandbox, Scrollable, Settings, Slider, Space,
-    Text, TextInput,
+    scrollable, text_input, Color, Container, Element, Length, Sandbox, Scrollable, Settings,
+    TextInput,
 };
 use iced_native::Font;
 use konnnyaku_client::Client;

@@ -143,13 +143,13 @@ impl Parser {
         }
 
         match first_char_selector_elm {
-            b'#' => SelectorElm::id(elm),
-            b'.' => SelectorElm::class(elm),
-            b'*' => SelectorElm::asterisk("*".to_string()),
+            b'#' => SelectorElm::Id(elm),
+            b'.' => SelectorElm::Class(elm),
+            b'*' => SelectorElm::Asterisk("*".to_string()),
             _ => {
                 let mut tag_name = String::from(first_char_selector_elm as char);
                 tag_name.push_str(&elm);
-                SelectorElm::tag_name(tag_name)
+                SelectorElm::TagName(tag_name)
             }
         }
     }
@@ -255,7 +255,7 @@ mod tests {
             result,
             vec![StylingRule {
                 selector: vec![Selector {
-                    elm: SelectorElm::tag_name("body".to_string()),
+                    elm: SelectorElm::TagName("body".to_string()),
                     children: vec![],
                 }],
                 declarations
@@ -277,18 +277,18 @@ mod tests {
             result,
             vec![StylingRule {
                 selector: vec![Selector {
-                    elm: SelectorElm::tag_name("body".to_string()),
+                    elm: SelectorElm::TagName("body".to_string()),
                     children: vec![SelectorChildren::child_combinator(vec![Selector {
-                        elm: SelectorElm::tag_name("div".to_string()),
+                        elm: SelectorElm::TagName("div".to_string()),
                         children: vec![SelectorChildren::adjacent_sibling_combinator(vec![
                             Selector {
-                                elm: SelectorElm::tag_name("p".to_string()),
+                                elm: SelectorElm::TagName("p".to_string()),
                                 children: vec![SelectorChildren::general_sibling_combinator(vec![
                                     Selector {
-                                        elm: SelectorElm::tag_name("a".to_string()),
+                                        elm: SelectorElm::TagName("a".to_string()),
                                         children: vec![SelectorChildren::descendant_combinator(
                                             vec![Selector {
-                                                elm: SelectorElm::tag_name("div".to_string()),
+                                                elm: SelectorElm::TagName("div".to_string()),
                                                 children: vec![],
                                             }]
                                         )]
@@ -318,11 +318,11 @@ mod tests {
             vec![StylingRule {
                 selector: vec![
                     Selector {
-                        elm: SelectorElm::class("class1".to_string()),
+                        elm: SelectorElm::Class("class1".to_string()),
                         children: vec![],
                     },
                     Selector {
-                        elm: SelectorElm::class("class2".to_string()),
+                        elm: SelectorElm::Class("class2".to_string()),
                         children: vec![],
                     }
                 ],
@@ -346,7 +346,7 @@ mod tests {
             result,
             vec![StylingRule {
                 selector: vec![Selector {
-                    elm: SelectorElm::tag_name("body".to_string()),
+                    elm: SelectorElm::TagName("body".to_string()),
                     children: vec![],
                 }],
                 declarations
@@ -374,14 +374,14 @@ mod tests {
             vec![
                 StylingRule {
                     selector: vec![Selector {
-                        elm: SelectorElm::tag_name("body".to_string()),
+                        elm: SelectorElm::TagName("body".to_string()),
                         children: vec![],
                     }],
                     declarations: declarations_body.clone(),
                 },
                 StylingRule {
                     selector: vec![Selector {
-                        elm: SelectorElm::tag_name("p".to_string()),
+                        elm: SelectorElm::TagName("p".to_string()),
                         children: vec![],
                     }],
                     declarations: declarations_p.clone(),

@@ -288,7 +288,7 @@ mod test {
                             children: vec![RenderObject::Text("hello browser!".to_string()),],
                             style: vec![StylingRule {
                                 selector: vec![Selector {
-                                    elm: SelectorElm::id("id1".to_string()),
+                                    elm: SelectorElm::Id("id1".to_string()),
                                     children: vec![]
                                 }],
                                 declarations: style_1
@@ -304,7 +304,7 @@ mod test {
                             children: vec![],
                             style: vec![StylingRule {
                                 selector: vec![Selector {
-                                    elm: SelectorElm::id("id2".to_string()),
+                                    elm: SelectorElm::Id("id2".to_string()),
                                     children: vec![]
                                 }],
                                 declarations: style_2
@@ -320,7 +320,7 @@ mod test {
                             children: vec![],
                             style: vec![StylingRule {
                                 selector: vec![Selector {
-                                    elm: SelectorElm::id("id3".to_string()),
+                                    elm: SelectorElm::Id("id3".to_string()),
                                     children: vec![]
                                 }],
                                 declarations: style_3
