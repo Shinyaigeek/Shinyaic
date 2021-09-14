@@ -278,7 +278,7 @@ impl RenderObject {
         Self::Text(txt)
     }
 
-    pub fn init_with_element(element_type: ElementType) -> Option<Self> {
+    pub fn init_wiThElement(element_type: ElementType) -> Option<Self> {
         match element_type.tag_name {
             HTMLElements::BodyElement => Some(Self::Scroll(_RenderObject {
                 children: vec![],

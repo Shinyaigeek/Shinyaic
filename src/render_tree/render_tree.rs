@@ -148,7 +148,7 @@ impl RenderTree {
                         // do nothing
                     }
                 };
-                let raw_render_object = RenderObject::init_with_element(element_type);
+                let raw_render_object = RenderObject::init_wiThElement(element_type);
                 let mut raw_render_object = match raw_render_object {
                     Some(raw_render_object) => raw_render_object,
                     //  TODO
