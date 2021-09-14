@@ -1,77 +1,77 @@
-pub const HTML_ELEMENT: &str = "html";
-pub const BODY_ELEMENT: &str = "body";
-pub const HEAD_ELEMENT: &str = "head";
-pub const PARAGRAPH_ELEMENT: &str = "p";
-pub const ANCHOR_ELEMENT: &str = "a";
-pub const DIV_ELEMENT: &str = "div";
-pub const SPAN_ELEMENT: &str = "span";
-pub const IMG_ELEMENT: &str = "img";
-pub const TABLE_ELEMENT: &str = "table";
-pub const TR_ELEMENT: &str = "tr";
-pub const TD_ELEMENT: &str = "td";
-pub const TH_ELEMENT: &str = "th";
-pub const FORM_ELEMENT: &str = "form";
-pub const INPUT_ELEMENT: &str = "input";
-pub const BUTTON_ELEMENT: &str = "button";
-pub const SELECT_ELEMENT: &str = "select";
-pub const OPTION_ELEMENT: &str = "option";
-pub const TITLE_ELEMENT: &str = "title";
-pub const META_ELEMENT: &str = "meta";
-pub const STYLE_ELEMENT: &str = "style";
-pub const SCRIPT_ELEMENT: &str = "script";
-pub const H1_ELEMENT: &str = "h1";
+pub const HtmlElement: &str = "html";
+pub const BodyElement: &str = "body";
+pub const HeadElement: &str = "head";
+pub const ParagraphElement: &str = "p";
+pub const AnchorElement: &str = "a";
+pub const DivElement: &str = "div";
+pub const SpanElement: &str = "span";
+pub const ImgElement: &str = "img";
+pub const TableElement: &str = "table";
+pub const TrElement: &str = "tr";
+pub const TdElement: &str = "td";
+pub const ThElement: &str = "th";
+pub const FormElement: &str = "form";
+pub const InputElement: &str = "input";
+pub const ButtonElement: &str = "button";
+pub const SelectElement: &str = "select";
+pub const OptionElement: &str = "option";
+pub const TitleElement: &str = "title";
+pub const MetaElement: &str = "meta";
+pub const StyleElement: &str = "style";
+pub const ScriptElement: &str = "script";
+pub const H1Element: &str = "h1";
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum HTMLElements {
-    HTML_ELEMENT,
-    BODY_ELEMENT,
-    HEAD_ELEMENT,
-    PARAGRAPH_ELEMENT,
-    ANCHOR_ELEMENT,
-    DIV_ELEMENT,
-    SPAN_ELEMENT,
-    IMG_ELEMENT,
-    TABLE_ELEMENT,
-    TR_ELEMENT,
-    TD_ELEMENT,
-    TH_ELEMENT,
-    FORM_ELEMENT,
-    INPUT_ELEMENT,
-    BUTTON_ELEMENT,
-    SELECT_ELEMENT,
-    OPTION_ELEMENT,
-    TITLE_ELEMENT,
-    META_ELEMENT,
-    STYLE_ELEMENT,
-    SCRIPT_ELEMENT,
-    H1_ELEMENT,
+    HtmlElement,
+    BodyElement,
+    HeadElement,
+    ParagraphElement,
+    AnchorElement,
+    DivElement,
+    SpanElement,
+    ImgElement,
+    TableElement,
+    TrElement,
+    TdElement,
+    ThElement,
+    FormElement,
+    InputElement,
+    ButtonElement,
+    SelectElement,
+    OptionElement,
+    TitleElement,
+    MetaElement,
+    StyleElement,
+    ScriptElement,
+    H1Element,
 }
 
 impl HTMLElements {
     pub fn to_string(self) -> String {
         let tag_str = match self {
-            HTMLElements::HTML_ELEMENT => "html",
-            HTMLElements::BODY_ELEMENT => "body",
-            HTMLElements::HEAD_ELEMENT => "head",
-            HTMLElements::PARAGRAPH_ELEMENT => "p",
-            HTMLElements::ANCHOR_ELEMENT => "a",
-            HTMLElements::DIV_ELEMENT => "div",
-            HTMLElements::SPAN_ELEMENT => "span",
-            HTMLElements::IMG_ELEMENT => "img",
-            HTMLElements::TABLE_ELEMENT => "table",
-            HTMLElements::TR_ELEMENT => "tr",
-            HTMLElements::TD_ELEMENT => "td",
-            HTMLElements::TH_ELEMENT => "th",
-            HTMLElements::FORM_ELEMENT => "form",
-            HTMLElements::INPUT_ELEMENT => "input",
-            HTMLElements::BUTTON_ELEMENT => "button",
-            HTMLElements::SELECT_ELEMENT => "select",
-            HTMLElements::OPTION_ELEMENT => "option",
-            HTMLElements::TITLE_ELEMENT => "title",
-            HTMLElements::META_ELEMENT => "meta",
-            HTMLElements::STYLE_ELEMENT => "style",
-            HTMLElements::SCRIPT_ELEMENT => "script",
-            HTMLElements::H1_ELEMENT => "h1",
+            HTMLElements::HtmlElement => "html",
+            HTMLElements::BodyElement => "body",
+            HTMLElements::HeadElement => "head",
+            HTMLElements::ParagraphElement => "p",
+            HTMLElements::AnchorElement => "a",
+            HTMLElements::DivElement => "div",
+            HTMLElements::SpanElement => "span",
+            HTMLElements::ImgElement => "img",
+            HTMLElements::TableElement => "table",
+            HTMLElements::TrElement => "tr",
+            HTMLElements::TdElement => "td",
+            HTMLElements::ThElement => "th",
+            HTMLElements::FormElement => "form",
+            HTMLElements::InputElement => "input",
+            HTMLElements::ButtonElement => "button",
+            HTMLElements::SelectElement => "select",
+            HTMLElements::OptionElement => "option",
+            HTMLElements::TitleElement => "title",
+            HTMLElements::MetaElement => "meta",
+            HTMLElements::StyleElement => "style",
+            HTMLElements::ScriptElement => "script",
+            HTMLElements::H1Element => "h1",
         };
 
         tag_str.to_string()
@@ -79,7 +79,7 @@ impl HTMLElements {
 
     pub fn need_closing_tag(&self) -> bool {
         match self {
-            Self::META_ELEMENT => false,
+            Self::MetaElement => false,
             _ => true,
         }
     }

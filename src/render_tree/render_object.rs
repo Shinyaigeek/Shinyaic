@@ -280,19 +280,19 @@ impl RenderObject {
 
     pub fn init_with_element(element_type: ElementType) -> Option<Self> {
         match element_type.tag_name {
-            HTMLElements::BODY_ELEMENT => Some(Self::Scroll(_RenderObject {
+            HTMLElements::BodyElement => Some(Self::Scroll(_RenderObject {
                 children: vec![],
                 style: vec![],
                 rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
             })),
-            HTMLElements::DIV_ELEMENT
-            | HTMLElements::PARAGRAPH_ELEMENT
-            | HTMLElements::H1_ELEMENT => Some(Self::Block(_RenderObject {
-                children: vec![],
-                style: vec![],
-                rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
-            })),
-            HTMLElements::ANCHOR_ELEMENT | HTMLElements::SPAN_ELEMENT => {
+            HTMLElements::DivElement | HTMLElements::ParagraphElement | HTMLElements::H1Element => {
+                Some(Self::Block(_RenderObject {
+                    children: vec![],
+                    style: vec![],
+                    rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
+                }))
+            }
+            HTMLElements::AnchorElement | HTMLElements::SpanElement => {
                 Some(Self::Inline(_RenderObject {
                     children: vec![],
                     style: vec![],
@@ -309,12 +309,12 @@ impl RenderObject {
             NodeType::dom_node(element_type) => element_type,
         };
         let tag = &element_type.tag_name;
-        tag == &HTMLElements::BODY_ELEMENT
-            || tag == &HTMLElements::DIV_ELEMENT
-            || tag == &HTMLElements::PARAGRAPH_ELEMENT
-            || tag == &HTMLElements::ANCHOR_ELEMENT
-            || tag == &HTMLElements::SPAN_ELEMENT
-            || tag == &HTMLElements::H1_ELEMENT
+        tag == &HTMLElements::BodyElement
+            || tag == &HTMLElements::DivElement
+            || tag == &HTMLElements::ParagraphElement
+            || tag == &HTMLElements::AnchorElement
+            || tag == &HTMLElements::SpanElement
+            || tag == &HTMLElements::H1Element
     }
 
     pub fn can_init_text(dom_node: &DOMNode) -> bool {
