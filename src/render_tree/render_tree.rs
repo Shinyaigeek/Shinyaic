@@ -165,7 +165,7 @@ impl RenderTree {
                     let selector = child_style_rule.0;
                     let styling_rule = child_style_rule.1;
 
-                    if (selector.clone().matches(&dom_node, &dom_node)) {
+                    if selector.clone().matches(&dom_node, &dom_node) {
                         if selector.is_one_node_tree() {
                             style.push(styling_rule);
                         } else {

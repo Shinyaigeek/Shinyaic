@@ -220,7 +220,7 @@ impl DisplayList {
         DisplayList { list: Vec::new() }
     }
 
-    pub fn constructor(render_tree: RenderTree) {}
+    pub fn constructor(_render_tree: RenderTree) {}
 
     fn traverse(&mut self, render_object: &RenderObject, parent_render_object: &RenderObject) {
         let parent_render_object = match parent_render_object {
@@ -243,10 +243,10 @@ impl DisplayList {
                     parent_render_object.rectangle.clone(),
                 ));
             }
-            RenderObject::ViewPort(render_object)
-            | RenderObject::Scroll(render_object)
-            | RenderObject::Inline(render_object)
-            | RenderObject::Block(render_object) => {
+            RenderObject::ViewPort(_)
+            | RenderObject::Scroll(_)
+            | RenderObject::Inline(_)
+            | RenderObject::Block(_) => {
                 self.list.push(DisplayCommand::SolidColor(
                     Color {
                         r: 255.0,

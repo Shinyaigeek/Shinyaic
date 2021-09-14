@@ -49,7 +49,7 @@ impl Selector {
 
     pub fn matches(self, elm: &DOMNode, parent_elm: &DOMNode) -> bool {
         let element_type = match &elm.node_type {
-            NodeType::text_node(text_node) => {
+            NodeType::text_node(_) => {
                 return false;
             }
             NodeType::dom_node(element_type) => element_type,
@@ -69,7 +69,7 @@ impl Selector {
                 SelectorElm::TagName(tag_name) => {
                     tag_name == element_type.clone().tag_name.to_string()
                 }
-                SelectorElm::Asterisk(asterisk) => true,
+                SelectorElm::Asterisk(_) => true,
             };
         }
 
