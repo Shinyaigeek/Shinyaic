@@ -264,11 +264,10 @@ impl RenderObject {
 
         let y = match self {
             // TODO
-            Self::Text(text) => parent_rect.y,
-            Self::Block(rendering_object)
-            | Self::Inline(rendering_object)
-            | Self::Scroll(rendering_object)
-            | Self::ViewPort(rendering_object) => big_brother_rect.y + big_brother_rect.height,
+            Self::Text(_) => parent_rect.y,
+            Self::Block(_) | Self::Inline(_) | Self::Scroll(_) | Self::ViewPort(_) => {
+                big_brother_rect.y + big_brother_rect.height
+            }
         };
 
         y
