@@ -14,8 +14,8 @@ pub struct Parser {
 
 impl Parser {
     pub fn parse(&mut self) -> DOMNode {
-        if (self.peek_start_with("<!DOCTYPE".to_string())
-            || self.peek_start_with("<!doctype".to_string()))
+        if self.peek_start_with("<!DOCTYPE".to_string())
+            || self.peek_start_with("<!doctype".to_string())
         {
             self.parse_doctype();
             self.eat_whitespace();
@@ -166,7 +166,6 @@ impl Parser {
     }
 
     fn peek_start_with(&self, value: String) -> bool {
-        let mut token = String::from("");
         self.input[self.pos..].starts_with(&value)
     }
 
@@ -208,9 +207,9 @@ impl Parser {
             return self.parse_text();
         }
         let (target_tag_name, attributes) = self.eat_opening_tag();
-        let node = if(!target_tag_name.need_closing_tag()) {
+        let node = if (!target_tag_name.need_closing_tag()) {
             DOMNode::elem(target_tag_name, attributes, vec![])
-        }else{
+        } else {
             let node = DOMNode::elem(target_tag_name.clone(), attributes, self.parse_nodes());
             self.eat_closing_tag();
             node
