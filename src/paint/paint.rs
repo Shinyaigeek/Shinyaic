@@ -1,6 +1,5 @@
 // TODO
 
-use crate::css::cssom::cssom::CSSOM;
 use crate::css::parser::parser::Parser as CSSParser;
 use crate::html::parser::parser::Parser;
 use crate::paint::window_canvas::{create_block, create_text};

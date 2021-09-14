@@ -146,7 +146,7 @@ impl Parser {
 
     pub fn eat_whitespace(&mut self) {
         loop {
-            if (self.pos >= self.input.len()) {
+            if self.pos >= self.input.len() {
                 break;
             }
 
@@ -182,7 +182,7 @@ impl Parser {
 
     // TODO 暫定的にpeekをdoctypeの次まで進めるだけ
     fn parse_doctype(&mut self) {
-        if (self.eat() != b'<') {
+        if self.eat() != b'<' {
             panic!("parse_doctype was invoked not in < but in {:?}", self.eat());
         }
 
@@ -203,7 +203,7 @@ impl Parser {
             return self.parse_text();
         }
         let (target_tag_name, attributes) = self.eat_opening_tag();
-        let node = if (!target_tag_name.need_closing_tag()) {
+        let node = if !target_tag_name.need_closing_tag() {
             DOMNode::elem(target_tag_name, attributes, vec![])
         } else {
             let node = DOMNode::elem(target_tag_name.clone(), attributes, self.parse_nodes());
