@@ -1,8 +1,8 @@
 use crate::html::dom::dom::DOMNode;
 use crate::html::dom::elements::elements::{
-    HTMLElements, ANCHOR_ELEMENT, BODY_ELEMENT, DIV_ELEMENT, H1_ELEMENT, HEAD_ELEMENT,
-    HTML_ELEMENT, META_ELEMENT, PARAGRAPH_ELEMENT, SCRIPT_ELEMENT, SPAN_ELEMENT, STYLE_ELEMENT,
-    TABLE_ELEMENT, TD_ELEMENT, TH_ELEMENT, TITLE_ELEMENT, TR_ELEMENT,
+    HTMLElements, AnchorElement, BodyElement, DivElement, H1Element, HeadElement,
+    HtmlElement, MetaElement, ParagraphElement, ScriptElement, SpanElement, StyleElement,
+    TableElement, TdElement, ThElement, TitleElement, TrElement,
 };
 use std::collections::HashMap;
 use std::vec::Vec;
@@ -57,22 +57,22 @@ impl Parser {
         let tag: &str = &tag;
 
         let tag = match tag {
-            HTML_ELEMENT => HTMLElements::HTML_ELEMENT,
-            HEAD_ELEMENT => HTMLElements::HEAD_ELEMENT,
-            BODY_ELEMENT => HTMLElements::BODY_ELEMENT,
-            PARAGRAPH_ELEMENT => HTMLElements::PARAGRAPH_ELEMENT,
-            ANCHOR_ELEMENT => HTMLElements::ANCHOR_ELEMENT,
-            DIV_ELEMENT => HTMLElements::DIV_ELEMENT,
-            SPAN_ELEMENT => HTMLElements::SPAN_ELEMENT,
-            TABLE_ELEMENT => HTMLElements::TABLE_ELEMENT,
-            TR_ELEMENT => HTMLElements::TR_ELEMENT,
-            TH_ELEMENT => HTMLElements::TH_ELEMENT,
-            TD_ELEMENT => HTMLElements::TD_ELEMENT,
-            TITLE_ELEMENT => HTMLElements::TITLE_ELEMENT,
-            META_ELEMENT => HTMLElements::META_ELEMENT,
-            STYLE_ELEMENT => HTMLElements::STYLE_ELEMENT,
-            SCRIPT_ELEMENT => HTMLElements::SCRIPT_ELEMENT,
-            H1_ELEMENT => HTMLElements::H1_ELEMENT,
+            HtmlElement => HTMLElements::HtmlElement,
+            HeadElement => HTMLElements::HeadElement,
+            BodyElement => HTMLElements::BodyElement,
+            ParagraphElement => HTMLElements::ParagraphElement,
+            AnchorElement => HTMLElements::AnchorElement,
+            DivElement => HTMLElements::DivElement,
+            SpanElement => HTMLElements::SpanElement,
+            TableElement => HTMLElements::TableElement,
+            TrElement => HTMLElements::TrElement,
+            ThElement => HTMLElements::ThElement,
+            TdElement => HTMLElements::TdElement,
+            TitleElement => HTMLElements::TitleElement,
+            MetaElement => HTMLElements::MetaElement,
+            StyleElement => HTMLElements::StyleElement,
+            ScriptElement => HTMLElements::ScriptElement,
+            H1Element => HTMLElements::H1Element,
             _ => panic!("there is no element, {:?}", tag),
         };
 
@@ -244,21 +244,21 @@ mod tests {
         let dom = parser.parse();
 
         let expected_dom = DOMNode::elem(
-            HTMLElements::HTML_ELEMENT,
+            HTMLElements::HtmlElement,
             HashMap::new(),
             vec![
-                DOMNode::elem(HTMLElements::HEAD_ELEMENT, HashMap::new(), vec![]),
+                DOMNode::elem(HTMLElements::HeadElement, HashMap::new(), vec![]),
                 DOMNode::elem(
-                    HTMLElements::BODY_ELEMENT,
+                    HTMLElements::BodyElement,
                     HashMap::new(),
                     vec![
                         DOMNode::elem(
-                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HTMLElements::ParagraphElement,
                             HashMap::new(),
                             vec![DOMNode::text(String::from("hoge"))],
                         ),
                         DOMNode::elem(
-                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HTMLElements::ParagraphElement,
                             HashMap::new(),
                             vec![DOMNode::text(String::from("asdf"))],
                         ),
@@ -281,21 +281,21 @@ mod tests {
         let dom = parser.parse();
 
         let expected_dom = DOMNode::elem(
-            HTMLElements::HTML_ELEMENT,
+            HTMLElements::HtmlElement,
             HashMap::new(),
             vec![
-                DOMNode::elem(HTMLElements::HEAD_ELEMENT, HashMap::new(), vec![]),
+                DOMNode::elem(HTMLElements::HeadElement, HashMap::new(), vec![]),
                 DOMNode::elem(
-                    HTMLElements::BODY_ELEMENT,
+                    HTMLElements::BodyElement,
                     HashMap::new(),
                     vec![
                         DOMNode::elem(
-                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HTMLElements::ParagraphElement,
                             HashMap::new(),
                             vec![DOMNode::text(String::from("hoge"))],
                         ),
                         DOMNode::elem(
-                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HTMLElements::ParagraphElement,
                             HashMap::new(),
                             vec![DOMNode::text(String::from("asdf"))],
                         ),
@@ -325,21 +325,21 @@ mod tests {
         let dom = parser.parse();
 
         let expected_dom = DOMNode::elem(
-            HTMLElements::HTML_ELEMENT,
+            HTMLElements::HtmlElement,
             HashMap::new(),
             vec![
-                DOMNode::elem(HTMLElements::HEAD_ELEMENT, HashMap::new(), vec![]),
+                DOMNode::elem(HTMLElements::HeadElement, HashMap::new(), vec![]),
                 DOMNode::elem(
-                    HTMLElements::BODY_ELEMENT,
+                    HTMLElements::BodyElement,
                     HashMap::new(),
                     vec![
                         DOMNode::elem(
-                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HTMLElements::ParagraphElement,
                             HashMap::new(),
                             vec![DOMNode::text(String::from("hoge"))],
                         ),
                         DOMNode::elem(
-                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HTMLElements::ParagraphElement,
                             HashMap::new(),
                             vec![DOMNode::text(String::from("asdf"))],
                         ),
@@ -365,21 +365,21 @@ mod tests {
         id.insert("id".to_string(), "fuga".to_string());
 
         let expected_dom = DOMNode::elem(
-            HTMLElements::HTML_ELEMENT,
+            HTMLElements::HtmlElement,
             HashMap::new(),
             vec![
-                DOMNode::elem(HTMLElements::HEAD_ELEMENT, HashMap::new(), vec![]),
+                DOMNode::elem(HTMLElements::HeadElement, HashMap::new(), vec![]),
                 DOMNode::elem(
-                    HTMLElements::BODY_ELEMENT,
+                    HTMLElements::BodyElement,
                     HashMap::new(),
                     vec![
                         DOMNode::elem(
-                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HTMLElements::ParagraphElement,
                             id,
                             vec![DOMNode::text(String::from("hoge"))],
                         ),
                         DOMNode::elem(
-                            HTMLElements::PARAGRAPH_ELEMENT,
+                            HTMLElements::ParagraphElement,
                             HashMap::new(),
                             vec![DOMNode::text(String::from("asdf"))],
                         ),

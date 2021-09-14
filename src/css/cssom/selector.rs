@@ -153,7 +153,7 @@ mod test {
 
         let elm = DOMNode {
             node_type: NodeType::dom_node(ElementType {
-                tag_name: HTMLElements::DIV_ELEMENT,
+                tag_name: HTMLElements::DivElement,
                 attributes: HashMap::new(),
             }),
             children: vec![],
@@ -177,12 +177,12 @@ mod test {
 
         let elm = DOMNode {
             node_type: NodeType::dom_node(ElementType {
-                tag_name: HTMLElements::DIV_ELEMENT,
+                tag_name: HTMLElements::DivElement,
                 attributes: HashMap::new(),
             }),
             children: vec![DOMNode {
                 node_type: NodeType::dom_node(ElementType {
-                    tag_name: HTMLElements::DIV_ELEMENT,
+                    tag_name: HTMLElements::DivElement,
                     attributes: attributes.clone(),
                 }),
                 children: vec![],
@@ -194,17 +194,17 @@ mod test {
         // * matches with descent combinator
         let elm = DOMNode {
             node_type: NodeType::dom_node(ElementType {
-                tag_name: HTMLElements::DIV_ELEMENT,
+                tag_name: HTMLElements::DivElement,
                 attributes: HashMap::new(),
             }),
             children: vec![DOMNode {
                 node_type: NodeType::dom_node(ElementType {
-                    tag_name: HTMLElements::PARAGRAPH_ELEMENT,
+                    tag_name: HTMLElements::ParagraphElement,
                     attributes: HashMap::new(),
                 }),
                 children: vec![DOMNode {
                     node_type: NodeType::dom_node(ElementType {
-                        tag_name: HTMLElements::DIV_ELEMENT,
+                        tag_name: HTMLElements::DivElement,
                         attributes,
                     }),
                     children: vec![],
@@ -228,12 +228,12 @@ mod test {
         attributes.insert("id".to_string(), "hoge".to_string());
         let elm = DOMNode {
             node_type: NodeType::dom_node(ElementType {
-                tag_name: HTMLElements::DIV_ELEMENT,
+                tag_name: HTMLElements::DivElement,
                 attributes: HashMap::new(),
             }),
             children: vec![DOMNode {
                 node_type: NodeType::dom_node(ElementType {
-                    tag_name: HTMLElements::DIV_ELEMENT,
+                    tag_name: HTMLElements::DivElement,
                     attributes: attributes.clone(),
                 }),
                 children: vec![],
@@ -244,17 +244,17 @@ mod test {
         // * not matches descendant child
         let elm = DOMNode {
             node_type: NodeType::dom_node(ElementType {
-                tag_name: HTMLElements::DIV_ELEMENT,
+                tag_name: HTMLElements::DivElement,
                 attributes: HashMap::new(),
             }),
             children: vec![DOMNode {
                 node_type: NodeType::dom_node(ElementType {
-                    tag_name: HTMLElements::PARAGRAPH_ELEMENT,
+                    tag_name: HTMLElements::ParagraphElement,
                     attributes: HashMap::new(),
                 }),
                 children: vec![DOMNode {
                     node_type: NodeType::dom_node(ElementType {
-                        tag_name: HTMLElements::DIV_ELEMENT,
+                        tag_name: HTMLElements::DivElement,
                         attributes: attributes.clone(),
                     }),
                     children: vec![],

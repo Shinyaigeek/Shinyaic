@@ -35,7 +35,7 @@ impl RenderTree {
             NodeType::dom_node(element_type) => {
                 match element_type.tag_name {
                     // TODO htmlにもstyleが来るので, skipはまずい
-                    HTMLElements::HTML_ELEMENT => {
+                    HTMLElements::HtmlElement => {
                         // TODO　一旦<html>の下には<head>と<body>がこの順序で来ると仮定
                         &self.dom.children[0]
                     }
@@ -52,7 +52,7 @@ impl RenderTree {
             NodeType::dom_node(element_type) => {
                 match element_type.tag_name {
                     // TODO htmlにもstyleが来るので, skipはまずい
-                    HTMLElements::HTML_ELEMENT => {
+                    HTMLElements::HtmlElement => {
                         // TODO　一旦<html>の下には<head>と<body>がこの順序で来ると仮定
                         &self.dom.children[1]
                     }
@@ -97,7 +97,7 @@ impl RenderTree {
             println!("head_el: {:?}", head_el);
             match head_el.node_type {
                 NodeType::dom_node(element_type) => match element_type.tag_name {
-                    HTMLElements::STYLE_ELEMENT => {
+                    HTMLElements::StyleElement => {
                         let style_text = head_el.children[0].clone();
                         let style_text = match style_text.node_type {
                             NodeType::text_node(text) => text,
@@ -128,7 +128,7 @@ impl RenderTree {
             NodeType::text_node(txt) => RenderObject::init_with_text(txt),
             NodeType::dom_node(element_type) => {
                 match element_type.tag_name {
-                    HTMLElements::STYLE_ELEMENT => {
+                    HTMLElements::StyleElement => {
                         let css_text = dom_node.clone().children[0].clone();
                         let css_text = match css_text.node_type {
                             NodeType::text_node(txt) => txt,
@@ -148,7 +148,7 @@ impl RenderTree {
                         // do nothing
                     }
                 };
-                let raw_render_object = RenderObject::init_with_element(element_type);
+                let raw_render_object = RenderObject::init_wiThElement(element_type);
                 let mut raw_render_object = match raw_render_object {
                     Some(raw_render_object) => raw_render_object,
                     //  TODO
