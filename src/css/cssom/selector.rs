@@ -11,10 +11,10 @@ pub enum SelectorElm {
 
 #[derive(Debug, PartialEq, Clone, Eq, Hash)]
 pub enum SelectorChildren {
-    descendant_combinator(Vec<Selector>),
-    child_combinator(Vec<Selector>),
-    general_sibling_combinator(Vec<Selector>),
-    adjacent_sibling_combinator(Vec<Selector>),
+    DescendantCombinator(Vec<Selector>),
+    ChildCombinator(Vec<Selector>),
+    GeneralSiblingCombinator(Vec<Selector>),
+    AdjacentSiblingCombinator(Vec<Selector>),
 }
 
 #[derive(Debug, PartialEq, Clone, Eq, Hash)]
@@ -33,10 +33,10 @@ impl Selector {
 
         for child in self.children.clone() {
             match child {
-                SelectorChildren::descendant_combinator(children)
-                | SelectorChildren::child_combinator(children)
-                | SelectorChildren::general_sibling_combinator(children)
-                | SelectorChildren::adjacent_sibling_combinator(children) => {
+                SelectorChildren::DescendantCombinator(children)
+                | SelectorChildren::ChildCombinator(children)
+                | SelectorChildren::GeneralSiblingCombinator(children)
+                | SelectorChildren::AdjacentSiblingCombinator(children) => {
                     for child in children {
                         res.push(child);
                     }
@@ -75,7 +75,7 @@ impl Selector {
 
         for child in self.children {
             match child {
-                SelectorChildren::descendant_combinator(children) => {
+                SelectorChildren::DescendantCombinator(children) => {
                     for descendant in children {
                         for child_elm in elm.clone().children {
                             if descendant.clone().matches(&child_elm, &elm) {
@@ -90,7 +90,7 @@ impl Selector {
                         }
                     }
                 }
-                SelectorChildren::child_combinator(children) => {
+                SelectorChildren::ChildCombinator(children) => {
                     for child in children {
                         for child_elm in elm.clone().children {
                             if child.clone().matches(&child_elm, &elm) {
@@ -99,7 +99,7 @@ impl Selector {
                         }
                     }
                 }
-                SelectorChildren::general_sibling_combinator(children) => {
+                SelectorChildren::GeneralSiblingCombinator(children) => {
                     for general_sibling in children {
                         for sibling_elm in parent_elm.clone().children {
                             if general_sibling.clone().matches(&sibling_elm, &parent_elm) {
@@ -108,7 +108,7 @@ impl Selector {
                         }
                     }
                 }
-                SelectorChildren::adjacent_sibling_combinator(children) => {
+                SelectorChildren::AdjacentSiblingCombinator(children) => {
                     for adjacent_sibling in children {
                         let elm_idx = parent_elm.children.iter().position(|x| &x == &elm);
                         let elm_idx = match elm_idx {
@@ -166,7 +166,7 @@ mod test {
     fn test_selector_match_nested_nodes_with_descent_combinator() {
         let selector = Selector {
             elm: SelectorElm::TagName("div".to_string()),
-            children: vec![SelectorChildren::descendant_combinator(vec![Selector {
+            children: vec![SelectorChildren::DescendantCombinator(vec![Selector {
                 elm: SelectorElm::Id("hoge".to_string()),
                 children: vec![],
             }])],
@@ -219,7 +219,7 @@ mod test {
     fn test_selector_match_nested_nodes_with_child_combinator() {
         let selector = Selector {
             elm: SelectorElm::TagName("div".to_string()),
-            children: vec![SelectorChildren::child_combinator(vec![Selector {
+            children: vec![SelectorChildren::ChildCombinator(vec![Selector {
                 elm: SelectorElm::Id("hoge".to_string()),
                 children: vec![],
             }])],

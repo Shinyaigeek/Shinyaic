@@ -174,10 +174,7 @@ impl RenderObject {
             Self::Text(_) => {
                 return 0.0;
             }
-            Self::Block(_)
-            | Self::Inline(_)
-            | Self::Scroll(_)
-            | Self::ViewPort(_) => parent_width,
+            Self::Block(_) | Self::Inline(_) | Self::Scroll(_) | Self::ViewPort(_) => parent_width,
         };
 
         width.clone()

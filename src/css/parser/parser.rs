@@ -1,7 +1,7 @@
 use crate::css::cssom::cssom::{StylingRule, CSSOM};
 use crate::css::cssom::declarations::Declarations;
 use crate::css::cssom::selector::{Selector, SelectorChildren, SelectorElm};
-use std::collections::{HashMap};
+use std::collections::HashMap;
 
 pub struct Parser {
     pub pos: usize,
@@ -93,20 +93,20 @@ impl Parser {
                 selector_elm = self.parse_selector_elm();
                 selector_children = Vec::<SelectorChildren>::new();
             } else if separation_char == b' ' {
-                selector_children.push(SelectorChildren::descendant_combinator(
+                selector_children.push(SelectorChildren::DescendantCombinator(
                     self.parse_selector(),
                 ));
             } else if separation_char == b'>' {
                 self.eat();
-                selector_children.push(SelectorChildren::child_combinator(self.parse_selector()));
+                selector_children.push(SelectorChildren::ChildCombinator(self.parse_selector()));
             } else if separation_char == b'+' {
                 self.eat();
-                selector_children.push(SelectorChildren::adjacent_sibling_combinator(
+                selector_children.push(SelectorChildren::AdjacentSiblingCombinator(
                     self.parse_selector(),
                 ));
             } else if separation_char == b'~' {
                 self.eat();
-                selector_children.push(SelectorChildren::general_sibling_combinator(
+                selector_children.push(SelectorChildren::GeneralSiblingCombinator(
                     self.parse_selector(),
                 ));
             } else {
@@ -278,15 +278,15 @@ mod tests {
             vec![StylingRule {
                 selector: vec![Selector {
                     elm: SelectorElm::TagName("body".to_string()),
-                    children: vec![SelectorChildren::child_combinator(vec![Selector {
+                    children: vec![SelectorChildren::ChildCombinator(vec![Selector {
                         elm: SelectorElm::TagName("div".to_string()),
-                        children: vec![SelectorChildren::adjacent_sibling_combinator(vec![
+                        children: vec![SelectorChildren::AdjacentSiblingCombinator(vec![
                             Selector {
                                 elm: SelectorElm::TagName("p".to_string()),
-                                children: vec![SelectorChildren::general_sibling_combinator(vec![
+                                children: vec![SelectorChildren::GeneralSiblingCombinator(vec![
                                     Selector {
                                         elm: SelectorElm::TagName("a".to_string()),
-                                        children: vec![SelectorChildren::descendant_combinator(
+                                        children: vec![SelectorChildren::DescendantCombinator(
                                             vec![Selector {
                                                 elm: SelectorElm::TagName("div".to_string()),
                                                 children: vec![],
