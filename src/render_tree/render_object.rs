@@ -83,7 +83,7 @@ impl RenderObject {
         iterator.push(self.clone());
 
         let rendering_object = match self {
-            Self::Text(text) => {
+            Self::Text(_) => {
                 return;
             }
             Self::Block(rendering_object)
@@ -110,7 +110,7 @@ impl RenderObject {
         let height = self.calc_height(&parent_rect.height);
 
         let rendering_object = match self {
-            Self::Text(text) => {
+            Self::Text(_) => {
                 return;
             }
             Self::Block(rendering_object)
@@ -126,7 +126,7 @@ impl RenderObject {
         let y = self.calc_y(&parent_rect, &big_brother_rect);
 
         let rendering_object = match self {
-            Self::Text(text) => {
+            Self::Text(_) => {
                 return;
             }
             Self::Block(rendering_object)
@@ -141,7 +141,7 @@ impl RenderObject {
     fn calc_width(&self, parent_width: &f32) -> f32 {
         let rendering_object = match self {
             // TODO
-            Self::Text(text) => {
+            Self::Text(_) => {
                 return 0.0;
             }
             Self::Block(rendering_object)
