@@ -244,11 +244,8 @@ impl RenderObject {
 
         let x = match self {
             // TODO
-            Self::Text(text) => parent_rect.x,
-            Self::Block(rendering_object)
-            | Self::Inline(rendering_object)
-            | Self::Scroll(rendering_object)
-            | Self::ViewPort(rendering_object) => parent_rect.x,
+            Self::Text(_) => parent_rect.x,
+            Self::Block(_) | Self::Inline(_) | Self::Scroll(_) | Self::ViewPort(_) => parent_rect.x,
         };
 
         x
