@@ -1,7 +1,7 @@
 use crate::css::cssom::cssom::{StylingRule, CSSOM};
 use crate::css::cssom::declarations::Declarations;
 use crate::css::cssom::selector::{Selector, SelectorChildren, SelectorElm};
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap};
 
 pub struct Parser {
     pub pos: usize,

@@ -171,13 +171,13 @@ impl RenderObject {
 
         let width = match self {
             // TODO
-            Self::Text(text) => {
+            Self::Text(_) => {
                 return 0.0;
             }
-            Self::Block(rendering_object)
-            | Self::Inline(rendering_object)
-            | Self::Scroll(rendering_object)
-            | Self::ViewPort(rendering_object) => parent_width,
+            Self::Block(_)
+            | Self::Inline(_)
+            | Self::Scroll(_)
+            | Self::ViewPort(_) => parent_width,
         };
 
         width.clone()
