@@ -27,8 +27,8 @@ pub struct Window {
     scroll: scrollable::State,
     debug: bool,
     render_tree: Vec<RenderObject>,
-    urlSearchBarTextValue: text_input::State,
-    urlSearchBarText: String,
+    url_search_bar_text_value: text_input::State,
+    url_searchbar_text: String,
 }
 
 fn prepare() -> RenderTree {
@@ -68,8 +68,8 @@ impl Sandbox for Window {
             scroll: scrollable::State::new(),
             debug: false,
             render_tree: rendering_objects,
-            urlSearchBarTextValue: text_input::State::new(),
-            urlSearchBarText: "".to_string(),
+            url_search_bar_text_value: text_input::State::new(),
+            url_searchbar_text: "".to_string(),
         }
     }
 
@@ -79,8 +79,8 @@ impl Sandbox for Window {
 
     fn update(&mut self, event: Message) {
         match event {
-            Message::UrlSearchBarTextInputChanged(text) => {
-                self.urlSearchBarText = text;
+            Message::url_searchbar_textInputChanged(text) => {
+                self.url_searchbar_text = text;
             }
             Message::UrlSearchBarSubmit(url) => {
                 println!("{}", url);
@@ -116,21 +116,21 @@ impl Sandbox for Window {
     fn view(&mut self) -> Element<Message> {
         let Window {
             scroll,
-            urlSearchBarText,
-            urlSearchBarTextValue,
+            url_searchbar_text,
+            url_search_bar_text_value,
             ..
         } = self;
 
         let mut wrapper = Wrapper::new(700.0, 700.0);
 
-        let urlSearchBar = TextInput::new(
-            urlSearchBarTextValue,
+        let url_search_bar = TextInput::new(
+            url_search_bar_text_value,
             "url",
-            urlSearchBarText,
-            Message::UrlSearchBarTextInputChanged,
+            url_searchbar_text,
+            Message::url_searchbar_textInputChanged,
         )
         .padding(10)
-        .on_submit(Message::UrlSearchBarSubmit(urlSearchBarText.to_string()));
+        .on_submit(Message::UrlSearchBarSubmit(url_searchbar_text.to_string()));
 
         for item in &self.render_tree {
             match item {
@@ -192,7 +192,7 @@ impl Sandbox for Window {
             };
         }
 
-        let scrollable = Scrollable::new(scroll).push(urlSearchBar).push(wrapper);
+        let scrollable = Scrollable::new(scroll).push(url_search_bar).push(wrapper);
 
         Container::new(scrollable)
             .height(Length::Fill)
@@ -203,7 +203,7 @@ impl Sandbox for Window {
 
 #[derive(Debug, Clone)]
 pub enum Message {
-    UrlSearchBarTextInputChanged(String),
+    url_searchbar_textInputChanged(String),
     UrlSearchBarSubmit(String),
 }
 
