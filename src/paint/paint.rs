@@ -78,7 +78,7 @@ impl Sandbox for Window {
 
     fn update(&mut self, event: Message) {
         match event {
-            Message::url_searchbar_textInputChanged(text) => {
+            Message::UrlSearchBarTextInputChanged(text) => {
                 self.url_searchbar_text = text;
             }
             Message::UrlSearchBarSubmit(url) => {
@@ -126,7 +126,7 @@ impl Sandbox for Window {
             url_search_bar_text_value,
             "url",
             url_searchbar_text,
-            Message::url_searchbar_textInputChanged,
+            Message::UrlSearchBarTextInputChanged,
         )
         .padding(10)
         .on_submit(Message::UrlSearchBarSubmit(url_searchbar_text.to_string()));
@@ -202,7 +202,7 @@ impl Sandbox for Window {
 
 #[derive(Debug, Clone)]
 pub enum Message {
-    url_searchbar_textInputChanged(String),
+    UrlSearchBarTextInputChanged(String),
     UrlSearchBarSubmit(String),
 }
 
