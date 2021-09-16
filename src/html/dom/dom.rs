@@ -3,8 +3,8 @@ use std::collections::HashMap;
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum NodeType {
-    text_node(String),
-    dom_node(ElementType),
+    TextNode(String),
+    DomNode(ElementType),
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -17,7 +17,7 @@ impl DOMNode {
     pub fn text(value: String) -> Self {
         Self {
             children: vec![],
-            node_type: NodeType::text_node(value),
+            node_type: NodeType::TextNode(value),
         }
     }
 
@@ -28,7 +28,7 @@ impl DOMNode {
     ) -> Self {
         Self {
             children,
-            node_type: NodeType::dom_node(ElementType {
+            node_type: NodeType::DomNode(ElementType {
                 tag_name,
                 attributes,
             }),

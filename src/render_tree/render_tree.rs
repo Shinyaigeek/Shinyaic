@@ -32,7 +32,7 @@ impl RenderTree {
 
     pub fn constructor(&mut self) {
         let head = match &self.dom.node_type {
-            NodeType::dom_node(element_type) => {
+            NodeType::DomNode(element_type) => {
                 match element_type.tag_name {
                     // TODO htmlにもstyleが来るので, skipはまずい
                     HTMLElements::HtmlElement => {
@@ -42,14 +42,14 @@ impl RenderTree {
                     _ => &self.dom,
                 }
             }
-            NodeType::text_node(_) => &self.dom,
+            NodeType::TextNode(_) => &self.dom,
         };
         self.handle_head(&head.clone());
 
         // TODO dom.rsでやる
         // TODO styled DOM と Rendering Tree で分けた方が良い
         let dom = match &self.dom.node_type {
-            NodeType::dom_node(element_type) => {
+            NodeType::DomNode(element_type) => {
                 match element_type.tag_name {
                     // TODO htmlにもstyleが来るので, skipはまずい
                     HTMLElements::HtmlElement => {
@@ -59,7 +59,7 @@ impl RenderTree {
                     _ => &self.dom,
                 }
             }
-            NodeType::text_node(_) => &self.dom,
+            NodeType::TextNode(_) => &self.dom,
         };
         let render_tree_under_viewport = self.traverse_single_dom(dom.clone(), vec![]);
 
@@ -96,11 +96,11 @@ impl RenderTree {
         for head_el in head.children.clone() {
             println!("head_el: {:?}", head_el);
             match head_el.node_type {
-                NodeType::dom_node(element_type) => match element_type.tag_name {
+                NodeType::DomNode(element_type) => match element_type.tag_name {
                     HTMLElements::StyleElement => {
                         let style_text = head_el.children[0].clone();
                         let style_text = match style_text.node_type {
-                            NodeType::text_node(text) => text,
+                            NodeType::TextNode(text) => text,
                             _ => panic!("TODO"),
                         };
                         let mut parser = CSSParser {
@@ -125,13 +125,13 @@ impl RenderTree {
         children_styles: Vec<(Selector, StylingRule)>,
     ) -> RenderObject {
         match dom_node.clone().node_type {
-            NodeType::text_node(txt) => RenderObject::init_with_text(txt),
-            NodeType::dom_node(element_type) => {
+            NodeType::TextNode(txt) => RenderObject::init_with_text(txt),
+            NodeType::DomNode(element_type) => {
                 match element_type.tag_name {
                     HTMLElements::StyleElement => {
                         let css_text = dom_node.clone().children[0].clone();
                         let css_text = match css_text.node_type {
-                            NodeType::text_node(txt) => txt,
+                            NodeType::TextNode(txt) => txt,
                             _ => panic!("text in style tag should be raw style"),
                         };
 

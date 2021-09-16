@@ -49,10 +49,10 @@ impl Selector {
 
     pub fn matches(self, elm: &DOMNode, parent_elm: &DOMNode) -> bool {
         let element_type = match &elm.node_type {
-            NodeType::text_node(_) => {
+            NodeType::TextNode(_) => {
                 return false;
             }
-            NodeType::dom_node(element_type) => element_type,
+            NodeType::DomNode(element_type) => element_type,
         };
         if self.children.len() == 0 {
             return match self.elm {
@@ -152,7 +152,7 @@ mod test {
         };
 
         let elm = DOMNode {
-            node_type: NodeType::dom_node(ElementType {
+            node_type: NodeType::DomNode(ElementType {
                 tag_name: HTMLElements::DivElement,
                 attributes: HashMap::new(),
             }),
@@ -176,12 +176,12 @@ mod test {
         attributes.insert("id".to_string(), "hoge".to_string());
 
         let elm = DOMNode {
-            node_type: NodeType::dom_node(ElementType {
+            node_type: NodeType::DomNode(ElementType {
                 tag_name: HTMLElements::DivElement,
                 attributes: HashMap::new(),
             }),
             children: vec![DOMNode {
-                node_type: NodeType::dom_node(ElementType {
+                node_type: NodeType::DomNode(ElementType {
                     tag_name: HTMLElements::DivElement,
                     attributes: attributes.clone(),
                 }),
@@ -193,17 +193,17 @@ mod test {
 
         // * matches with descent combinator
         let elm = DOMNode {
-            node_type: NodeType::dom_node(ElementType {
+            node_type: NodeType::DomNode(ElementType {
                 tag_name: HTMLElements::DivElement,
                 attributes: HashMap::new(),
             }),
             children: vec![DOMNode {
-                node_type: NodeType::dom_node(ElementType {
+                node_type: NodeType::DomNode(ElementType {
                     tag_name: HTMLElements::ParagraphElement,
                     attributes: HashMap::new(),
                 }),
                 children: vec![DOMNode {
-                    node_type: NodeType::dom_node(ElementType {
+                    node_type: NodeType::DomNode(ElementType {
                         tag_name: HTMLElements::DivElement,
                         attributes,
                     }),
@@ -227,12 +227,12 @@ mod test {
         let mut attributes = HashMap::new();
         attributes.insert("id".to_string(), "hoge".to_string());
         let elm = DOMNode {
-            node_type: NodeType::dom_node(ElementType {
+            node_type: NodeType::DomNode(ElementType {
                 tag_name: HTMLElements::DivElement,
                 attributes: HashMap::new(),
             }),
             children: vec![DOMNode {
-                node_type: NodeType::dom_node(ElementType {
+                node_type: NodeType::DomNode(ElementType {
                     tag_name: HTMLElements::DivElement,
                     attributes: attributes.clone(),
                 }),
@@ -243,17 +243,17 @@ mod test {
 
         // * not matches descendant child
         let elm = DOMNode {
-            node_type: NodeType::dom_node(ElementType {
+            node_type: NodeType::DomNode(ElementType {
                 tag_name: HTMLElements::DivElement,
                 attributes: HashMap::new(),
             }),
             children: vec![DOMNode {
-                node_type: NodeType::dom_node(ElementType {
+                node_type: NodeType::DomNode(ElementType {
                     tag_name: HTMLElements::ParagraphElement,
                     attributes: HashMap::new(),
                 }),
                 children: vec![DOMNode {
-                    node_type: NodeType::dom_node(ElementType {
+                    node_type: NodeType::DomNode(ElementType {
                         tag_name: HTMLElements::DivElement,
                         attributes: attributes.clone(),
                     }),

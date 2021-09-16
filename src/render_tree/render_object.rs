@@ -291,8 +291,8 @@ impl RenderObject {
 
     pub fn can_init_element(dom_node: &DOMNode) -> bool {
         let element_type = match &dom_node.node_type {
-            NodeType::text_node(_) => return false,
-            NodeType::dom_node(element_type) => element_type,
+            NodeType::TextNode(_) => return false,
+            NodeType::DomNode(element_type) => element_type,
         };
         let tag = &element_type.tag_name;
         tag == &HTMLElements::BodyElement
@@ -305,8 +305,8 @@ impl RenderObject {
 
     pub fn can_init_text(dom_node: &DOMNode) -> bool {
         match &dom_node.node_type {
-            NodeType::text_node(_) => true,
-            NodeType::dom_node(element_type) => false,
+            NodeType::TextNode(_) => true,
+            NodeType::DomNode(element_type) => false,
         }
     }
 
