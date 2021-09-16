@@ -1,5 +1,5 @@
 [package]
-name = "Shinyaic"
+name = "shinyaic"
 version = "0.1.0"
 authors = ["shinyaigeek <PhilisPaxil@gmail.com>"]
 edition = "2018"
