@@ -44,6 +44,7 @@ impl RenderTree {
             }
             NodeType::TextNode(_) => &self.dom,
         };
+
         self.handle_head(&head.clone());
 
         // TODO dom.rsでやる

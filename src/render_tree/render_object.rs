@@ -231,7 +231,7 @@ impl RenderObject {
         height
     }
 
-    fn calc_x(&self, parent_rect: &Rectangle, big_brother_rect: &Option<Rectangle>) -> f32 {
+    fn calc_x(&self, parent_rect: &Rectangle, _big_brother_rect: &Option<Rectangle>) -> f32 {
         let x = match self {
             // TODO
             Self::Text(_) => parent_rect.x,
@@ -306,7 +306,7 @@ impl RenderObject {
     pub fn can_init_text(dom_node: &DOMNode) -> bool {
         match &dom_node.node_type {
             NodeType::TextNode(_) => true,
-            NodeType::DomNode(element_type) => false,
+            NodeType::DomNode(_) => false,
         }
     }
 
