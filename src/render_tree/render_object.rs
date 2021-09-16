@@ -180,10 +180,10 @@ impl RenderObject {
         width.clone()
     }
 
-    fn calc_height(&self, parent_height: &f32) -> f32 {
+    fn calc_height(&self, _parent_height: &f32) -> f32 {
         let rendering_object = match self {
             // TODO
-            Self::Text(text) => {
+            Self::Text(_) => {
                 return 0.0;
             }
             Self::Block(rendering_object)
@@ -213,7 +213,7 @@ impl RenderObject {
 
         let height = match self {
             // TODO
-            Self::Text(text) => {
+            Self::Text(_) => {
                 return 0.0;
             }
             Self::Block(rendering_object)
@@ -232,13 +232,6 @@ impl RenderObject {
     }
 
     fn calc_x(&self, parent_rect: &Rectangle, big_brother_rect: &Option<Rectangle>) -> f32 {
-        let big_brother_rect = match big_brother_rect {
-            Some(big_brother_rect) => big_brother_rect,
-            None => {
-                return parent_rect.x;
-            }
-        };
-
         let x = match self {
             // TODO
             Self::Text(_) => parent_rect.x,
