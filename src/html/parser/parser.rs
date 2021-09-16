@@ -1,9 +1,5 @@
 use crate::html::dom::dom::DOMNode;
-use crate::html::dom::elements::elements::{
-    AnchorElement, BodyElement, DivElement, H1Element, HTMLElements, HeadElement, HtmlElement,
-    MetaElement, ParagraphElement, ScriptElement, SpanElement, StyleElement, TableElement,
-    TdElement, ThElement, TitleElement, TrElement,
-};
+use crate::html::dom::elements::elements::HTMLElements;
 use std::collections::HashMap;
 use std::vec::Vec;
 
@@ -54,26 +50,13 @@ impl Parser {
         }
 
         let tag = String::from_utf8(tag).unwrap();
-        let tag: &str = &tag;
+        let raw_tag: &str = &tag;
+
+        let tag = HTMLElements::init_from_str_tag(raw_tag);
 
         let tag = match tag {
-            HtmlElement => HTMLElements::HtmlElement,
-            HeadElement => HTMLElements::HeadElement,
-            BodyElement => HTMLElements::BodyElement,
-            ParagraphElement => HTMLElements::ParagraphElement,
-            AnchorElement => HTMLElements::AnchorElement,
-            DivElement => HTMLElements::DivElement,
-            SpanElement => HTMLElements::SpanElement,
-            TableElement => HTMLElements::TableElement,
-            TrElement => HTMLElements::TrElement,
-            ThElement => HTMLElements::ThElement,
-            TdElement => HTMLElements::TdElement,
-            TitleElement => HTMLElements::TitleElement,
-            MetaElement => HTMLElements::MetaElement,
-            StyleElement => HTMLElements::StyleElement,
-            ScriptElement => HTMLElements::ScriptElement,
-            H1Element => HTMLElements::H1Element,
-            _ => panic!("there is no element, {:?}", tag),
+            Some(tag) => tag,
+            None => panic!("Unknown tag: {}", raw_tag),
         };
 
         (tag, attributes)

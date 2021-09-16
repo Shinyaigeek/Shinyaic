@@ -1,26 +1,3 @@
-pub const HtmlElement: &str = "html";
-pub const BodyElement: &str = "body";
-pub const HeadElement: &str = "head";
-pub const ParagraphElement: &str = "p";
-pub const AnchorElement: &str = "a";
-pub const DivElement: &str = "div";
-pub const SpanElement: &str = "span";
-pub const ImgElement: &str = "img";
-pub const TableElement: &str = "table";
-pub const TrElement: &str = "tr";
-pub const TdElement: &str = "td";
-pub const ThElement: &str = "th";
-pub const FormElement: &str = "form";
-pub const InputElement: &str = "input";
-pub const ButtonElement: &str = "button";
-pub const SelectElement: &str = "select";
-pub const OptionElement: &str = "option";
-pub const TitleElement: &str = "title";
-pub const MetaElement: &str = "meta";
-pub const StyleElement: &str = "style";
-pub const ScriptElement: &str = "script";
-pub const H1Element: &str = "h1";
-
 #[derive(Debug, PartialEq, Clone)]
 pub enum HTMLElements {
     HtmlElement,
@@ -81,6 +58,34 @@ impl HTMLElements {
         match self {
             Self::MetaElement => false,
             _ => true,
+        }
+    }
+
+    pub fn init_from_str_tag(tag_str: &str) -> Option<Self> {
+        match tag_str {
+            "html" => Some(HTMLElements::HtmlElement),
+            "body" => Some(HTMLElements::BodyElement),
+            "head" => Some(HTMLElements::HeadElement),
+            "p" => Some(HTMLElements::ParagraphElement),
+            "a" => Some(HTMLElements::AnchorElement),
+            "div" => Some(HTMLElements::DivElement),
+            "span" => Some(HTMLElements::SpanElement),
+            "img" => Some(HTMLElements::ImgElement),
+            "table" => Some(HTMLElements::TableElement),
+            "tr" => Some(HTMLElements::TrElement),
+            "td" => Some(HTMLElements::TdElement),
+            "th" => Some(HTMLElements::ThElement),
+            "form" => Some(HTMLElements::FormElement),
+            "input" => Some(HTMLElements::InputElement),
+            "button" => Some(HTMLElements::ButtonElement),
+            "select" => Some(HTMLElements::SelectElement),
+            "option" => Some(HTMLElements::OptionElement),
+            "title" => Some(HTMLElements::TitleElement),
+            "meta" => Some(HTMLElements::MetaElement),
+            "style" => Some(HTMLElements::StyleElement),
+            "script" => Some(HTMLElements::ScriptElement),
+            "h1" => Some(HTMLElements::H1Element),
+            _ => None,
         }
     }
 }
