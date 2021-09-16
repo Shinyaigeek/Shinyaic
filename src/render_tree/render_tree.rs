@@ -55,14 +55,14 @@ impl RenderTree {
                     // TODO htmlにもstyleが来るので, skipはまずい
                     HTMLElements::HtmlElement => {
                         // TODO　一旦<html>の下には<head>と<body>がこの順序で来ると仮定
-                        &self.dom.children[1]
+                        self.dom.children[1].clone()
                     }
-                    _ => &self.dom,
+                    _ => self.dom.clone(),
                 }
             }
-            NodeType::TextNode(_) => &self.dom,
+            NodeType::TextNode(_) => self.dom.clone(),
         };
-        let render_tree_under_viewport = self.traverse_single_dom(dom.clone(), vec![]);
+        let render_tree_under_viewport = self.traverse_single_dom(dom, vec![]);
 
         self.tree.push_child(render_tree_under_viewport);
 
