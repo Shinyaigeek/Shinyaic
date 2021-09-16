@@ -42,7 +42,7 @@ impl RenderTree {
                     _ => &self.dom,
                 }
             }
-            NodeType::text_node(text) => &self.dom,
+            NodeType::text_node(_) => &self.dom,
         };
         self.handle_head(&head.clone());
 
@@ -59,7 +59,7 @@ impl RenderTree {
                     _ => &self.dom,
                 }
             }
-            NodeType::text_node(text) => &self.dom,
+            NodeType::text_node(_) => &self.dom,
         };
         let render_tree_under_viewport = self.traverse_single_dom(dom.clone(), vec![]);
 

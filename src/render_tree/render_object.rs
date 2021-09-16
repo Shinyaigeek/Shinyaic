@@ -68,7 +68,7 @@ impl RenderObject {
                 let mut i = 0;
 
                 while i < rendering_object.children.len() {
-                    let mut child = rendering_object.children.get_mut(i).unwrap();
+                    let child = rendering_object.children.get_mut(i).unwrap();
                     child.layouting_node(parent.clone(), big_brother_node);
                     println!("child: {:?}", child);
                     println!("---------");
