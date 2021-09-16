@@ -42,12 +42,4 @@ pub struct ElementType {
     pub attributes: HashMap<String, String>,
 }
 
-impl ElementType {
-    pub fn get_attributes_value(&self, key: String) -> String {
-        if self.attributes.get(&key).is_none() {
-            return self.attributes.get(&key).unwrap().to_string();
-        }
-
-        "".to_string()
-    }
-}
+impl ElementType {}

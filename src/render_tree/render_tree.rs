@@ -79,13 +79,13 @@ impl RenderTree {
         let parent = self.tree.clone();
         let mut i = 0;
 
-        let mut root_node = match self.tree {
+        let root_node = match self.tree {
             RenderObject::ViewPort(ref mut viewport) => viewport,
             _ => panic!("TODO"),
         };
 
         while i < root_node.children.len() {
-            let mut child = root_node.children.get_mut(i).unwrap();
+            let child = root_node.children.get_mut(i).unwrap();
             child.layouting_node(parent.clone(), big_brother);
             big_brother = Some(child.clone());
             i += 1;

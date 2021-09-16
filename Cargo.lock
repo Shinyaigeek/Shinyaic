@@ -3,16 +3,6 @@
 version = 3
 
 [[package]]
-name = "Shinyaic"
-version = "0.1.0"
-dependencies = [
- "iced",
- "iced_graphics",
- "iced_native",
- "konnnyaku-client",
-]
-
-[[package]]
 name = "ab_glyph"
 version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1922,6 +1912,16 @@ checksum = "2c4ccb6d0d32d277d3ef7dea86203d8210945eb7a45fba89dd445b3595dd0dfc"
 dependencies = [
  "cmake",
  "pkg-config",
+]
+
+[[package]]
+name = "shinyaic"
+version = "0.1.0"
+dependencies = [
+ "iced",
+ "iced_graphics",
+ "iced_native",
+ "konnnyaku-client",
 ]
 
 [[package]]
