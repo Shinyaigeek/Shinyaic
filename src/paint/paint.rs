@@ -17,13 +17,13 @@ use konnnyaku_client::Client;
 pub fn paint() {
     let mut settings = Settings::default();
     settings.window.size = (700, 700);
-    Window::run(settings);
+    Window::run(settings).unwrap();
 }
 
 // TODO
 pub struct Window {
     scroll: scrollable::State,
-    debug: bool,
+    pub debug: bool,
     render_tree: Vec<RenderObject>,
     url_search_bar_text_value: text_input::State,
     url_searchbar_text: String,
@@ -203,59 +203,4 @@ impl Sandbox for Window {
 pub enum Message {
     UrlSearchBarTextInputChanged(String),
     UrlSearchBarSubmit(String),
-}
-
-enum DisplayCommand {
-    Text(String, Color, Rectangle),
-    SolidColor(Color, Rectangle),
-}
-
-struct DisplayList {
-    list: Vec<DisplayCommand>,
-}
-
-impl DisplayList {
-    pub fn new() -> DisplayList {
-        DisplayList { list: Vec::new() }
-    }
-
-    pub fn constructor(_render_tree: RenderTree) {}
-
-    fn traverse(&mut self, render_object: &RenderObject, parent_render_object: &RenderObject) {
-        let parent_render_object = match parent_render_object {
-            RenderObject::Text(_) => panic!("todo"),
-            RenderObject::ViewPort(render_object)
-            | RenderObject::Scroll(render_object)
-            | RenderObject::Inline(render_object)
-            | RenderObject::Block(render_object) => render_object,
-        };
-        match render_object {
-            RenderObject::Text(text) => {
-                self.list.push(DisplayCommand::Text(
-                    text.clone(),
-                    Color {
-                        r: 0.0,
-                        g: 0.0,
-                        b: 0.0,
-                        a: 0.0,
-                    },
-                    parent_render_object.rectangle.clone(),
-                ));
-            }
-            RenderObject::ViewPort(_)
-            | RenderObject::Scroll(_)
-            | RenderObject::Inline(_)
-            | RenderObject::Block(_) => {
-                self.list.push(DisplayCommand::SolidColor(
-                    Color {
-                        r: 255.0,
-                        g: 0.0,
-                        b: 0.0,
-                        a: 0.0,
-                    },
-                    parent_render_object.rectangle.clone(),
-                ));
-            }
-        };
-    }
 }

@@ -317,42 +317,6 @@ impl RenderObject {
         }
     }
 
-    pub fn change_kind(&mut self, target: &str) -> Self {
-        let (children, style, rectangle) = match self {
-            Self::Text(_) => {
-                panic!("RenderObject::change_kind should not be called with text")
-            }
-            Self::ViewPort(render_object)
-            | Self::Inline(render_object)
-            | Self::Scroll(render_object)
-            | Self::Block(render_object) => (
-                render_object.children.clone(),
-                render_object.style.clone(),
-                render_object.rectangle.clone(),
-            ),
-        };
-        match target {
-            "view_port" => Self::ViewPort(_RenderObject {
-                children,
-                style,
-                rectangle,
-            }),
-            "scroll" => Self::Scroll(_RenderObject {
-                children,
-                style,
-                rectangle,
-            }),
-            "block" => Self::Block(_RenderObject {
-                children,
-                style,
-                rectangle,
-            }),
-            _ => {
-                panic!("RenderObject::change_kind should be viewport or scroll or block")
-            }
-        }
-    }
-
     pub fn push_child(&mut self, child: RenderObject) {
         match self {
             Self::Text(_) => {
