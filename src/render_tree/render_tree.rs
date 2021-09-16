@@ -37,15 +37,15 @@ impl RenderTree {
                     // TODO htmlにもstyleが来るので, skipはまずい
                     HTMLElements::HtmlElement => {
                         // TODO　一旦<html>の下には<head>と<body>がこの順序で来ると仮定
-                        &self.dom.children[0]
+                        self.dom.children[0].clone()
                     }
-                    _ => &self.dom,
+                    _ => self.dom.clone(),
                 }
             }
-            NodeType::TextNode(_) => &self.dom,
+            NodeType::TextNode(_) => self.dom.clone(),
         };
 
-        self.handle_head(&head.clone());
+        self.handle_head(&head);
 
         // TODO dom.rsでやる
         // TODO styled DOM と Rendering Tree で分けた方が良い
