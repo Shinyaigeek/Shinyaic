@@ -1,7 +1,6 @@
 use crate::css::cssom::declarations::Declarations;
 use crate::css::cssom::selector::Selector;
-use crate::html::dom::dom::{DOMNode, ElementType, NodeType};
-use std::collections::HashSet;
+use crate::html::dom::dom::DOMNode;
 
 // Selector: #id .class tagname, Declaration HashSet<key, value> width: 100px, padding: auto
 pub type CSSOM = Vec<StylingRule>;
