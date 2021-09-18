@@ -189,7 +189,7 @@ impl Parser {
         let node = if !target_tag_name.need_closing_tag() {
             DOMNode::elem(target_tag_name, attributes, vec![])
         } else {
-            let node = DOMNode::elem(target_tag_name.clone(), attributes, self.parse_nodes());
+            let node = DOMNode::elem(target_tag_name, attributes, self.parse_nodes());
             self.eat_closing_tag();
             node
         };
