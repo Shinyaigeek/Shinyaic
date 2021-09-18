@@ -100,7 +100,7 @@ impl Parser {
             let next_token = self.eat();
             if !is_eating_key {
                 if next_token == b'"' {
-                    attributes.insert(key.clone(), value.clone());
+                    attributes.insert(key.to_string(), value.to_string());
                     is_eating_key = true;
                 } else {
                     value.push(next_token as char);
