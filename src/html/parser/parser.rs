@@ -10,9 +10,7 @@ pub struct Parser {
 
 impl Parser {
     pub fn parse(&mut self) -> DOMNode {
-        if self.peek_start_with("<!DOCTYPE".to_string())
-            || self.peek_start_with("<!doctype".to_string())
-        {
+        if self.peek_start_with("<!DOCTYPE") || self.peek_start_with("<!doctype") {
             self.parse_doctype();
             self.eat_whitespace();
         }
@@ -155,7 +153,7 @@ impl Parser {
     fn parse_text(&mut self) -> DOMNode {
         let mut text = String::from("");
 
-        while !self.peek_start_with("<".to_string()) {
+        while !self.peek_start_with("<") {
             let c = self.eat();
             text.push(c as char);
         }
@@ -204,7 +202,7 @@ impl Parser {
         let mut nodes: Vec<DOMNode> = vec![];
 
         // 終了条件: eof or </
-        while !self.peek_start_with("</".to_string()) && !(self.input.len() <= self.pos) {
+        while !self.peek_start_with("</") && !(self.input.len() <= self.pos) {
             nodes.push(self.parse_node());
         }
         self.eat_whitespace();
