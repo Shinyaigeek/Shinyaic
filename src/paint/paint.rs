@@ -2,6 +2,7 @@
 
 use crate::css::parser::parser::Parser as CSSParser;
 use crate::html::parser::parser::Parser;
+use crate::paint::font::PaintFont;
 use crate::paint::window_canvas::{create_block, create_text};
 use crate::paint::wrapper::Wrapper;
 use crate::render_tree::rectangle::Rectangle;
@@ -11,7 +12,6 @@ use iced::{
     scrollable, text_input, Color, Container, Element, Length, Sandbox, Scrollable, Settings,
     TextInput,
 };
-use iced_native::Font;
 use konnnyaku_client::Client;
 
 pub fn paint() {
@@ -133,6 +133,7 @@ impl Sandbox for Window {
         for item in &self.render_tree {
             match item {
                 RenderObject::Text(text) => {
+                    let font = PaintFont::new(None, None, None, None);
                     wrapper.items.push(create_text(
                         text.to_string(),
                         Color::new(0.0, 0.0, 0.0, 1.0),
@@ -142,7 +143,7 @@ impl Sandbox for Window {
                             width: 700.0,
                             height: 700.0,
                         },
-                        Font::default(),
+                        font,
                     ));
                 }
                 RenderObject::ViewPort(rendering_object)
