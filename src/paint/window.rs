@@ -35,23 +35,6 @@ impl Sandbox for Window {
     fn view(&mut self) -> Element<Message> {
         let Window { scroll, .. } = self;
 
-        // let mut wrapper = Wrapper::new(300, 300);
-
-        // for item in &self.render_tree {
-            // wrapper.items.push(match item {
-            //     DisplayCommand::SolidColor(color, rect) => {
-            //         painter::create_block(color.clone(), rect.clone())
-            //     }
-            //     DisplayCommand::Text(text, color, rect, font) => painter::create_text(
-            //         text.into(),
-            //         color.clone(),
-            //         rect.clone(),
-            //         font.clone(),
-            //         font_context,
-            //     ),
-            // });
-        // }
-
         let scrollable = Scrollable::new(scroll);
 
         Container::new(scrollable)
@@ -69,13 +52,6 @@ fn paint(render_tree: RenderTree) {
     settings.window.size = (300, 300);
     Window::run(settings);
 }
-
-// struct Color {
-//     pub r: u8,
-//     pub g: u8,
-//     pub b: u8,
-//     pub a: u8,
-// }
 
 enum DisplayCommand {
     Text(String, Color, Rectangle),
