@@ -148,8 +148,8 @@ impl Parser {
         self.input.as_bytes()[self.pos]
     }
 
-    fn peek_start_with(&self, value: String) -> bool {
-        self.input[self.pos..].starts_with(&value)
+    fn peek_start_with<S: Into<String>>(&self, value: S) -> bool {
+        self.input[self.pos..].starts_with(value.into().as_str())
     }
 
     fn parse_text(&mut self) -> DOMNode {
