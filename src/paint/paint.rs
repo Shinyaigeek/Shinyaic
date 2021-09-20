@@ -133,7 +133,7 @@ impl Sandbox for Window {
         for item in &self.render_tree {
             match item {
                 RenderObject::Text(text) => {
-                    let font = PaintFont::new(None, None, None, None);
+                    let font = PaintFont::new(None, None);
                     wrapper.items.push(create_text(
                         text.to_string(),
                         Color::new(0.0, 0.0, 0.0, 1.0),

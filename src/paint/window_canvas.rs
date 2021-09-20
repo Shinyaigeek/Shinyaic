@@ -1,7 +1,9 @@
-use crate::paint::font::PaintFont;
+use crate::paint::font::{FontContext, PaintFont};
 use crate::render_tree::rectangle::Rectangle as RenderObjectRectangle;
 use iced_graphics::Primitive;
-use iced_native::{Background, Color, Point, Rectangle, Size};
+use iced_native::{
+    Background, Color, HorizontalAlignment, Point, Rectangle, Size, VerticalAlignment,
+};
 
 pub fn create_block(color: Color, rect: RenderObjectRectangle) -> Primitive {
     Primitive::Quad {
@@ -30,8 +32,8 @@ pub fn create_text(
         ),
         color: Color::from_rgba8(color.r as u8, color.g as u8, color.b as u8, color.a),
         size: font.size,
-        font: font.font,
-        horizontal_alignment: font.text_align,
-        vertical_alignment: font.vertical_align,
+        font: font.to_iced_font(&mut FontContext::new()),
+        horizontal_alignment: HorizontalAlignment::Left,
+        vertical_alignment: VerticalAlignment::Top,
     }
 }
