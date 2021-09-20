@@ -1,9 +1,7 @@
 use crate::paint::font::PaintFont;
 use crate::render_tree::rectangle::Rectangle as RenderObjectRectangle;
 use iced_graphics::Primitive;
-use iced_native::{
-    Background, Color, HorizontalAlignment, Point, Rectangle, Size, VerticalAlignment,
-};
+use iced_native::{Background, Color, Point, Rectangle, Size};
 
 pub fn create_block(color: Color, rect: RenderObjectRectangle) -> Primitive {
     Primitive::Quad {
