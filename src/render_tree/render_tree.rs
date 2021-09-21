@@ -1,12 +1,10 @@
 use crate::css::cssom::cssom::{StylingRule, CSSOM};
-use crate::css::cssom::selector::{Selector, SelectorElm};
+use crate::css::cssom::selector::Selector;
 use crate::css::parser::parser::Parser as CSSParser;
 use crate::html::dom::dom::{DOMNode, NodeType};
 use crate::html::dom::elements::elements::HTMLElements;
-use crate::html::parser::parser::Parser as HTMLParser;
 use crate::render_tree::rectangle::Rectangle;
-use crate::render_tree::render_object::{RenderObject, _RenderObject};
-use std::collections::HashMap;
+use crate::render_tree::render_object::RenderObject;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct RenderTree {
@@ -229,6 +227,10 @@ impl RenderTree {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::css::cssom::selector::SelectorElm;
+    use crate::html::parser::parser::Parser as HTMLParser;
+    use crate::render_tree::render_object::_RenderObject;
+    use std::collections::HashMap;
 
     #[test]
     fn test_render_tree() {

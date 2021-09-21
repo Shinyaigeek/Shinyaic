@@ -1,4 +1,4 @@
-use crate::html::dom::dom::{DOMNode, ElementType, NodeType};
+use crate::html::dom::dom::{DOMNode, NodeType};
 
 // TODO SelectorElmは正しいのか？, 属性selecytor
 #[derive(Debug, PartialEq, Clone, Eq, Hash)]
@@ -141,6 +141,7 @@ impl Selector {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::html::dom::dom::ElementType;
     use crate::html::dom::elements::elements::HTMLElements;
     use std::collections::HashMap;
 

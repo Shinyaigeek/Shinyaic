@@ -2,10 +2,8 @@
 
 use crate::css::parser::parser::Parser as CSSParser;
 use crate::html::parser::parser::Parser;
-use crate::paint::font::PaintFont;
 use crate::paint::window_canvas::{create_block, create_text};
 use crate::paint::wrapper::Wrapper;
-use crate::render_tree::rectangle::Rectangle;
 use crate::render_tree::render_object::RenderObject;
 use crate::render_tree::render_tree::RenderTree;
 use iced::{
@@ -135,7 +133,6 @@ impl Sandbox for Window {
         for item in &self.render_tree {
             match item {
                 RenderObject::Text(text) => {
-                    let font = PaintFont::new(None, None);
                     wrapper.items.push(create_text(
                         text.text.to_string(),
                         Color::new(0.0, 0.0, 0.0, 1.0),
