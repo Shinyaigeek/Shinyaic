@@ -192,9 +192,7 @@ impl RenderObject {
     fn calc_height(&self, _parent_height: &f32) -> f32 {
         let rendering_object = match self {
             // TODO
-            Self::Text(text) => {
-                return text.rectangle.height;
-            }
+            Self::Text(text) => return text.font.get_font_rendered_size().height as f32,
             Self::Block(rendering_object)
             | Self::Inline(rendering_object)
             | Self::Scroll(rendering_object)

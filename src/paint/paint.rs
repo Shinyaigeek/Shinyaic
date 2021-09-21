@@ -41,7 +41,7 @@ fn prepare() -> RenderTree {
 
     let mut parser = CSSParser {
         pos: 0,
-        input: "#id1 { width: 120; height: 90; background: rgba(255, 0, 0, 1); margin: 0; }
+        input: "#id1 { width: 120; background: rgba(255, 0, 0, 1); margin: 0; }
         #id2 { width: 120; height: 90; background: rgba(0, 255, 0, 1); margin: 0; }
         #id3 { width: 120; height: 90; background: rgba(0, 0, 255, 1); margin: 0; }"
             .to_string(),

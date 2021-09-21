@@ -153,11 +153,11 @@ impl PaintFont {
     }
 }
 
-struct PaintFontRenderedRect {
-    x: f64,
-    y: f64,
-    width: f64,
-    height: f64,
+pub struct PaintFontRenderedRect {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
 }
 
 fn px_to_pt(px: f64) -> f64 {
