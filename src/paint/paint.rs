@@ -32,7 +32,7 @@ pub struct Window {
 fn prepare() -> RenderTree {
     let mut parser = Parser {
         pos: 0,
-        input: "<html><head></head><body><p id=\"id1\">hello browser!</p><p id=\"id2\"></p><p id=\"id3\"></p></body></html>".to_string(),
+        input: "<html><head></head><body><p id=\"id1\">hello browser!</p><p id=\"id2\">asdf</p><p id=\"id3\"></p></body></html>".to_string(),
     };
 
     let dom = parser.parse();
@@ -53,6 +53,8 @@ fn prepare() -> RenderTree {
 
     let mut render_tree = RenderTree::new(dom, cssom);
     render_tree.constructor();
+    println!("------");
+    println!("{:?}", render_tree);
 
     render_tree
 }

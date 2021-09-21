@@ -117,8 +117,12 @@ impl RenderObject {
         let width = self.calc_width(&parent_rect.width);
         let height = self.calc_height(&parent_rect.height);
 
+        let x = self.calc_x(&parent_rect, &big_brother_rect);
+        let y = self.calc_y(&parent_rect, &big_brother_rect);
+
         let rendering_object = match self {
-            Self::Text(_) => {
+            Self::Text(text_render_object) => {
+                text_render_object.rectangle = Rectangle::new(x, y, width, height);
                 return;
             }
             Self::Block(rendering_object)
@@ -129,9 +133,6 @@ impl RenderObject {
 
         // TODO
         rendering_object.rectangle = Rectangle::new(0.0, 0.0, width, height);
-
-        let x = self.calc_x(&parent_rect, &big_brother_rect);
-        let y = self.calc_y(&parent_rect, &big_brother_rect);
 
         let rendering_object = match self {
             Self::Text(_) => {
@@ -150,7 +151,7 @@ impl RenderObject {
         let rendering_object = match self {
             // TODO
             Self::Text(_) => {
-                return 0.0;
+                return parent_width.clone();
             }
             Self::Block(rendering_object)
             | Self::Inline(rendering_object)

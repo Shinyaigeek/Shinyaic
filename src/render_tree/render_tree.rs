@@ -8,6 +8,7 @@ use crate::render_tree::rectangle::Rectangle;
 use crate::render_tree::render_object::{RenderObject, _RenderObject};
 use std::collections::HashMap;
 
+#[derive(Debug, PartialEq, Clone)]
 pub struct RenderTree {
     dom: DOMNode,
     cssom: CSSOM,
