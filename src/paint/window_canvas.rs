@@ -27,7 +27,7 @@ pub fn create_text(
     Primitive::Text {
         content,
         bounds: Rectangle::new(
-            Point::new(rect.x, rect.y),
+            Point::new(rect.x, 45.0 + rect.y),
             Size::new(rect.width, rect.height),
         ),
         color: Color::from_rgba8(color.r as u8, color.g as u8, color.b as u8, color.a),
