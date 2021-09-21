@@ -137,8 +137,8 @@ impl Sandbox for Window {
                     wrapper.items.push(create_text(
                         text.text.to_string(),
                         Color::new(0.0, 0.0, 0.0, 1.0),
-                        text.rectangle,
-                        text.font,
+                        text.rectangle.clone(),
+                        text.font.clone(),
                     ));
                 }
                 RenderObject::ViewPort(rendering_object)

@@ -126,7 +126,7 @@ impl RenderTree {
         children_styles: Vec<(Selector, StylingRule)>,
     ) -> RenderObject {
         match dom_node.clone().node_type {
-            NodeType::TextNode(txt) => RenderObject::init_with_text(txt),
+            NodeType::TextNode(txt) => RenderObject::init_with_text(txt, None, None),
             NodeType::DomNode(element_type) => {
                 match element_type.tag_name {
                     HTMLElements::StyleElement => {
