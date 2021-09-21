@@ -13,16 +13,7 @@ impl Parser {
         let mut cssom = Vec::<StylingRule>::new();
 
         loop {
-            let selector = self.parse_selector();
-            //  eat {
-            self.eat();
-
-            let declarations = self.parse_declarations();
-
-            cssom.push(StylingRule {
-                selector,
-                declarations,
-            });
+            self.parse_style(&mut cssom);
 
             self.goto_next_token();
 
@@ -41,6 +32,19 @@ impl Parser {
 
     fn peek(&self) -> u8 {
         self.input.as_bytes()[self.pos]
+    }
+
+    fn parse_style(&mut self, cssom: &mut Vec<StylingRule>) {
+        let selector = self.parse_selector();
+        //  eat {
+        self.eat();
+
+        let declarations = self.parse_declarations();
+
+        cssom.push(StylingRule {
+            selector,
+            declarations,
+        });
     }
 
     fn get_cur_char(&self) -> u8 {
