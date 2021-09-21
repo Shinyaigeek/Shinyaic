@@ -29,6 +29,12 @@ pub struct PaintFont {
     cache_key: FontCacheKey,
 }
 
+impl PartialEq for PaintFont {
+    fn eq(&self, other: &Self) -> bool {
+        self.family_name == other.family_name
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct FontCacheKey {
     size: f32,

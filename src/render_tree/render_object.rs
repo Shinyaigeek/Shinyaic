@@ -11,7 +11,7 @@ pub struct _RenderObject {
     pub rectangle: Rectangle,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct TextRenderObject {
     pub text: String,
     pub rectangle: Rectangle,
@@ -24,7 +24,7 @@ pub enum RenderObject {
     Scroll(_RenderObject),
     Block(_RenderObject),
     Inline(_RenderObject),
-    Text(String),
+    Text(TextRenderObject),
 }
 
 impl RenderObject {
@@ -268,8 +268,25 @@ impl RenderObject {
         y
     }
 
-    pub fn init_with_text(txt: String) -> Self {
-        Self::Text(txt)
+    pub fn init_with_text(
+        txt: String,
+        rectangle: Option<Rectangle>,
+        font: Option<PaintFont>,
+    ) -> Self {
+        let rectangle = rectangle.unwrap_or(Rectangle {
+            x: 0.0,
+            y: 0.0,
+            width: 700.0,
+            height: 700.0,
+        });
+
+        let font = font.unwrap_or(PaintFont::new(None, None));
+
+        Self::Text(TextRenderObject {
+            text: txt,
+            rectangle,
+            font,
+        })
     }
 
     pub fn init_with_element(element_type: ElementType) -> Option<Self> {

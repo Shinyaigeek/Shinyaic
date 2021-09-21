@@ -286,7 +286,11 @@ mod test {
                                 width: 120.0,
                                 height: 90.0,
                             },
-                            children: vec![RenderObject::Text("hello browser!".to_string()),],
+                            children: vec![RenderObject::init_with_text(
+                                "hello browser!".to_string(),
+                                None,
+                                None
+                            ),],
                             style: vec![StylingRule {
                                 selector: vec![Selector {
                                     elm: SelectorElm::Id("id1".to_string()),
