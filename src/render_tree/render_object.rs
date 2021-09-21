@@ -1,6 +1,7 @@
 use crate::css::cssom::cssom::StylingRule;
 use crate::html::dom::dom::{DOMNode, ElementType, NodeType};
 use crate::html::dom::elements::elements::HTMLElements;
+use crate::paint::font::PaintFont;
 use crate::render_tree::rectangle::Rectangle;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -8,6 +9,13 @@ pub struct _RenderObject {
     pub children: Vec<RenderObject>,
     pub style: Vec<StylingRule>,
     pub rectangle: Rectangle,
+}
+
+#[derive(Debug, Clone)]
+pub struct TextRenderObject {
+    pub text: String,
+    pub rectangle: Rectangle,
+    pub font: PaintFont,
 }
 
 #[derive(Debug, PartialEq, Clone)]
