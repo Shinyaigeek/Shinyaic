@@ -1,8 +1,11 @@
+use font_kit::canvas::RasterizationOptions;
 use font_kit::family_name::FamilyName;
 use font_kit::font::Font;
+use font_kit::hinting::HintingOptions;
 use font_kit::properties::{Properties as FontProperties, Style as FontStyle};
 use font_kit::source::SystemSource;
 use iced_native::Font as IcedFont;
+use pathfinder_geometry::transform2d::Transform2F;
 use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
@@ -137,18 +140,53 @@ impl PaintFont {
         }
     }
 
-    pub fn get_font_rendered_size(&self) -> PaintFontRenderedRect {
+    pub fn get_font_rendered_size(&self, width: f32, text: String) -> PaintFontRenderedRect {
         let ctfont = self
             .font
             .native_font()
             .clone_with_font_size(self.size as f64);
         let font = ctfont.bounding_box();
 
+        // TODO: これでいいの感
+        let id = self.font.glyph_for_char('a').unwrap();
+
+        let bounding = self
+            .font
+            .raster_bounds(
+                id,
+                self.size,
+                Transform2F::default(),
+                HintingOptions::None,
+                RasterizationOptions::Bilevel,
+            )
+            .unwrap();
+
+        let (width, height): (f32, f32) = {
+            if (text.len() as f32) * (bounding.width() as f32) <= width {
+                (bounding.width() as f32, font.size.height as f32)
+            } else {
+                let mut height = 0.0;
+                let mut text_cnt = text.len() as isize;
+                loop {
+                    text_cnt -= (width / bounding.width() as f32) as isize;
+                    height += font.size.height as f32;
+
+                    if text_cnt <= 0 {
+                        break;
+                    }
+                }
+
+                (width, height)
+            }
+        };
+
+        println!("font: {:#?}", font);
+
         PaintFontRenderedRect {
             x: font.origin.x,
             y: font.origin.y,
-            width: font.size.width,
-            height: font.size.height,
+            width: width as f64,
+            height: height as f64,
         }
     }
 }

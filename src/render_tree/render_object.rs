@@ -114,15 +114,14 @@ impl RenderObject {
         parent_rect: &Rectangle,
         big_brother_rect: &Option<Rectangle>,
     ) {
+        println!("rect: {:#?}", parent_rect);
         let width = self.calc_width(&parent_rect.width);
-        let height = self.calc_height(&parent_rect.height);
-
-        let x = self.calc_x(&parent_rect, &big_brother_rect);
-        let y = self.calc_y(&parent_rect, &big_brother_rect);
+        let height = self.calc_height(&parent_rect.height, &width);
 
         let rendering_object = match self {
             Self::Text(text_render_object) => {
-                text_render_object.rectangle = Rectangle::new(x, y, width, height);
+                text_render_object.rectangle =
+                    Rectangle::new(parent_rect.x, parent_rect.y, width, height);
                 return;
             }
             Self::Block(rendering_object)
@@ -133,6 +132,9 @@ impl RenderObject {
 
         // TODO
         rendering_object.rectangle = Rectangle::new(0.0, 0.0, width, height);
+
+        let x = self.calc_x(&parent_rect, &big_brother_rect);
+        let y = self.calc_y(&parent_rect, &big_brother_rect);
 
         let rendering_object = match self {
             Self::Text(_) => {
@@ -189,10 +191,16 @@ impl RenderObject {
         width.clone()
     }
 
-    fn calc_height(&self, _parent_height: &f32) -> f32 {
+    fn calc_height(&self, _parent_height: &f32, parent_width: &f32) -> f32 {
+        println!("www: {:?}", parent_width);
         let rendering_object = match self {
             // TODO
-            Self::Text(text) => return text.font.get_font_rendered_size().height as f32,
+            Self::Text(text) => {
+                return text
+                    .font
+                    .get_font_rendered_size(parent_width.clone(), text.text.clone())
+                    .height as f32
+            }
             Self::Block(rendering_object)
             | Self::Inline(rendering_object)
             | Self::Scroll(rendering_object)
@@ -219,7 +227,6 @@ impl RenderObject {
         }
 
         let height = match self {
-            // TODO
             Self::Text(_) => {
                 return 0.0;
             }
@@ -229,7 +236,7 @@ impl RenderObject {
             | Self::ViewPort(rendering_object) => {
                 let mut height = 0.0;
                 for child in rendering_object.clone().children {
-                    height += child.calc_height(&rendering_object.rectangle.height);
+                    height += child.calc_height(&rendering_object.rectangle.height, &parent_width);
                 }
                 height
             }

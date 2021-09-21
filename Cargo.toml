@@ -12,4 +12,5 @@ font-kit = "0.10.1"
 iced = "0.3"
 iced_native = "0.4"
 iced_graphics = "0.2"
+pathfinder_geometry = "0.5.1"
 konnnyaku-client = { path = "./konnnyaku/packages/konnnyaku-client" }

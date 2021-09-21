@@ -2040,6 +2040,7 @@ dependencies = [
  "iced_graphics",
  "iced_native",
  "konnnyaku-client",
+ "pathfinder_geometry",
 ]
 
 [[package]]

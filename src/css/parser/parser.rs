@@ -11,9 +11,13 @@ pub struct Parser {
 impl Parser {
     pub fn parse(&mut self) -> CSSOM {
         let mut cssom = Vec::<StylingRule>::new();
+        self.goto_next_token();
 
         loop {
-            self.parse_style(&mut cssom);
+            if self.peek_start_with("@") {
+            } else {
+                self.parse_style(&mut cssom);
+            };
 
             self.goto_next_token();
 
@@ -35,6 +39,19 @@ impl Parser {
     }
 
     fn parse_style(&mut self, cssom: &mut Vec<StylingRule>) {
+        let selector = self.parse_selector();
+        //  eat {
+        self.eat();
+
+        let declarations = self.parse_declarations();
+
+        cssom.push(StylingRule {
+            selector,
+            declarations,
+        });
+    }
+
+    fn parse_media_query(&mut self, cssom: &mut Vec<StylingRule>) {
         let selector = self.parse_selector();
         //  eat {
         self.eat();
@@ -239,6 +256,10 @@ impl Parser {
         }
 
         value
+    }
+
+    fn peek_start_with<S: Into<String>>(&self, value: S) -> bool {
+        self.input[self.pos..].starts_with(value.into().as_str())
     }
 }
 
