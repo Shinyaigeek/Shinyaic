@@ -130,6 +130,28 @@ impl PaintFont {
             bytes: self.get_static_font_data(font_context),
         }
     }
+
+    pub fn get_font_rendered_size(&self) -> PaintFontRenderedRect {
+        let ctfont = self
+            .font
+            .native_font()
+            .clone_with_font_size(self.size as f64);
+        let font = ctfont.bounding_box();
+
+        PaintFontRenderedRect {
+            x: font.origin.x,
+            y: font.origin.y,
+            width: font.size.width,
+            height: font.size.height,
+        }
+    }
+}
+
+struct PaintFontRenderedRect {
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
 }
 
 fn px_to_pt(px: f64) -> f64 {
