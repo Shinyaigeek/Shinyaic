@@ -191,8 +191,8 @@ impl RenderObject {
     fn calc_height(&self, _parent_height: &f32) -> f32 {
         let rendering_object = match self {
             // TODO
-            Self::Text(_) => {
-                return 0.0;
+            Self::Text(text) => {
+                return text.rectangle.height;
             }
             Self::Block(rendering_object)
             | Self::Inline(rendering_object)
@@ -258,7 +258,6 @@ impl RenderObject {
         };
 
         let y = match self {
-            // TODO
             Self::Text(_) => parent_rect.y,
             Self::Block(_) | Self::Inline(_) | Self::Scroll(_) | Self::ViewPort(_) => {
                 big_brother_rect.y + big_brother_rect.height
@@ -275,7 +274,7 @@ impl RenderObject {
     ) -> Self {
         let rectangle = rectangle.unwrap_or(Rectangle {
             x: 0.0,
-            y: 0.0,
+            y: 45.0,
             width: 700.0,
             height: 700.0,
         });
