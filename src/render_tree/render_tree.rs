@@ -291,7 +291,12 @@ mod test {
                             },
                             children: vec![RenderObject::init_with_text(
                                 "hello browser!".to_string(),
-                                None,
+                                Some(Rectangle {
+                                    x: 0.0,
+                                    y: 0.0,
+                                    width: 120.0,
+                                    height: 23.642578,
+                                }),
                                 None
                             ),],
                             style: vec![StylingRule {
