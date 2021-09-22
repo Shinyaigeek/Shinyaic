@@ -4,5 +4,5 @@ pub fn fix_unit_to_px(value: String) -> Option<f32> {
         return Some(str_value.parse::<f32>().unwrap());
     }
 
-    None
+    Some(value.parse::<f32>().unwrap())
 }
