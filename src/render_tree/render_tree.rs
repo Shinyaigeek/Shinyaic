@@ -94,7 +94,6 @@ impl RenderTree {
 
     fn handle_head(&mut self, head: &DOMNode) {
         for head_el in head.children.clone() {
-            println!("head_el: {:?}", head_el);
             match head_el.node_type {
                 NodeType::DomNode(element_type) => match element_type.tag_name {
                     HTMLElements::StyleElement => {
@@ -108,7 +107,6 @@ impl RenderTree {
                             input: style_text,
                         };
                         let mut cssom = parser.parse();
-                        println!("cssom: {:?}", cssom);
                         self.cssom.append(&mut cssom);
                     }
                     _ => (),

@@ -15,6 +15,9 @@ impl Parser {
 
         loop {
             if self.peek_start_with("@") {
+                // self.parse_media_query(&mut cssom);
+                // TODO
+                break;
             } else {
                 self.parse_style(&mut cssom);
             };
