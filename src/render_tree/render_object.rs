@@ -2,6 +2,7 @@ use crate::css::cssom::cssom::StylingRule;
 use crate::html::dom::dom::{DOMNode, ElementType, NodeType};
 use crate::html::dom::elements::elements::HTMLElements;
 use crate::paint::font::PaintFont;
+use crate::render_tree::pt::fix_unit_to_px;
 use crate::render_tree::rectangle::Rectangle;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -163,18 +164,16 @@ impl RenderObject {
 
         for style in rendering_object.clone().style {
             if style.declarations.get(&"width".to_string()).is_some() {
-                let raw_width = style
-                    .declarations
-                    .get(&"width".to_string())
-                    .unwrap()
-                    .parse::<f32>();
+                let raw_width = style.declarations.get(&"width".to_string()).unwrap();
+
+                let raw_width = fix_unit_to_px(raw_width.to_string());
 
                 match raw_width {
-                    Ok(width) => {
+                    Some(width) => {
                         return width;
                     }
-                    Err(e) => {
-                        panic!("{}", e);
+                    None => {
+                        panic!("TODO");
                     }
                 }
             }
