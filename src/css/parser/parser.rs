@@ -180,7 +180,7 @@ impl Parser {
         loop {
             let peeked = self.peek();
 
-            if peeked != b' ' || self.is_eof() {
+            if self.is_eof() || (peeked != b' ' && peeked != b'\n' && peeked != b'\t') {
                 break;
             }
 
