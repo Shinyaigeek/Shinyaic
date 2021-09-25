@@ -191,7 +191,6 @@ impl RenderObject {
     }
 
     fn calc_height(&self, _parent_height: &f32, parent_width: &f32) -> f32 {
-        println!("www: {:?}", parent_width);
         let rendering_object = match self {
             // TODO
             Self::Text(text) => {
