@@ -13,8 +13,8 @@ pub fn create_block(color: Color, rect: RenderObjectRectangle) -> Primitive {
         ),
         background: Background::Color(color),
         border_radius: 0.0,
-        border_width: 0.0,
-        border_color: Color::TRANSPARENT,
+        border_width: 1.0,
+        border_color: Color::BLACK,
     }
 }
 
