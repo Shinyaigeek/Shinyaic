@@ -6,3 +6,18 @@ pub fn fix_unit_to_px(value: String) -> Option<f32> {
 
     Some(value.parse::<f32>().unwrap())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_fix_unit_to_px() {
+        assert_eq!(fix_unit_to_px("10px".to_string()), Some(10.0));
+    }
+
+    #[test]
+    fn test_fix_unit_to_px_without_px() {
+        assert_eq!(fix_unit_to_px("10".to_string()), Some(10.0));
+    }
+}
