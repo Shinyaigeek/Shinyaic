@@ -294,7 +294,38 @@ impl RenderObject {
             Self::Block(_) | Self::Inline(_) | Self::Scroll(_) | Self::ViewPort(_) => parent_rect.x,
         };
 
-        x
+        let rendering_object = match self {
+            // TODO
+            Self::Text(text) => {
+                return parent_rect.x;
+            }
+            Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => rendering_object,
+        };
+
+        let mut paddinged_width = 0.0;
+
+        for style in rendering_object.clone().style {
+            if style.declarations.get(&"padding".to_string()).is_some() {
+                let padding = style.declarations.get(&"padding".to_string()).unwrap();
+
+                // TODO
+                let padding = fix_unit_to_px(padding.to_string());
+
+                match padding {
+                    Some(_padding) => {
+                        paddinged_width = _padding;
+                    }
+                    None => {
+                        panic!("TODO");
+                    }
+                }
+            }
+        }
+
+        x + paddinged_width
     }
 
     fn calc_y(&self, parent_rect: &Rectangle, big_brother_rect: &Option<Rectangle>) -> f32 {
@@ -312,7 +343,38 @@ impl RenderObject {
             }
         };
 
-        y
+        let rendering_object = match self {
+            // TODO
+            Self::Text(text) => {
+                return parent_rect.y;
+            }
+            Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => rendering_object,
+        };
+
+        let mut paddinged_height = 0.0;
+
+        for style in rendering_object.clone().style {
+            if style.declarations.get(&"padding".to_string()).is_some() {
+                let padding = style.declarations.get(&"padding".to_string()).unwrap();
+
+                // TODO
+                let padding = fix_unit_to_px(padding.to_string());
+
+                match padding {
+                    Some(_padding) => {
+                        paddinged_height = _padding;
+                    }
+                    None => {
+                        panic!("TODO");
+                    }
+                }
+            }
+        }
+
+        y + paddinged_height
     }
 
     pub fn init_with_text(
