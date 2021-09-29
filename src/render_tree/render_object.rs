@@ -161,7 +161,7 @@ impl RenderObject {
         pad_top: Option<f32>,
     ) {
         println!("rect: {:#?}", parent_rect);
-        let width = self.calc_width(&parent_rect.width);
+        let width = self.calc_width(&(parent_rect.width - pad_left.unwrap_or(0.0) * 2.0));
         let height = self.calc_height(&parent_rect.height, &width);
 
         let rendering_object = match self {
