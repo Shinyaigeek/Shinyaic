@@ -284,7 +284,7 @@ impl RenderObject {
             }
         };
 
-        height
+        height + paddinged_height
     }
 
     fn calc_x(&self, parent_rect: &Rectangle, _big_brother_rect: &Option<Rectangle>) -> f32 {
