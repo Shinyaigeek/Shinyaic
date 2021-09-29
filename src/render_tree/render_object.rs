@@ -296,7 +296,7 @@ impl RenderObject {
 
         let rendering_object = match self {
             // TODO
-            Self::Text(text) => {
+            Self::Text(_) => {
                 return parent_rect.x;
             }
             Self::Block(rendering_object)
@@ -345,7 +345,7 @@ impl RenderObject {
 
         let rendering_object = match self {
             // TODO
-            Self::Text(text) => {
+            Self::Text(_) => {
                 return parent_rect.y;
             }
             Self::Block(rendering_object)
