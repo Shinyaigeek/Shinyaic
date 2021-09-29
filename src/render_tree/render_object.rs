@@ -37,7 +37,13 @@ impl RenderObject {
         })
     }
 
-    pub fn layouting_node(&mut self, parent_node: Self, big_brother_node: Option<Self>) {
+    pub fn layouting_node(
+        &mut self,
+        parent_node: Self,
+        big_brother_node: Option<Self>,
+        pad_left: Option<f32>,
+        pad_top: Option<f32>,
+    ) {
         let big_brother_node = match big_brother_node {
             Some(big_brother_node_) => Some(big_brother_node_),
             None => None,
@@ -62,9 +68,41 @@ impl RenderObject {
             },
         };
 
-        self.calc_rectangle(&parent_rectangle, &big_brother_rectangle);
+        self.calc_rectangle(&parent_rectangle, &big_brother_rectangle, pad_left, pad_top);
 
         let parent = self.clone();
+
+        let mut paddinged_width = 0.0;
+        let mut paddinged_height = 0.0;
+
+        let styles = match self {
+            Self::Text(_) => {
+                vec![]
+            }
+            Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => rendering_object.style.clone(),
+        };
+
+        for style in styles {
+            if style.declarations.get(&"padding".to_string()).is_some() {
+                let padding = style.declarations.get(&"padding".to_string()).unwrap();
+
+                // TODO
+                let padding = fix_unit_to_px(padding.to_string());
+
+                match padding {
+                    Some(_padding) => {
+                        paddinged_width = _padding;
+                        paddinged_height = _padding;
+                    }
+                    None => {
+                        panic!("TODO");
+                    }
+                }
+            }
+        }
 
         match self {
             Self::Text(_) => return,
@@ -78,7 +116,12 @@ impl RenderObject {
 
                 while i < rendering_object.children.len() {
                     let child = rendering_object.children.get_mut(i).unwrap();
-                    child.layouting_node(parent.clone(), big_brother_node);
+                    child.layouting_node(
+                        parent.clone(),
+                        big_brother_node.clone(),
+                        Some(paddinged_width),
+                        if i > 0 { None } else { Some(paddinged_height) },
+                    );
                     println!("child: {:?}", child);
                     println!("---------");
                     big_brother_node = Some(child.clone());
@@ -114,6 +157,8 @@ impl RenderObject {
         &mut self,
         parent_rect: &Rectangle,
         big_brother_rect: &Option<Rectangle>,
+        pad_left: Option<f32>,
+        pad_top: Option<f32>,
     ) {
         println!("rect: {:#?}", parent_rect);
         let width = self.calc_width(&parent_rect.width);
@@ -134,8 +179,8 @@ impl RenderObject {
         // TODO
         rendering_object.rectangle = Rectangle::new(0.0, 0.0, width, height);
 
-        let x = self.calc_x(&parent_rect, &big_brother_rect);
-        let y = self.calc_y(&parent_rect, &big_brother_rect);
+        let x = self.calc_x(&parent_rect, pad_left, &big_brother_rect);
+        let y = self.calc_y(&parent_rect, pad_top, &big_brother_rect);
 
         let rendering_object = match self {
             Self::Text(_) => {
@@ -204,7 +249,7 @@ impl RenderObject {
                 return 0.0;
             }
             Self::Block(_) | Self::Inline(_) | Self::Scroll(_) | Self::ViewPort(_) => {
-                width + paddinged_width
+                width + paddinged_width * 2.0
             }
         };
 
@@ -284,51 +329,30 @@ impl RenderObject {
             }
         };
 
-        height + paddinged_height
+        height + paddinged_height * 2.0
     }
 
-    fn calc_x(&self, parent_rect: &Rectangle, _big_brother_rect: &Option<Rectangle>) -> f32 {
+    fn calc_x(
+        &self,
+        parent_rect: &Rectangle,
+        pad_left: Option<f32>,
+        _big_brother_rect: &Option<Rectangle>,
+    ) -> f32 {
         let x = match self {
             // TODO
             Self::Text(_) => parent_rect.x,
             Self::Block(_) | Self::Inline(_) | Self::Scroll(_) | Self::ViewPort(_) => parent_rect.x,
         };
 
-        let rendering_object = match self {
-            // TODO
-            Self::Text(_) => {
-                return parent_rect.x;
-            }
-            Self::Block(rendering_object)
-            | Self::Inline(rendering_object)
-            | Self::Scroll(rendering_object)
-            | Self::ViewPort(rendering_object) => rendering_object,
-        };
-
-        let mut paddinged_width = 0.0;
-
-        for style in rendering_object.clone().style {
-            if style.declarations.get(&"padding".to_string()).is_some() {
-                let padding = style.declarations.get(&"padding".to_string()).unwrap();
-
-                // TODO
-                let padding = fix_unit_to_px(padding.to_string());
-
-                match padding {
-                    Some(_padding) => {
-                        paddinged_width = _padding;
-                    }
-                    None => {
-                        panic!("TODO");
-                    }
-                }
-            }
-        }
-
-        x + paddinged_width
+        x + pad_left.unwrap_or(0.0)
     }
 
-    fn calc_y(&self, parent_rect: &Rectangle, big_brother_rect: &Option<Rectangle>) -> f32 {
+    fn calc_y(
+        &self,
+        parent_rect: &Rectangle,
+        pad_top: Option<f32>,
+        big_brother_rect: &Option<Rectangle>,
+    ) -> f32 {
         let big_brother_rect = match big_brother_rect {
             Some(big_brother_rect) => big_brother_rect,
             None => {
@@ -343,38 +367,7 @@ impl RenderObject {
             }
         };
 
-        let rendering_object = match self {
-            // TODO
-            Self::Text(_) => {
-                return parent_rect.y;
-            }
-            Self::Block(rendering_object)
-            | Self::Inline(rendering_object)
-            | Self::Scroll(rendering_object)
-            | Self::ViewPort(rendering_object) => rendering_object,
-        };
-
-        let mut paddinged_height = 0.0;
-
-        for style in rendering_object.clone().style {
-            if style.declarations.get(&"padding".to_string()).is_some() {
-                let padding = style.declarations.get(&"padding".to_string()).unwrap();
-
-                // TODO
-                let padding = fix_unit_to_px(padding.to_string());
-
-                match padding {
-                    Some(_padding) => {
-                        paddinged_height = _padding;
-                    }
-                    None => {
-                        panic!("TODO");
-                    }
-                }
-            }
-        }
-
-        y + paddinged_height
+        y + pad_top.unwrap_or(0.0)
     }
 
     pub fn init_with_text(
@@ -385,7 +378,7 @@ impl RenderObject {
         let rectangle = rectangle.unwrap_or(Rectangle {
             x: 0.0,
             y: 45.0,
-            width: 700.0,
+            width: 900.0,
             height: 700.0,
         });
 

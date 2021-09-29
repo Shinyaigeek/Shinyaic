@@ -65,7 +65,7 @@ impl RenderTree {
 
         self.tree.push_child(render_tree_under_viewport);
 
-        self.layouting(700.0, 700.0);
+        self.layouting(900.0, 700.0);
     }
 
     pub fn layouting(&mut self, window_with: f32, window_height: f32) {
@@ -86,7 +86,7 @@ impl RenderTree {
 
         while i < root_node.children.len() {
             let child = root_node.children.get_mut(i).unwrap();
-            child.layouting_node(parent.clone(), big_brother);
+            child.layouting_node(parent.clone(), big_brother, None, None);
             big_brother = Some(child.clone());
             i += 1;
         }
@@ -269,14 +269,14 @@ mod test {
                 rectangle: Rectangle {
                     x: 0.0,
                     y: 0.0,
-                    width: 700.0,
+                    width: 900.0,
                     height: 700.0,
                 },
                 children: vec![RenderObject::Scroll(_RenderObject {
                     rectangle: Rectangle {
                         x: 0.0,
                         y: 0.0,
-                        width: 700.0,
+                        width: 900.0,
                         height: 270.0,
                     },
                     children: vec![
