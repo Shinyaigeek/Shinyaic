@@ -168,7 +168,7 @@ impl PaintFont {
                 let mut height = 0.0;
                 let mut text_cnt = text.len() as isize;
                 loop {
-                    text_cnt -= (width / bounding.width() as f32) as isize;
+                    text_cnt -= (width / bounding.width() as f32) as isize + 1;
                     height += font.size.height as f32;
 
                     if text_cnt <= 0 {

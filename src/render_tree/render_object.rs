@@ -57,7 +57,7 @@ impl RenderObject {
             | Self::Inline(parent_node) => parent_node.rectangle,
         };
 
-        let big_brother_rectangle = match big_brother_node {
+        let big_brother_rectangle = match big_brother_node.clone() {
             None => None,
             Some(big_brother_node_) => match big_brother_node_ {
                 Self::Text(_) => panic!("TODO"),
@@ -68,7 +68,16 @@ impl RenderObject {
             },
         };
 
-        self.calc_rectangle(&parent_rectangle, &big_brother_rectangle, pad_left, pad_top);
+        self.calc_rectangle(
+            &parent_rectangle,
+            &big_brother_rectangle,
+            pad_left,
+            if big_brother_node.is_none() {
+                pad_top
+            } else {
+                None
+            },
+        );
 
         let parent = self.clone();
 
@@ -94,8 +103,8 @@ impl RenderObject {
 
                 match padding {
                     Some(_padding) => {
-                        paddinged_width = _padding;
-                        paddinged_height = _padding;
+                        paddinged_width = _padding.clone();
+                        paddinged_height = _padding.clone();
                     }
                     None => {
                         panic!("TODO");
@@ -114,13 +123,16 @@ impl RenderObject {
 
                 let mut i = 0;
 
-                while i < rendering_object.children.len() {
+                let children_length = rendering_object.children.len();
+
+                while i < children_length {
                     let child = rendering_object.children.get_mut(i).unwrap();
+
                     child.layouting_node(
                         parent.clone(),
                         big_brother_node.clone(),
                         Some(paddinged_width),
-                        if i > 0 { None } else { Some(paddinged_height) },
+                        Some(paddinged_height),
                     );
                     println!("child: {:?}", child);
                     println!("---------");
@@ -181,6 +193,8 @@ impl RenderObject {
 
         let x = self.calc_x(&parent_rect, pad_left, &big_brother_rect);
         let y = self.calc_y(&parent_rect, pad_top, &big_brother_rect);
+
+        println!("yyyyy---- {:?}", y);
 
         let rendering_object = match self {
             Self::Text(_) => {
@@ -310,7 +324,7 @@ impl RenderObject {
         }
 
         if height.is_some() {
-            return height.unwrap() + paddinged_height;
+            return height.unwrap() + paddinged_height * 2.0;
         }
 
         let height = match self {
@@ -356,7 +370,7 @@ impl RenderObject {
         let big_brother_rect = match big_brother_rect {
             Some(big_brother_rect) => big_brother_rect,
             None => {
-                return parent_rect.y;
+                return parent_rect.y + pad_top.unwrap_or(0.0);
             }
         };
 
