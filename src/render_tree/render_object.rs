@@ -162,6 +162,9 @@ impl RenderObject {
             | Self::ViewPort(rendering_object) => rendering_object,
         };
 
+        let mut width = parent_width.clone();
+        let mut paddinged_width = 0.0;
+
         for style in rendering_object.clone().style {
             if style.declarations.get(&"width".to_string()).is_some() {
                 let raw_width = style.declarations.get(&"width".to_string()).unwrap();
@@ -169,8 +172,24 @@ impl RenderObject {
                 let raw_width = fix_unit_to_px(raw_width.to_string());
 
                 match raw_width {
-                    Some(width) => {
-                        return width;
+                    Some(_width) => {
+                        width = _width;
+                    }
+                    None => {
+                        panic!("TODO");
+                    }
+                }
+            }
+
+            if style.declarations.get(&"padding".to_string()).is_some() {
+                let padding = style.declarations.get(&"padding".to_string()).unwrap();
+
+                // TODO
+                let padding = fix_unit_to_px(padding.to_string());
+
+                match padding {
+                    Some(_padding) => {
+                        paddinged_width = _padding;
                     }
                     None => {
                         panic!("TODO");
@@ -184,7 +203,9 @@ impl RenderObject {
             Self::Text(_) => {
                 return 0.0;
             }
-            Self::Block(_) | Self::Inline(_) | Self::Scroll(_) | Self::ViewPort(_) => parent_width,
+            Self::Block(_) | Self::Inline(_) | Self::Scroll(_) | Self::ViewPort(_) => {
+                width + paddinged_width
+            }
         };
 
         width.clone()
@@ -205,6 +226,9 @@ impl RenderObject {
             | Self::ViewPort(rendering_object) => rendering_object,
         };
 
+        let mut height = Option::<f32>::None;
+        let mut paddinged_height = 0.0;
+
         for style in rendering_object.clone().style {
             if style.declarations.get(&"height".to_string()).is_some() {
                 let raw_height = style
@@ -214,14 +238,34 @@ impl RenderObject {
                     .parse::<f32>();
 
                 match raw_height {
-                    Ok(height) => {
-                        return height;
+                    Ok(_height) => {
+                        height = Some(_height);
                     }
                     Err(e) => {
                         panic!("{:?}", e);
                     }
                 }
             }
+
+            if style.declarations.get(&"padding".to_string()).is_some() {
+                let padding = style.declarations.get(&"padding".to_string()).unwrap();
+
+                // TODO
+                let padding = fix_unit_to_px(padding.to_string());
+
+                match padding {
+                    Some(_padding) => {
+                        paddinged_height = _padding;
+                    }
+                    None => {
+                        panic!("TODO");
+                    }
+                }
+            }
+        }
+
+        if height.is_some() {
+            return height.unwrap() + paddinged_height;
         }
 
         let height = match self {

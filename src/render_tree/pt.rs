@@ -4,6 +4,12 @@ pub fn fix_unit_to_px(value: String) -> Option<f32> {
         return Some(str_value.parse::<f32>().unwrap());
     }
 
+    if value.ends_with("em") {
+        // TODO
+        let str_value = value.strip_suffix("em").unwrap();
+        return Some(str_value.parse::<f32>().unwrap() * 18.0);
+    }
+
     Some(value.parse::<f32>().unwrap())
 }
 
