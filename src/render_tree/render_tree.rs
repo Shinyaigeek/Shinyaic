@@ -3,6 +3,8 @@ use crate::css::cssom::selector::Selector;
 use crate::css::parser::parser::Parser as CSSParser;
 use crate::html::dom::dom::{DOMNode, NodeType};
 use crate::html::dom::elements::elements::HTMLElements;
+use crate::paint::font::PaintFont;
+use crate::render_tree::pt::fix_unit_to_px;
 use crate::render_tree::rectangle::Rectangle;
 use crate::render_tree::render_object::RenderObject;
 
@@ -61,7 +63,7 @@ impl RenderTree {
             }
             NodeType::TextNode(_) => self.dom.clone(),
         };
-        let render_tree_under_viewport = self.traverse_single_dom(dom, vec![]);
+        let render_tree_under_viewport = self.traverse_single_dom(dom, vec![], None);
 
         self.tree.push_child(render_tree_under_viewport);
 
@@ -121,9 +123,10 @@ impl RenderTree {
         &mut self,
         dom_node: DOMNode,
         children_styles: Vec<(Selector, StylingRule)>,
+        font: Option<PaintFont>,
     ) -> RenderObject {
         match dom_node.clone().node_type {
-            NodeType::TextNode(txt) => RenderObject::init_with_text(txt, None, None),
+            NodeType::TextNode(txt) => RenderObject::init_with_text(txt, None, font),
             NodeType::DomNode(element_type) => {
                 match element_type.tag_name {
                     HTMLElements::StyleElement => {
@@ -146,6 +149,7 @@ impl RenderTree {
                         // do nothing
                     }
                 };
+
                 let raw_render_object = RenderObject::init_with_element(element_type);
                 let mut raw_render_object = match raw_render_object {
                     Some(raw_render_object) => raw_render_object,
@@ -199,19 +203,43 @@ impl RenderTree {
 
                 raw_render_object.replace_style(style);
 
+                let current_font = match raw_render_object.clone() {
+                    RenderObject::Text(_) => font,
+                    RenderObject::ViewPort(render_object)
+                    | RenderObject::Scroll(render_object)
+                    | RenderObject::Block(render_object)
+                    | RenderObject::Inline(render_object) => {
+                        let styles = render_object.style;
+                        let mut current_font = Option::<PaintFont>::None;
+                        for style in styles {
+                            if style.declarations.get("font-size").is_some() {
+                                let font_size = style.declarations.get("font-size").unwrap();
+                                let font_size = fix_unit_to_px(font_size.clone());
+                                current_font = Some(PaintFont::new(None, font_size));
+                            }
+                        }
+
+                        current_font
+                    }
+                };
+
                 // TODO 後で消す
                 if dom_node.children.len() == 0 {
                     raw_render_object
                 } else {
                     for child in dom_node.children {
                         if RenderObject::can_init_element(&child) {
-                            raw_render_object.push_child(
-                                self.traverse_single_dom(child, passed_children_styles.clone()),
-                            )
+                            raw_render_object.push_child(self.traverse_single_dom(
+                                child,
+                                passed_children_styles.clone(),
+                                current_font.clone(),
+                            ))
                         } else if RenderObject::can_init_text(&child) {
-                            raw_render_object.push_child(
-                                self.traverse_single_dom(child, passed_children_styles.clone()),
-                            )
+                            raw_render_object.push_child(self.traverse_single_dom(
+                                child,
+                                passed_children_styles.clone(),
+                                current_font.clone(),
+                            ))
                         }
                     }
 

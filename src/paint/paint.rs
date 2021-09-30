@@ -95,7 +95,7 @@ a:link, a:visited {
             margin-right: 0;
             font-weight: bold;
         }"
-            .to_string(),
+        .to_string(),
     };
 
     let cssom = parser.parse();
