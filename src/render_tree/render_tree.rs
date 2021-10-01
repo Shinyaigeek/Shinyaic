@@ -7,12 +7,14 @@ use crate::paint::font::PaintFont;
 use crate::render_tree::pt::fix_unit_to_px;
 use crate::render_tree::rectangle::Rectangle;
 use crate::render_tree::render_object::RenderObject;
+use crate::render_tree::window_size::WindowSize;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct RenderTree {
     dom: DOMNode,
     cssom: CSSOM,
     pub tree: RenderObject,
+    pub window_size: WindowSize,
 }
 
 impl RenderTree {
@@ -21,6 +23,7 @@ impl RenderTree {
             dom,
             cssom,
             tree: RenderObject::new(),
+            window_size: WindowSize::new(900.0, 700.0),
         }
     }
 
@@ -67,7 +70,7 @@ impl RenderTree {
 
         self.tree.push_child(render_tree_under_viewport);
 
-        self.layouting(900.0, 700.0);
+        self.layouting(self.window_size.width, self.window_size.height);
     }
 
     pub fn layouting(&mut self, window_with: f32, window_height: f32) {
