@@ -2,6 +2,8 @@
 
 Browser(html rendering engine) made by @Shinyaigeek.
 
+![](./sample.gif)
+
 ## How to use
 
 ```

@@ -135,9 +135,18 @@ impl Sandbox for Window {
                 let mut parser = CSSParser {
                     pos: 0,
                     input:
-                        "#id1 { width: 120; height: 90; background: rgba(255, 0, 0, 1); margin: 0; }
-                    #id2 { width: 120; height: 90; background: rgba(0, 255, 0, 1); margin: 0; }
-                    #id3 { width: 120; height: 90; background: rgba(0, 0, 255, 1); margin: 0; }"
+                        "h1 {
+                            display: block;
+                            font-size: 2em;
+                            margin-top: 0.67em;
+                            margin-bottom: 0.67em;
+                            margin-left: 0;
+                            margin-right: 0;
+                            font-weight: bold;
+                        }
+                        body {
+                            min-height: 100vh;
+                        }"
                             .to_string(),
                 };
                 let cssom = parser.parse();
