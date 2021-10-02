@@ -52,7 +52,7 @@ impl RenderObject {
             None => None,
         };
 
-        let parent_rectangle = match parent_node {
+        let parent_rectangle = match parent_node.clone() {
             Self::Text(_) => panic!("TODO"),
             Self::Scroll(parent_node)
             | Self::ViewPort(parent_node)
@@ -194,10 +194,91 @@ impl RenderObject {
         // TODO
         rendering_object.rectangle = Rectangle::new(0.0, 0.0, width, height);
 
-        let x = self.calc_x(&parent_rect, pad_left, &big_brother_rect);
-        let y = self.calc_y(&parent_rect, pad_top, &big_brother_rect);
+        let mut margined_top = 0.0;
+        let mut margined_left = 0.0;
 
-        println!("yyyyy---- {:?}", y);
+        let styles = match self {
+            Self::Text(_) => {
+                vec![]
+            }
+            Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => rendering_object.style.clone(),
+        };
+
+        for style in styles {
+            if style.declarations.get(&"margin".to_string()).is_some() {
+                let margin = style.declarations.get(&"margin".to_string()).unwrap();
+                let margin = margin.split(" ").collect::<Vec<&str>>();
+
+                if margin.len() == 1 {
+                    let margin = margin[0];
+                    // TODO
+                    let margin = fix_unit_to_px(margin.to_string());
+
+                    match margin {
+                        Some(_margin) => {
+                            margined_top = _margin.clone();
+                            margined_left = _margin.clone();
+                        }
+                        None => {
+                            panic!("TODO");
+                        }
+                    }
+                } else if margin.len() == 2 {
+                    let margin_vertical = margin[0];
+                    let margin_horizontal = margin[1];
+                    // TODO
+                    let margin_vertical = if margin_vertical == "auto" {
+                        let parent_node_height = parent_rect.height;
+
+                        let self_node_height = match self {
+                            Self::Text(_) => panic!("TODO"),
+                            Self::Scroll(self_node)
+                            | Self::ViewPort(self_node)
+                            | Self::Block(self_node)
+                            | Self::Inline(self_node) => self_node.rectangle.height,
+                        };
+
+                        Some((parent_node_height - self_node_height) / 2.0)
+                    } else {
+                        fix_unit_to_px(margin_vertical.to_string())
+                    };
+                    let margin_horizontal = if margin_horizontal == "auto" {
+                        let parent_node_width = parent_rect.width;
+
+                        let self_node_width = match self {
+                            Self::Text(_) => panic!("TODO"),
+                            Self::Scroll(self_node)
+                            | Self::ViewPort(self_node)
+                            | Self::Block(self_node)
+                            | Self::Inline(self_node) => self_node.rectangle.width,
+                        };
+
+                        Some((parent_node_width - self_node_width) / 2.0)
+                    } else {
+                        fix_unit_to_px(margin_horizontal.to_string())
+                    };
+
+                    margined_top = margin_vertical.unwrap_or(0.0);
+                    margined_left = margin_horizontal.unwrap_or(0.0);
+                } else {
+                    panic!("TODO");
+                }
+            }
+        }
+
+        let x = self.calc_x(
+            &parent_rect,
+            Some(pad_left.unwrap_or(0.0) + margined_left),
+            &big_brother_rect,
+        );
+        let y = self.calc_y(
+            &parent_rect,
+            Some(pad_top.unwrap_or(0.0) + margined_top),
+            &big_brother_rect,
+        );
 
         let rendering_object = match self {
             Self::Text(_) => {
