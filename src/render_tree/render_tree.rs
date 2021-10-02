@@ -221,7 +221,8 @@ impl RenderTree {
                         for style in styles {
                             if style.declarations.get("font-size").is_some() {
                                 let font_size = style.declarations.get("font-size").unwrap();
-                                let font_size = fix_unit_to_px(font_size.clone());
+                                let font_size =
+                                    fix_unit_to_px(font_size.clone(), self.window_size.height);
                                 current_font = Some(PaintFont::new(None, font_size));
                             }
                         }

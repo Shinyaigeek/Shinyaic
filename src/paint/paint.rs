@@ -94,6 +94,9 @@ a:link, a:visited {
             margin-left: 0;
             margin-right: 0;
             font-weight: bold;
+        }
+        body {
+            min-height: 100vh;
         }"
         .to_string(),
     };

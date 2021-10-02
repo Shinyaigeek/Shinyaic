@@ -97,12 +97,23 @@ impl RenderObject {
             | Self::ViewPort(rendering_object) => rendering_object.style.clone(),
         };
 
+        let window_height = match self {
+            Self::Text(_) => {
+                // TODO
+                0.0
+            }
+            Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => rendering_object.window_size.height,
+        };
+
         for style in styles {
             if style.declarations.get(&"padding".to_string()).is_some() {
                 let padding = style.declarations.get(&"padding".to_string()).unwrap();
 
                 // TODO
-                let padding = fix_unit_to_px(padding.to_string());
+                let padding = fix_unit_to_px(padding.to_string(), window_height);
 
                 match padding {
                     Some(_padding) => {
@@ -191,6 +202,8 @@ impl RenderObject {
             | Self::ViewPort(rendering_object) => rendering_object,
         };
 
+        let window_height = rendering_object.window_size.height;
+
         // TODO
         rendering_object.rectangle = Rectangle::new(0.0, 0.0, width, height);
 
@@ -215,7 +228,7 @@ impl RenderObject {
                 if margin.len() == 1 {
                     let margin = margin[0];
                     // TODO
-                    let margin = fix_unit_to_px(margin.to_string());
+                    let margin = fix_unit_to_px(margin.to_string(), window_height);
 
                     match margin {
                         Some(_margin) => {
@@ -243,7 +256,7 @@ impl RenderObject {
 
                         Some((parent_node_height - self_node_height) / 2.0)
                     } else {
-                        fix_unit_to_px(margin_vertical.to_string())
+                        fix_unit_to_px(margin_vertical.to_string(), window_height)
                     };
                     let margin_horizontal = if margin_horizontal == "auto" {
                         let parent_node_width = parent_rect.width;
@@ -258,7 +271,7 @@ impl RenderObject {
 
                         Some((parent_node_width - self_node_width) / 2.0)
                     } else {
-                        fix_unit_to_px(margin_horizontal.to_string())
+                        fix_unit_to_px(margin_horizontal.to_string(), window_height)
                     };
 
                     margined_top = margin_vertical.unwrap_or(0.0);
@@ -305,6 +318,17 @@ impl RenderObject {
             | Self::ViewPort(rendering_object) => rendering_object,
         };
 
+        let window_height = match self {
+            Self::Text(_) => {
+                // TODO
+                0.0
+            }
+            Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => rendering_object.window_size.height,
+        };
+
         let mut width = parent_width.clone();
         let mut paddinged_width = 0.0;
 
@@ -312,7 +336,7 @@ impl RenderObject {
             if style.declarations.get(&"width".to_string()).is_some() {
                 let raw_width = style.declarations.get(&"width".to_string()).unwrap();
 
-                let raw_width = fix_unit_to_px(raw_width.to_string());
+                let raw_width = fix_unit_to_px(raw_width.to_string(), window_height);
 
                 match raw_width {
                     Some(_width) => {
@@ -328,7 +352,7 @@ impl RenderObject {
                 let padding = style.declarations.get(&"padding".to_string()).unwrap();
 
                 // TODO
-                let padding = fix_unit_to_px(padding.to_string());
+                let padding = fix_unit_to_px(padding.to_string(), window_height);
 
                 match padding {
                     Some(_padding) => {
@@ -369,6 +393,17 @@ impl RenderObject {
             | Self::ViewPort(rendering_object) => rendering_object,
         };
 
+        let window_height = match self {
+            Self::Text(_) => {
+                // TODO
+                0.0
+            }
+            Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => rendering_object.window_size.height,
+        };
+
         let mut height = Option::<f32>::None;
         let mut paddinged_height = 0.0;
 
@@ -390,11 +425,28 @@ impl RenderObject {
                 }
             }
 
+            if style.declarations.get(&"min-height".to_string()).is_some() {
+                let min_heigt = style.declarations.get(&"min-height".to_string()).unwrap();
+
+                let min_heigt = fix_unit_to_px(min_heigt.to_string(), window_height);
+
+                match min_heigt {
+                    Some(_min_heigt) => {
+                        if _min_heigt > height.unwrap_or(0.0) {
+                            height = Some(_min_heigt);
+                        }
+                    }
+                    None => {
+                        panic!("TODO");
+                    }
+                }
+            }
+
             if style.declarations.get(&"padding".to_string()).is_some() {
                 let padding = style.declarations.get(&"padding".to_string()).unwrap();
 
                 // TODO
-                let padding = fix_unit_to_px(padding.to_string());
+                let padding = fix_unit_to_px(padding.to_string(), window_height);
 
                 match padding {
                     Some(_padding) => {
