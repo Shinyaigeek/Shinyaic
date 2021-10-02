@@ -334,7 +334,8 @@ mod test {
                                     children: vec![]
                                 }],
                                 declarations: style_1
-                            }]
+                            }],
+                            window_size: WindowSize::new(0.0, 0.0)
                         },),
                         RenderObject::Block(_RenderObject {
                             rectangle: Rectangle {
@@ -350,7 +351,8 @@ mod test {
                                     children: vec![]
                                 }],
                                 declarations: style_2
-                            }]
+                            }],
+                            window_size: WindowSize::new(0.0, 0.0)
                         },),
                         RenderObject::Block(_RenderObject {
                             rectangle: Rectangle {
@@ -366,12 +368,15 @@ mod test {
                                     children: vec![]
                                 }],
                                 declarations: style_3
-                            }]
+                            }],
+                            window_size: WindowSize::new(0.0, 0.0)
                         },),
                     ],
-                    style: vec![]
+                    style: vec![],
+                    window_size: WindowSize::new(0.0, 0.0)
                 },)],
                 style: vec![],
+                window_size: WindowSize::new(0.0, 0.0)
             })
         );
     }

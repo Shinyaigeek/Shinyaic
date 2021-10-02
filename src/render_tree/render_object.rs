@@ -4,12 +4,14 @@ use crate::html::dom::elements::elements::HTMLElements;
 use crate::paint::font::PaintFont;
 use crate::render_tree::pt::fix_unit_to_px;
 use crate::render_tree::rectangle::Rectangle;
+use crate::render_tree::window_size::WindowSize;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct _RenderObject {
     pub children: Vec<RenderObject>,
     pub style: Vec<StylingRule>,
     pub rectangle: Rectangle,
+    pub window_size: WindowSize,
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -34,6 +36,7 @@ impl RenderObject {
             children: vec![],
             style: vec![],
             rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
+            window_size: WindowSize::new(0.0, 0.0),
         })
     }
 
@@ -411,12 +414,14 @@ impl RenderObject {
                 children: vec![],
                 style: vec![],
                 rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
+                window_size: WindowSize::new(0.0, 0.0),
             })),
             HTMLElements::DivElement | HTMLElements::ParagraphElement | HTMLElements::H1Element => {
                 Some(Self::Block(_RenderObject {
                     children: vec![],
                     style: vec![],
                     rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
+                    window_size: WindowSize::new(0.0, 0.0),
                 }))
             }
             HTMLElements::AnchorElement | HTMLElements::SpanElement => {
@@ -424,6 +429,7 @@ impl RenderObject {
                     children: vec![],
                     style: vec![],
                     rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
+                    window_size: WindowSize::new(0.0, 0.0),
                 }))
             }
             _ => None,
