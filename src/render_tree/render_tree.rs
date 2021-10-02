@@ -153,7 +153,11 @@ impl RenderTree {
                     }
                 };
 
-                let raw_render_object = RenderObject::init_with_element(element_type);
+                let raw_render_object = RenderObject::init_with_element(
+                    element_type,
+                    self.window_size.width,
+                    self.window_size.height,
+                );
                 let mut raw_render_object = match raw_render_object {
                     Some(raw_render_object) => raw_render_object,
                     //  TODO
@@ -335,7 +339,7 @@ mod test {
                                 }],
                                 declarations: style_1
                             }],
-                            window_size: WindowSize::new(0.0, 0.0)
+                            window_size: WindowSize::new(900.0, 700.0)
                         },),
                         RenderObject::Block(_RenderObject {
                             rectangle: Rectangle {
@@ -352,7 +356,7 @@ mod test {
                                 }],
                                 declarations: style_2
                             }],
-                            window_size: WindowSize::new(0.0, 0.0)
+                            window_size: WindowSize::new(900.0, 700.0)
                         },),
                         RenderObject::Block(_RenderObject {
                             rectangle: Rectangle {
@@ -369,11 +373,11 @@ mod test {
                                 }],
                                 declarations: style_3
                             }],
-                            window_size: WindowSize::new(0.0, 0.0)
+                            window_size: WindowSize::new(900.0, 700.0)
                         },),
                     ],
                     style: vec![],
-                    window_size: WindowSize::new(0.0, 0.0)
+                    window_size: WindowSize::new(900.0, 700.0)
                 },)],
                 style: vec![],
                 window_size: WindowSize::new(0.0, 0.0)

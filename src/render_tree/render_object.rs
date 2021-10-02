@@ -408,20 +408,24 @@ impl RenderObject {
         })
     }
 
-    pub fn init_with_element(element_type: ElementType) -> Option<Self> {
+    pub fn init_with_element(
+        element_type: ElementType,
+        window_width: f32,
+        window_height: f32,
+    ) -> Option<Self> {
         match element_type.tag_name {
             HTMLElements::BodyElement => Some(Self::Scroll(_RenderObject {
                 children: vec![],
                 style: vec![],
                 rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
-                window_size: WindowSize::new(0.0, 0.0),
+                window_size: WindowSize::new(window_width, window_height),
             })),
             HTMLElements::DivElement | HTMLElements::ParagraphElement | HTMLElements::H1Element => {
                 Some(Self::Block(_RenderObject {
                     children: vec![],
                     style: vec![],
                     rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
-                    window_size: WindowSize::new(0.0, 0.0),
+                    window_size: WindowSize::new(window_width, window_height),
                 }))
             }
             HTMLElements::AnchorElement | HTMLElements::SpanElement => {
@@ -429,7 +433,7 @@ impl RenderObject {
                     children: vec![],
                     style: vec![],
                     rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
-                    window_size: WindowSize::new(0.0, 0.0),
+                    window_size: WindowSize::new(window_width, window_height),
                 }))
             }
             _ => None,
