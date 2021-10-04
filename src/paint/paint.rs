@@ -29,7 +29,6 @@ pub struct Window {
 }
 
 fn prepare() -> RenderTree {
-
     let mut parser = Parser {
         pos: 0,
         input: "<!doctype html>
@@ -61,7 +60,8 @@ fn prepare() -> RenderTree {
             </p>
             </div>
         </body>
-        </html>".to_string()
+        </html>"
+            .to_string(),
     };
 
     let dom = parser.parse();
@@ -134,8 +134,7 @@ impl Sandbox for Window {
                 // TODO link の css をちゃんと読む
                 let mut parser = CSSParser {
                     pos: 0,
-                    input:
-                        "h1 {
+                    input: "h1 {
                             display: block;
                             font-size: 2em;
                             margin-top: 0.67em;
@@ -147,7 +146,7 @@ impl Sandbox for Window {
                         body {
                             min-height: 100vh;
                         }"
-                            .to_string(),
+                    .to_string(),
                 };
                 let cssom = parser.parse();
                 println!("------");
