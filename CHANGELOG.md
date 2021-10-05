@@ -4,3 +4,6 @@
 
 - konnnyaku update, enable https connection
 - css border style rule
+
+### 2021/10/5
+- border
