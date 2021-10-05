@@ -91,6 +91,7 @@ impl Border {
     }
 }
 
+#[derive(Debug, PartialEq)]
 enum BorderStyle {
     None,
     Groove,
@@ -132,5 +133,54 @@ impl BorderStyle {
             "double" => true,
             _ => false,
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_is_border_style_enum() {
+        assert!(BorderStyle::is_style("none"));
+        assert!(BorderStyle::is_style("solid"));
+        assert!(!BorderStyle::is_style("hoge"));
+    }
+
+    #[test]
+    fn test_apply_numeric_width() {
+        let mut border = Border::new(None, None, None, None);
+        border.apply_width("12.0");
+        assert_eq!(border.width, 12.0);
+    }
+
+    #[test]
+    fn test_apply_specific_width() {
+        let mut border = Border::new(None, None, None, None);
+        border.apply_width("medium");
+        assert_eq!(border.width, 1.0);
+    }
+
+    #[test]
+    fn test_apply_color() {
+        let mut border = Border::new(None, None, None, None);
+        border.apply_color("black");
+        assert_eq!(border.color, Color::BLACK);
+    }
+
+    #[test]
+    fn test_apply_style() {
+        let mut border = Border::new(None, None, None, None);
+        border.apply_style("solid");
+        assert_eq!(border.style, BorderStyle::Solid);
+    }
+
+    #[test]
+    fn test_apply_shorthand() {
+        let mut border = Border::new(None, None, None, None);
+        border.apply_shorthand("medium solid black");
+        assert_eq!(border.width, 1.0);
+        assert_eq!(border.style, BorderStyle::Solid);
+        assert_eq!(border.color, Color::BLACK);
     }
 }
