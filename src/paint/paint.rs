@@ -2,6 +2,7 @@
 
 use crate::css::parser::parser::Parser as CSSParser;
 use crate::html::parser::parser::Parser;
+use crate::paint::border::Border;
 use crate::paint::styling_handler::handle_background::handle_background;
 use crate::paint::window_canvas::{create_block, create_text};
 use crate::paint::wrapper::Wrapper;
@@ -193,14 +194,26 @@ impl Sandbox for Window {
                 | RenderObject::Inline(rendering_object)
                 | RenderObject::Scroll(rendering_object) => {
                     let mut background_color = Color::new(1.0, 1.0, 1.0, 1.0);
+                    let mut border = Border::new(None, None, None, None);
                     for style in &rendering_object.style {
                         let bg = handle_background(style);
                         if bg.is_some() {
                             background_color = bg.unwrap();
                         }
+
+                        // TODO
+                        if style.declarations.get("border").is_some() {
+                            border.apply_shorthand(style.declarations.get("border").unwrap());
+                        }
+
+                        // TODO
+                        if style.declarations.get("border-radius").is_some() {
+                            border.apply_radius(style.declarations.get("border-radius").unwrap());
+                        }
                     }
                     wrapper.items.push(create_block(
                         background_color,
+                        border,
                         rendering_object.rectangle.clone(),
                     ));
                 }

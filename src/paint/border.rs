@@ -1,10 +1,10 @@
 use iced_native::Color;
 
 pub struct Border {
-    width: f32,
-    radius: f32,
-    style: BorderStyle,
-    color: Color,
+    pub width: f32,
+    pub radius: f32,
+    pub style: BorderStyle,
+    pub color: Color,
 }
 
 impl Border {
@@ -74,6 +74,14 @@ impl Border {
         self.style = style;
     }
 
+    pub fn apply_radius(&mut self, radius: &str) {
+        let radius = radius.strip_suffix("em").unwrap_or("9");
+        // TODO
+        let radius = if radius == "0.5" { "9.0" } else { radius };
+        let radius = radius.parse::<f32>();
+        self.radius = radius.unwrap_or(1.0);
+    }
+
     pub fn apply_shorthand(&mut self, shorthand: &str) {
         let styles = shorthand.split(" ");
 
@@ -92,7 +100,7 @@ impl Border {
 }
 
 #[derive(Debug, PartialEq)]
-enum BorderStyle {
+pub enum BorderStyle {
     None,
     Groove,
     Dotted,

@@ -1,3 +1,4 @@
+use crate::paint::border::Border;
 use crate::paint::font::{FontContext, PaintFont};
 use crate::render_tree::rectangle::Rectangle as RenderObjectRectangle;
 use iced_graphics::Primitive;
@@ -5,16 +6,16 @@ use iced_native::{
     Background, Color, HorizontalAlignment, Point, Rectangle, Size, VerticalAlignment,
 };
 
-pub fn create_block(color: Color, rect: RenderObjectRectangle) -> Primitive {
+pub fn create_block(color: Color, border: Border, rect: RenderObjectRectangle) -> Primitive {
     Primitive::Quad {
         bounds: Rectangle::new(
             Point::new(rect.x, 45.0 + rect.y),
             Size::new(rect.width, rect.height),
         ),
         background: Background::Color(color),
-        border_radius: 0.0,
-        border_width: 0.0,
-        border_color: Color::BLACK,
+        border_radius: border.radius,
+        border_width: border.width,
+        border_color: border.color,
     }
 }
 
