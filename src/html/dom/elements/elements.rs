@@ -59,6 +59,7 @@ impl HTMLElements {
     pub fn need_closing_tag(&self) -> bool {
         match self {
             Self::MetaElement => false,
+            Self::LinkElement => false,
             _ => true,
         }
     }
