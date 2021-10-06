@@ -122,7 +122,7 @@ impl Parser {
 
     fn eat(&mut self) -> char {
         self.pos += 1;
-        self.input.chars().nth(self.pos - 1).unwrap_or('a')
+        self.input.chars().nth(self.pos - 1).unwrap_or(0 as char)
     }
 
     pub fn eat_whitespace(&mut self) {
@@ -143,6 +143,9 @@ impl Parser {
     }
 
     fn peek(&self) -> char {
+        if self.pos >= self.input.chars().count() {
+            return 0 as char;
+        }
         self.input.chars().nth(self.pos).unwrap()
     }
 
@@ -155,7 +158,7 @@ impl Parser {
 
         let mut value = value.chars();
 
-        if value.next().unwrap() != input.nth(self.pos).unwrap() {
+        if value.next().unwrap() != input.nth(self.pos).unwrap_or(0 as char) {
             return false;
         }
 
@@ -211,7 +214,11 @@ impl Parser {
         let node = if !target_tag_name.need_closing_tag() {
             DOMNode::elem(target_tag_name, attributes, vec![])
         } else {
-            let node = DOMNode::elem(target_tag_name, attributes, self.parse_nodes());
+            let node = DOMNode::elem(
+                target_tag_name,
+                attributes,
+                self.parse_nodes(),
+            );
             self.eat_closing_tag();
             node
         };

@@ -60,6 +60,7 @@ impl HTMLElements {
         match self {
             Self::MetaElement => false,
             Self::LinkElement => false,
+            Self::ImgElement => false,
             _ => true,
         }
     }
