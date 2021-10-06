@@ -21,25 +21,25 @@ impl Parser {
 
     fn eat_opening_tag(&mut self) -> (HTMLElements, HashMap<String, String>) {
         // `<`li id="id1" `>`</li> -> li
-        let init_pos = self.input.as_bytes()[self.pos];
-        if init_pos != b'<' {
+        let init_pos = self.input.chars().nth(self.pos).unwrap();
+        if init_pos != '<' {
             panic!("pick_tag_name was invoked not in < but in {:?}", init_pos)
         }
 
         self.eat();
 
-        let mut tag: Vec<u8> = vec![];
+        let mut tag: Vec<char> = vec![];
 
         let mut attributes: HashMap<String, String> = HashMap::new();
 
         loop {
             let next_token = self.eat();
 
-            if next_token == b'>' {
+            if next_token == '>' {
                 break;
             }
 
-            if next_token == b' ' {
+            if next_token == ' ' {
                 attributes = self.eat_element_attributes();
                 break;
             }
@@ -47,7 +47,7 @@ impl Parser {
             tag.push(next_token);
         }
 
-        let tag = String::from_utf8(tag).unwrap();
+        let tag = tag.into_iter().collect::<String>();
         let raw_tag: &str = &tag;
 
         let tag = HTMLElements::init_from_str_tag(raw_tag);
@@ -62,7 +62,7 @@ impl Parser {
 
     fn eat_closing_tag(&mut self) {
         let init_pos = self.eat();
-        if init_pos != b'<' {
+        if init_pos != '<' {
             panic!(
                 "eat_closing_tag was invoked not in < but in {:?}",
                 init_pos as char
@@ -70,7 +70,7 @@ impl Parser {
         }
 
         let should_slash = self.eat();
-        if should_slash != b'/' {
+        if should_slash != '/' {
             panic!(
                 "eat_closing_tag was invoked not in / but in {:?}",
                 should_slash as char
@@ -80,7 +80,7 @@ impl Parser {
         loop {
             let token = self.eat();
 
-            if token == b'>' {
+            if token == '>' {
                 break;
             }
         }
@@ -97,19 +97,19 @@ impl Parser {
         loop {
             let next_token = self.eat();
             if !is_eating_key {
-                if next_token == b'"' {
+                if next_token == '"' {
                     attributes.insert(key.to_string(), value.to_string());
                     is_eating_key = true;
                 } else {
                     value.push(next_token as char);
                 }
             } else {
-                if next_token == b'>' {
+                if next_token == '>' {
                     break;
                 }
-                if next_token == b'"' {
+                if next_token == '"' {
                     is_eating_key = false;
-                } else if next_token == b' ' || next_token == b'=' {
+                } else if next_token == ' ' || next_token == '=' {
                     // do nothing
                 } else {
                     key.push(next_token as char);
@@ -120,9 +120,9 @@ impl Parser {
         attributes
     }
 
-    fn eat(&mut self) -> u8 {
+    fn eat(&mut self) -> char {
         self.pos += 1;
-        self.input.as_bytes()[self.pos - 1]
+        self.input.chars().nth(self.pos - 1).unwrap_or('a')
     }
 
     pub fn eat_whitespace(&mut self) {
@@ -134,7 +134,7 @@ impl Parser {
             let next_ch = self.peek();
 
             // EOF or breakline or whitespace or tab
-            if !(next_ch == 0 || next_ch == b'\n' || next_ch == b' ' || next_ch == b'\t') {
+            if !(next_ch == 0 as char || next_ch == '\n' || next_ch == ' ' || next_ch == '\t') {
                 break;
             }
 
@@ -142,12 +142,35 @@ impl Parser {
         }
     }
 
-    fn peek(&self) -> u8 {
-        self.input.as_bytes()[self.pos]
+    fn peek(&self) -> char {
+        self.input.chars().nth(self.pos).unwrap()
     }
 
     fn peek_start_with<S: Into<String>>(&self, value: S) -> bool {
-        self.input[self.pos..].starts_with(value.into().as_str())
+        // TODO
+        // self.input[self.pos..].starts_with(value.into().as_str())
+
+        let mut input = self.input.chars();
+        let value = value.into();
+
+        let mut value = value.chars();
+
+        if value.next().unwrap() != input.nth(self.pos).unwrap() {
+            return false;
+        }
+
+        for v in value {
+            let i = input.next().unwrap();
+
+            if i != v {
+                return false;
+            }
+            if input.clone().count() <= 0 {
+                return false;
+            }
+        }
+
+        true
     }
 
     fn parse_text(&mut self) -> DOMNode {
@@ -163,14 +186,14 @@ impl Parser {
 
     // TODO 暫定的にpeekをdoctypeの次まで進めるだけ
     fn parse_doctype(&mut self) {
-        if self.eat() != b'<' {
+        if self.eat() != '<' {
             panic!("parse_doctype was invoked not in < but in {:?}", self.eat());
         }
 
         loop {
             let ch = self.eat();
 
-            if ch == b'>' {
+            if ch == '>' {
                 break;
             }
         }
@@ -179,11 +202,12 @@ impl Parser {
     fn parse_node(&mut self) -> DOMNode {
         self.eat_whitespace();
         // `<`li></LI`>`
-        if self.input.as_bytes()[self.pos] != b'<' {
+        if self.input.chars().nth(self.pos).unwrap() != '<' {
             // text node
             return self.parse_text();
         }
         let (target_tag_name, attributes) = self.eat_opening_tag();
+
         let node = if !target_tag_name.need_closing_tag() {
             DOMNode::elem(target_tag_name, attributes, vec![])
         } else {
