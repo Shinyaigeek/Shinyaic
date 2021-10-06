@@ -21,6 +21,7 @@ pub enum HTMLElements {
     MetaElement,
     StyleElement,
     ScriptElement,
+    LinkElement,
     H1Element,
 }
 
@@ -48,6 +49,7 @@ impl HTMLElements {
             HTMLElements::MetaElement => "meta",
             HTMLElements::StyleElement => "style",
             HTMLElements::ScriptElement => "script",
+            HTMLElements::LinkElement => "link",
             HTMLElements::H1Element => "h1",
         };
 
@@ -84,6 +86,7 @@ impl HTMLElements {
             "meta" => Some(HTMLElements::MetaElement),
             "style" => Some(HTMLElements::StyleElement),
             "script" => Some(HTMLElements::ScriptElement),
+            "link" => Some(HTMLElements::LinkElement),
             "h1" => Some(HTMLElements::H1Element),
             _ => None,
         }
