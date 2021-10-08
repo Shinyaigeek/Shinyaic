@@ -42,7 +42,7 @@ impl DOMNode {
         match &self.node_type {
             NodeType::DomNode(dom_node) => match dom_node.tag_name {
                 HTMLElements::LinkElement => {
-                    if dom_node.attributes.get("rel").unwrap_or(&"".to_string()) == "stylesheet" {
+                    if dom_node.attributes.get("type").unwrap_or(&"".to_string()) == "text/css" {
                         let external_css_href = dom_node.attributes.get("href").unwrap();
                         let external_css_source = Client::get(external_css_href.to_string());
                         let external_css_source = external_css_source.body;

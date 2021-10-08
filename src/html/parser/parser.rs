@@ -99,6 +99,8 @@ impl Parser {
             if !is_eating_key {
                 if next_token == '"' {
                     attributes.insert(key.to_string(), value.to_string());
+                    key = String::from("");
+                    value = String::from("");
                     is_eating_key = true;
                 } else {
                     value.push(next_token as char);
