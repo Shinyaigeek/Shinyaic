@@ -3,6 +3,7 @@
 ### 2021/10/8
 
 - set NotoSansJP as default font
+- load external css source with link element
 
 ### 2021//10/6
 
