@@ -15,7 +15,10 @@ use iced::{
 use konnnyaku_client::Client;
 
 pub fn paint() {
-    let mut settings = Settings::default();
+    let mut settings = Settings {
+        default_font: Some(include_bytes!("./font_assets/NotoSansJP-Regular.otf")),
+        ..Settings::default()
+    };
     settings.window.size = (900, 700);
     Window::run(settings).unwrap();
 }
@@ -154,6 +157,8 @@ impl Sandbox for Window {
                 println!("{:?}", cssom);
                 let mut render_tree = RenderTree::new(dom, cssom);
                 render_tree.constructor();
+
+                println!("{:#?}", render_tree);
 
                 self.render_tree = render_tree.prepare_iterator();
             }

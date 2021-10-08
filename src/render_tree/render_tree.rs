@@ -329,7 +329,7 @@ mod test {
                                     x: 0.0,
                                     y: 0.0,
                                     width: 120.0,
-                                    height: 23.642578,
+                                    height: 32.0,
                                 }),
                                 None
                             ),],

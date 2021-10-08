@@ -1,13 +1,12 @@
 use font_kit::canvas::RasterizationOptions;
-use font_kit::family_name::FamilyName;
 use font_kit::font::Font;
 use font_kit::hinting::HintingOptions;
 use font_kit::properties::{Properties as FontProperties, Style as FontStyle};
-use font_kit::source::SystemSource;
 use iced_native::Font as IcedFont;
 use pathfinder_geometry::transform2d::Transform2F;
 use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
+use std::fs::File;
 use std::hash::{Hash, Hasher};
 
 pub struct FontContext {
@@ -91,11 +90,8 @@ impl PaintFont {
         let size = size.unwrap_or(18.0);
         let font_families = family.unwrap_or("default".to_string());
 
-        let font = SystemSource::new()
-            .select_best_match(&[FamilyName::Serif], &FontProperties::new())
-            .unwrap()
-            .load()
-            .unwrap();
+        let mut file = File::open("./src/paint/font_assets/NotoSansJP-Regular.otf").unwrap();
+        let font = Font::from_file(&mut file, 0).unwrap();
 
         let ctfont = font.native_font().clone_with_font_size(size as f64);
 
@@ -148,7 +144,7 @@ impl PaintFont {
         let font = ctfont.bounding_box();
 
         // TODO: これでいいの感
-        let id = self.font.glyph_for_char('a').unwrap();
+        let id = self.font.glyph_for_char('あ').unwrap();
 
         let bounding = self
             .font
@@ -163,13 +159,13 @@ impl PaintFont {
 
         let (width, height): (f32, f32) = {
             if (text.len() as f32) * (bounding.width() as f32) <= width {
-                (bounding.width() as f32, font.size.height as f32)
+                (bounding.width() as f32, bounding.height() as f32)
             } else {
                 let mut height = 0.0;
                 let mut text_cnt = text.len() as isize;
                 loop {
                     text_cnt -= (width / bounding.width() as f32) as isize + 1;
-                    height += font.size.height as f32;
+                    height += bounding.height() as f32;
 
                     if text_cnt <= 0 {
                         break;
