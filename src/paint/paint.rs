@@ -135,23 +135,23 @@ impl Sandbox for Window {
                 let dom = parser.parse();
                 println!("------");
                 println!("{:?}", dom);
+                let external_css = dom.get_external_css();
+                let mut css = "h1 {
+                    display: block;
+                    font-size: 2em;
+                    margin-top: 0.67em;
+                    margin-bottom: 0.67em;
+                    margin-left: 0;
+                    margin-right: 0;
+                    font-weight: bold;
+                }
+                body {
+                    min-height: 100vh;
+                }"
+                .to_string();
+                css.push_str(&external_css);
                 // TODO link の css をちゃんと読む
-                let mut parser = CSSParser {
-                    pos: 0,
-                    input: "h1 {
-                            display: block;
-                            font-size: 2em;
-                            margin-top: 0.67em;
-                            margin-bottom: 0.67em;
-                            margin-left: 0;
-                            margin-right: 0;
-                            font-weight: bold;
-                        }
-                        body {
-                            min-height: 100vh;
-                        }"
-                    .to_string(),
-                };
+                let mut parser = CSSParser { pos: 0, input: css };
                 let cssom = parser.parse();
                 println!("------");
                 println!("{:?}", cssom);

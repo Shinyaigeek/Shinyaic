@@ -1,4 +1,5 @@
 use crate::html::dom::elements::elements::HTMLElements;
+use konnnyaku_client::Client;
 use std::collections::HashMap;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -33,6 +34,33 @@ impl DOMNode {
                 attributes,
             }),
         }
+    }
+
+    pub fn get_external_css(&self) -> String {
+        let mut css_source = String::from("");
+
+        match &self.node_type {
+            NodeType::DomNode(dom_node) => match dom_node.tag_name {
+                HTMLElements::LinkElement => {
+                    if dom_node.attributes.get("rel").unwrap_or(&"".to_string()) == "stylesheet" {
+                        let external_css_href = dom_node.attributes.get("href").unwrap();
+                        let external_css_source = Client::get(external_css_href.to_string());
+                        let external_css_source = external_css_source.body;
+                        css_source.push_str(&external_css_source)
+                    }
+                }
+                _ => {
+                    for child in self.children.clone() {
+                        css_source.push_str(&child.get_external_css());
+                    }
+                }
+            },
+            NodeType::TextNode(_) => {
+                return css_source;
+            }
+        };
+
+        css_source
     }
 }
 
