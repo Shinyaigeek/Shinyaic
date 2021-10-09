@@ -1,4 +1,11 @@
 pub fn fix_unit_to_px(value: String, window_height: f32) -> Option<f32> {
+    let value = if value.starts_with(".") {
+        let mut v = String::from("0");
+        v.push_str(&value);
+        v
+    } else {
+        value
+    };
     if value.ends_with("px") {
         let str_value = value.strip_suffix("px").unwrap();
         return Some(str_value.parse::<f32>().unwrap());
