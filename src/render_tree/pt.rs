@@ -17,6 +17,13 @@ pub fn fix_unit_to_px(value: String, window_height: f32) -> Option<f32> {
         return Some(vh * window_height);
     }
 
+    if value.ends_with("vw") {
+        // TODO
+        let str_value = value.strip_suffix("vw").unwrap();
+        let vh = str_value.parse::<f32>().unwrap();
+        return Some(vh * window_height);
+    }
+
     Some(value.parse::<f32>().unwrap())
 }
 

@@ -32,13 +32,17 @@ impl Parser {
         cssom
     }
 
-    fn eat(&mut self) -> u8 {
+    fn eat(&mut self) -> char {
         self.pos += 1;
-        self.input.as_bytes()[self.pos - 1]
+        self.input.chars().nth(self.pos - 1).unwrap_or(0 as char)
     }
 
-    fn peek(&self) -> u8 {
-        self.input.as_bytes()[self.pos]
+    fn peek(&self) -> char {
+        if self.pos >= self.input.len() {
+            return 0 as char;
+        }
+
+        self.input.chars().nth(self.pos).unwrap()
     }
 
     fn parse_style(&mut self, cssom: &mut Vec<StylingRule>) {
@@ -67,12 +71,12 @@ impl Parser {
         });
     }
 
-    fn get_cur_char(&self) -> u8 {
-        self.input.as_bytes()[self.pos - 1]
+    fn get_cur_char(&self) -> char {
+        self.input.chars().nth(self.pos - 1).unwrap_or(0 as char)
     }
 
     fn is_eof(&self) -> bool {
-        self.pos + 1 >= self.input.as_bytes().len()
+        self.pos + 1 >= self.input.len()
     }
 
     //  "."class "{" width: 80px }
@@ -83,7 +87,7 @@ impl Parser {
         let mut selector_elm = self.parse_selector_elm();
 
         loop {
-            if self.peek() == b'{' {
+            if self.peek() == '{' {
                 selectors.push(Selector {
                     elm: selector_elm.clone(),
                     children: selector_children,
@@ -94,21 +98,21 @@ impl Parser {
             // * " "と" ,"を分けるためにこうするしかなかった...
 
             let separation_char = match self.peek() {
-                b',' => b',',
-                b'>' => b'>',
-                b'+' => b'+',
-                b'~' => b'~',
-                b'{' => b'{',
-                _ => b' ',
+                ',' => ',',
+                '>' => '>',
+                '+' => '+',
+                '~' => '~',
+                '{' => '{',
+                _ => ' ',
             };
 
-            if separation_char == b'{' {
+            if separation_char == '{' {
                 selectors.push(Selector {
                     elm: selector_elm.clone(),
                     children: vec![],
                 });
                 break;
-            } else if separation_char == b',' {
+            } else if separation_char == ',' {
                 self.eat();
                 selectors.push(Selector {
                     elm: selector_elm.clone(),
@@ -116,19 +120,19 @@ impl Parser {
                 });
                 selector_elm = self.parse_selector_elm();
                 selector_children = Vec::<SelectorChildren>::new();
-            } else if separation_char == b' ' {
+            } else if separation_char == ' ' {
                 selector_children.push(SelectorChildren::DescendantCombinator(
                     self.parse_selector(),
                 ));
-            } else if separation_char == b'>' {
+            } else if separation_char == '>' {
                 self.eat();
                 selector_children.push(SelectorChildren::ChildCombinator(self.parse_selector()));
-            } else if separation_char == b'+' {
+            } else if separation_char == '+' {
                 self.eat();
                 selector_children.push(SelectorChildren::AdjacentSiblingCombinator(
                     self.parse_selector(),
                 ));
-            } else if separation_char == b'~' {
+            } else if separation_char == '~' {
                 self.eat();
                 selector_children.push(SelectorChildren::GeneralSiblingCombinator(
                     self.parse_selector(),
@@ -154,12 +158,12 @@ impl Parser {
         loop {
             let peeked_char = self.peek();
 
-            if peeked_char == b','
-                || peeked_char == b' '
-                || peeked_char == b'>'
-                || peeked_char == b'{'
-                || peeked_char == b'~'
-                || peeked_char == b'+'
+            if peeked_char == ','
+                || peeked_char == ' '
+                || peeked_char == '>'
+                || peeked_char == '{'
+                || peeked_char == '~'
+                || peeked_char == '+'
             {
                 break;
             }
@@ -167,9 +171,9 @@ impl Parser {
         }
 
         match first_char_selector_elm {
-            b'#' => SelectorElm::Id(elm),
-            b'.' => SelectorElm::Class(elm),
-            b'*' => SelectorElm::Asterisk("*".to_string()),
+            '#' => SelectorElm::Id(elm),
+            '.' => SelectorElm::Class(elm),
+            '*' => SelectorElm::Asterisk("*".to_string()),
             _ => {
                 let mut tag_name = String::from(first_char_selector_elm as char);
                 tag_name.push_str(&elm);
@@ -183,7 +187,7 @@ impl Parser {
         loop {
             let peeked = self.peek();
 
-            if self.is_eof() || (peeked != b' ' && peeked != b'\n' && peeked != b'\t') {
+            if self.is_eof() || (peeked != ' ' && peeked != '\n' && peeked != '\t') {
                 break;
             }
 
@@ -195,7 +199,7 @@ impl Parser {
     fn parse_declarations(&mut self) -> Declarations {
         let should_be_left_embrace = self.get_cur_char();
 
-        if should_be_left_embrace != b'{' {
+        if should_be_left_embrace != '{' {
             panic!("[CSSOM] parse css failed! because in parse_declaration, should_ne_left_brace should be {{ but got {:?}", should_be_left_embrace);
         }
 
@@ -205,7 +209,7 @@ impl Parser {
             self.goto_next_token();
             let cur_char = self.peek();
 
-            if cur_char == b'}' {
+            if cur_char == '}' {
                 if !self.is_eof() {
                     self.eat();
                 }
@@ -234,7 +238,7 @@ impl Parser {
         loop {
             let cur_char = self.eat();
 
-            if cur_char == b':' {
+            if cur_char == ':' {
                 break;
             } else {
                 key.push(cur_char as char);
@@ -251,7 +255,7 @@ impl Parser {
         loop {
             let cur_char = self.eat();
 
-            if cur_char == b';' {
+            if cur_char == ';' || cur_char == '}' {
                 break;
             } else {
                 value.push(cur_char as char);
@@ -262,7 +266,30 @@ impl Parser {
     }
 
     fn peek_start_with<S: Into<String>>(&self, value: S) -> bool {
-        self.input[self.pos..].starts_with(value.into().as_str())
+        // TODO
+        // self.input[self.pos..].starts_with(value.into().as_str())
+
+        let mut input = self.input.chars();
+        let value = value.into();
+
+        let mut value = value.chars();
+
+        if value.next().unwrap() != input.nth(self.pos).unwrap_or(0 as char) {
+            return false;
+        }
+
+        for v in value {
+            let i = input.next().unwrap();
+
+            if i != v {
+                return false;
+            }
+            if input.clone().count() <= 0 {
+                return false;
+            }
+        }
+
+        true
     }
 }
 
