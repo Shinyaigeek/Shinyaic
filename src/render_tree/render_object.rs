@@ -537,7 +537,7 @@ impl RenderObject {
     }
 
     pub fn fix_unit_to_px(&self, value: String) -> Option<f32> {
-        let window_height = self.get_window_size().height;
+        let window_size = self.get_window_size();
         let value = if value.starts_with(".") {
             let mut v = String::from("0");
             v.push_str(&value);
@@ -560,14 +560,14 @@ impl RenderObject {
             // TODO
             let str_value = value.strip_suffix("vh").unwrap();
             let vh = str_value.parse::<f32>().unwrap();
-            return Some(vh * window_height);
+            return Some(vh * window_size.height);
         }
 
         if value.ends_with("vw") {
             // TODO
             let str_value = value.strip_suffix("vw").unwrap();
-            let vh = str_value.parse::<f32>().unwrap();
-            return Some(vh * window_height);
+            let vw = str_value.parse::<f32>().unwrap();
+            return Some(vw * window_size.width);
         }
 
         println!("value: {:?}", value);
