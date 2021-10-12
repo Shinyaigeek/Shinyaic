@@ -96,17 +96,6 @@ impl RenderObject {
             | Self::ViewPort(rendering_object) => rendering_object.style.clone(),
         };
 
-        let window_height = match self {
-            Self::Text(_) => {
-                // TODO
-                0.0
-            }
-            Self::Block(rendering_object)
-            | Self::Inline(rendering_object)
-            | Self::Scroll(rendering_object)
-            | Self::ViewPort(rendering_object) => rendering_object.window_size.height,
-        };
-
         for style in styles {
             if style.declarations.get(&"padding".to_string()).is_some() {
                 let padding = style.declarations.get(&"padding".to_string()).unwrap();
@@ -211,8 +200,6 @@ impl RenderObject {
             | Self::Scroll(rendering_object)
             | Self::ViewPort(rendering_object) => rendering_object,
         };
-
-        let window_height = rendering_object.window_size.height;
 
         // TODO
         rendering_object.rectangle = Rectangle::new(0.0, 0.0, width, height);
@@ -328,17 +315,6 @@ impl RenderObject {
             | Self::ViewPort(rendering_object) => rendering_object,
         };
 
-        let window_height = match self {
-            Self::Text(_) => {
-                // TODO
-                0.0
-            }
-            Self::Block(rendering_object)
-            | Self::Inline(rendering_object)
-            | Self::Scroll(rendering_object)
-            | Self::ViewPort(rendering_object) => rendering_object.window_size.height,
-        };
-
         let mut width = parent_width.clone();
         let mut paddinged_width = 0.0;
 
@@ -419,17 +395,6 @@ impl RenderObject {
             | Self::Inline(rendering_object)
             | Self::Scroll(rendering_object)
             | Self::ViewPort(rendering_object) => rendering_object,
-        };
-
-        let window_height = match self {
-            Self::Text(_) => {
-                // TODO
-                0.0
-            }
-            Self::Block(rendering_object)
-            | Self::Inline(rendering_object)
-            | Self::Scroll(rendering_object)
-            | Self::ViewPort(rendering_object) => rendering_object.window_size.height,
         };
 
         let mut height = Option::<f32>::None;
@@ -721,8 +686,6 @@ mod tests {
             rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
             window_size: WindowSize::new(0.0, 0.0),
         });
-
-        let value = rendering_object.fix_unit_to_px("100px".to_string());
 
         assert_eq!(
             rendering_object.fix_unit_to_px("10px".to_string()),
