@@ -143,6 +143,9 @@ impl Sandbox for Window {
                 }
                 body {
                     min-height: 100vh;
+                }
+                header {
+                    display: block;
                 }"
                 .to_string();
                 css.push_str(&external_css);

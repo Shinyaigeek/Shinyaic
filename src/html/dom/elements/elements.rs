@@ -5,6 +5,7 @@ pub enum HTMLElements {
     HeadElement,
     ParagraphElement,
     AnchorElement,
+    HeaderElement,
     DivElement,
     SpanElement,
     ImgElement,
@@ -36,6 +37,7 @@ impl HTMLElements {
             HTMLElements::DivElement => "div",
             HTMLElements::SpanElement => "span",
             HTMLElements::ImgElement => "img",
+            HTMLElements::HeaderElement => "header",
             HTMLElements::TableElement => "table",
             HTMLElements::TrElement => "tr",
             HTMLElements::TdElement => "td",
@@ -90,6 +92,7 @@ impl HTMLElements {
             "script" => Some(HTMLElements::ScriptElement),
             "link" => Some(HTMLElements::LinkElement),
             "h1" => Some(HTMLElements::H1Element),
+            "header" => Some(HTMLElements::HeaderElement),
             _ => None,
         }
     }
