@@ -571,7 +571,7 @@ impl RenderObject {
         }
     }
 
-    fn fix_unit_to_px(&self, value: String) -> Option<f32> {
+    pub fn fix_unit_to_px(&self, value: String) -> Option<f32> {
         let window_height = self.get_window_size().height;
         let value = if value.starts_with(".") {
             let mut v = String::from("0");

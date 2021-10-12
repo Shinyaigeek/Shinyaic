@@ -4,7 +4,6 @@ use crate::css::parser::parser::Parser as CSSParser;
 use crate::html::dom::dom::{DOMNode, NodeType};
 use crate::html::dom::elements::elements::HTMLElements;
 use crate::paint::font::PaintFont;
-use crate::render_tree::pt::fix_unit_to_px;
 use crate::render_tree::rectangle::Rectangle;
 use crate::render_tree::render_object::RenderObject;
 use crate::render_tree::window_size::WindowSize;
@@ -221,8 +220,7 @@ impl RenderTree {
                         for style in styles {
                             if style.declarations.get("font-size").is_some() {
                                 let font_size = style.declarations.get("font-size").unwrap();
-                                let font_size =
-                                    fix_unit_to_px(font_size.clone(), self.window_size.height);
+                                let font_size = raw_render_object.fix_unit_to_px(font_size.clone());
                                 current_font = Some(PaintFont::new(None, font_size));
                             }
                         }
