@@ -10,10 +10,7 @@ pub struct Parser {
 
 impl Parser {
     pub fn new(input: String) -> Self {
-        Self {
-            pos: 0,
-            input,
-        }
+        Self { pos: 0, input }
     }
 
     pub fn parse(&mut self) -> DOMNode {

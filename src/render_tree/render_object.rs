@@ -2,7 +2,6 @@ use crate::css::cssom::cssom::StylingRule;
 use crate::html::dom::dom::{DOMNode, ElementType, NodeType};
 use crate::html::dom::elements::elements::HTMLElements;
 use crate::paint::font::PaintFont;
-use crate::render_tree::pt::fix_unit_to_px;
 use crate::render_tree::rectangle::Rectangle;
 use crate::render_tree::window_size::WindowSize;
 
@@ -116,20 +115,20 @@ impl RenderObject {
                 // TODO
                 let (_padding_width, _padding_height) = if padding.len() == 1 {
                     (
-                        fix_unit_to_px(padding[0].to_string(), window_height).unwrap() * 2.0,
-                        fix_unit_to_px(padding[0].to_string(), window_height).unwrap() * 2.0,
+                        self.fix_unit_to_px(padding[0].to_string()).unwrap() * 2.0,
+                        self.fix_unit_to_px(padding[0].to_string()).unwrap() * 2.0,
                     )
                 } else if padding.len() == 2 {
                     (
-                        fix_unit_to_px(padding[1].to_string(), window_height).unwrap() * 2.0,
-                        fix_unit_to_px(padding[0].to_string(), window_height).unwrap() * 2.0,
+                        self.fix_unit_to_px(padding[1].to_string()).unwrap() * 2.0,
+                        self.fix_unit_to_px(padding[0].to_string()).unwrap() * 2.0,
                     )
                 } else {
                     (
-                        fix_unit_to_px(padding[1].to_string(), window_height).unwrap()
-                            + fix_unit_to_px(padding[3].to_string(), window_height).unwrap(),
-                        fix_unit_to_px(padding[0].to_string(), window_height).unwrap()
-                            + fix_unit_to_px(padding[2].to_string(), window_height).unwrap(),
+                        self.fix_unit_to_px(padding[1].to_string()).unwrap()
+                            + self.fix_unit_to_px(padding[3].to_string()).unwrap(),
+                        self.fix_unit_to_px(padding[0].to_string()).unwrap()
+                            + self.fix_unit_to_px(padding[2].to_string()).unwrap(),
                     )
                 };
 
@@ -239,7 +238,7 @@ impl RenderObject {
                 if margin.len() == 1 {
                     let margin = margin[0];
                     // TODO
-                    let margin = fix_unit_to_px(margin.to_string(), window_height);
+                    let margin = self.fix_unit_to_px(margin.to_string());
 
                     match margin {
                         Some(_margin) => {
@@ -267,7 +266,7 @@ impl RenderObject {
 
                         Some((parent_node_height - self_node_height) / 2.0)
                     } else {
-                        fix_unit_to_px(margin_vertical.to_string(), window_height)
+                        self.fix_unit_to_px(margin_vertical.to_string())
                     };
                     let margin_horizontal = if margin_horizontal == "auto" {
                         let parent_node_width = parent_rect.width;
@@ -282,7 +281,7 @@ impl RenderObject {
 
                         Some((parent_node_width - self_node_width) / 2.0)
                     } else {
-                        fix_unit_to_px(margin_horizontal.to_string(), window_height)
+                        self.fix_unit_to_px(margin_horizontal.to_string())
                     };
 
                     margined_top = margin_vertical.unwrap_or(0.0);
@@ -354,7 +353,7 @@ impl RenderObject {
                     let raw_width = raw_width.strip_suffix("%").unwrap();
                     Some(parent_width.clone() * raw_width.parse::<f32>().unwrap() / 100.0)
                 } else {
-                    fix_unit_to_px(raw_width.to_string(), window_height)
+                    self.fix_unit_to_px(raw_width.to_string())
                 };
 
                 match raw_width {
@@ -373,13 +372,13 @@ impl RenderObject {
 
                 // TODO
                 let padding = if padding.len() == 1 {
-                    fix_unit_to_px(padding[0].to_string(), window_height)
+                    self.fix_unit_to_px(padding[0].to_string())
                 } else if padding.len() == 2 {
-                    Some(fix_unit_to_px(padding[1].to_string(), window_height).unwrap() * 2.0)
+                    Some(self.fix_unit_to_px(padding[1].to_string()).unwrap() * 2.0)
                 } else {
                     Some(
-                        fix_unit_to_px(padding[1].to_string(), window_height).unwrap()
-                            + fix_unit_to_px(padding[3].to_string(), window_height).unwrap(),
+                        self.fix_unit_to_px(padding[1].to_string()).unwrap()
+                            + self.fix_unit_to_px(padding[3].to_string()).unwrap(),
                     )
                 };
 
@@ -457,7 +456,7 @@ impl RenderObject {
             if style.declarations.get(&"min-height".to_string()).is_some() {
                 let min_heigt = style.declarations.get(&"min-height".to_string()).unwrap();
 
-                let min_heigt = fix_unit_to_px(min_heigt.to_string(), window_height);
+                let min_heigt = self.fix_unit_to_px(min_heigt.to_string());
 
                 match min_heigt {
                     Some(_min_heigt) => {
@@ -477,13 +476,13 @@ impl RenderObject {
 
                 // TODO
                 let padding = if padding.len() == 1 {
-                    Some(fix_unit_to_px(padding[0].to_string(), window_height).unwrap() * 2.0)
+                    Some(self.fix_unit_to_px(padding[0].to_string()).unwrap() * 2.0)
                 } else if padding.len() == 2 {
-                    Some(fix_unit_to_px(padding[0].to_string(), window_height).unwrap() * 2.0)
+                    Some(self.fix_unit_to_px(padding[0].to_string()).unwrap() * 2.0)
                 } else {
                     Some(
-                        fix_unit_to_px(padding[0].to_string(), window_height).unwrap()
-                            + fix_unit_to_px(padding[2].to_string(), window_height).unwrap(),
+                        self.fix_unit_to_px(padding[0].to_string()).unwrap()
+                            + self.fix_unit_to_px(padding[2].to_string()).unwrap(),
                     )
                 };
 
@@ -557,6 +556,58 @@ impl RenderObject {
         };
 
         y + pad_top.unwrap_or(0.0)
+    }
+
+    fn get_window_size(&self) -> WindowSize {
+        match self {
+            Self::Text(_) => {
+                // TODO
+                panic!("TODO");
+            }
+            Self::Block(rendering_object)
+            | Self::Inline(rendering_object)
+            | Self::Scroll(rendering_object)
+            | Self::ViewPort(rendering_object) => rendering_object.window_size.clone(),
+        }
+    }
+
+    fn fix_unit_to_px(&self, value: String) -> Option<f32> {
+        let window_height = self.get_window_size().height;
+        let value = if value.starts_with(".") {
+            let mut v = String::from("0");
+            v.push_str(&value);
+            v
+        } else {
+            value
+        };
+        if value.ends_with("px") {
+            let str_value = value.strip_suffix("px").unwrap();
+            return Some(str_value.parse::<f32>().unwrap());
+        }
+
+        if value.ends_with("em") {
+            // TODO
+            let str_value = value.strip_suffix("em").unwrap();
+            return Some(str_value.parse::<f32>().unwrap() * 18.0);
+        }
+
+        if value.ends_with("vh") {
+            // TODO
+            let str_value = value.strip_suffix("vh").unwrap();
+            let vh = str_value.parse::<f32>().unwrap();
+            return Some(vh * window_height);
+        }
+
+        if value.ends_with("vw") {
+            // TODO
+            let str_value = value.strip_suffix("vw").unwrap();
+            let vh = str_value.parse::<f32>().unwrap();
+            return Some(vh * window_height);
+        }
+
+        println!("value: {:?}", value);
+
+        Some(value.parse::<f32>().unwrap())
     }
 
     pub fn init_with_text(
@@ -655,5 +706,41 @@ impl RenderObject {
             | Self::Inline(render_object)
             | Self::Block(render_object) => render_object.style = rules,
         };
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_fix_unit_to_px() {
+        let rendering_object = RenderObject::Block(_RenderObject {
+            children: vec![],
+            style: vec![],
+            rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
+            window_size: WindowSize::new(0.0, 0.0),
+        });
+
+        let value = rendering_object.fix_unit_to_px("100px".to_string());
+
+        assert_eq!(
+            rendering_object.fix_unit_to_px("10px".to_string()),
+            Some(10.0)
+        );
+    }
+
+    #[test]
+    fn test_fix_unit_to_px_without_px() {
+        let rendering_object = RenderObject::Block(_RenderObject {
+            children: vec![],
+            style: vec![],
+            rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
+            window_size: WindowSize::new(0.0, 0.0),
+        });
+        assert_eq!(
+            rendering_object.fix_unit_to_px("10".to_string()),
+            Some(10.0)
+        );
     }
 }
