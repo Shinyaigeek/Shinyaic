@@ -1,5 +1,9 @@
 ## Shinyaic Changelog
 
+### 2021/10/12
+
+- improve fix-unit-to-px logic
+
 ### 2021/10/8
 
 - set NotoSansJP as default font
