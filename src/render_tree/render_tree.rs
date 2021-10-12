@@ -268,10 +268,7 @@ mod test {
 
     #[test]
     fn test_render_tree() {
-        let mut parser = HTMLParser {
-            pos: 0,
-            input: "<html><head></head><body><p id=\"id1\">hello browser!</p><p id=\"id2\"></p><p id=\"id3\"></p></body></html>".to_string(),
-        };
+        let mut parser = HTMLParser::new("<html><head></head><body><p id=\"id1\">hello browser!</p><p id=\"id2\"></p><p id=\"id3\"></p></body></html>".to_string());
 
         let dom = parser.parse();
 

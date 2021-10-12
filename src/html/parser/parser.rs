@@ -9,6 +9,13 @@ pub struct Parser {
 }
 
 impl Parser {
+    pub fn new(input: String) -> Self {
+        Self {
+            pos: 0,
+            input,
+        }
+    }
+
     pub fn parse(&mut self) -> DOMNode {
         if self.peek_start_with("<!DOCTYPE") || self.peek_start_with("<!doctype") {
             self.parse_doctype();
@@ -246,10 +253,9 @@ mod tests {
 
     #[test]
     fn parser_works() {
-        let mut parser = Parser {
-            pos: 0,
-            input: "<html><head></head><body><p>hoge</p><p>asdf</p></body></html>".to_string(),
-        };
+        let mut parser = Parser::new(
+            "<html><head></head><body><p>hoge</p><p>asdf</p></body></html>".to_string(),
+        );
 
         let dom = parser.parse();
 
@@ -282,11 +288,10 @@ mod tests {
 
     #[test]
     fn parse_html_with_doctype() {
-        let mut parser = Parser {
-            pos: 0,
-            input: "<!DOCTYPE html><html><head></head><body><p>hoge</p><p>asdf</p></body></html>"
+        let mut parser = Parser::new(
+            "<!DOCTYPE html><html><head></head><body><p>hoge</p><p>asdf</p></body></html>"
                 .to_string(),
-        };
+        );
 
         let dom = parser.parse();
 
@@ -319,18 +324,17 @@ mod tests {
 
     #[test]
     fn parse_html_with_breakline() {
-        let mut parser = Parser {
-            pos: 0,
-            input: "<html>
-<head>
-</head>
-<body>
-    <p>hoge</p>
-    <p>asdf</p>
-</body>
-</html>"
+        let mut parser = Parser::new(
+            "<html>
+        <head>
+        </head>
+        <body>
+            <p>hoge</p>
+            <p>asdf</p>
+        </body>
+        </html>"
                 .to_string(),
-        };
+        );
 
         let dom = parser.parse();
 
@@ -363,11 +367,9 @@ mod tests {
 
     #[test]
     fn parser_works_with_attributes() {
-        let mut parser = Parser {
-            pos: 0,
-            input: "<html><head></head><body><p id=\"fuga\">hoge</p><p>asdf</p></body></html>"
-                .to_string(),
-        };
+        let mut parser = Parser::new(
+            "<html><head></head><body><p id=\"fuga\">hoge</p><p>asdf</p></body></html>".to_string(),
+        );
 
         let dom = parser.parse();
 
@@ -403,12 +405,10 @@ mod tests {
 
     #[test]
     fn html_parser_works_with_children() {
-        let mut parser = Parser {
-            pos: 0,
-            input:
-                "<html><head></head><body><div><p>hoge</p><p>fuga</p><p>bar</p></div></body></html>"
-                    .to_string(),
-        };
+        let mut parser = Parser::new(
+            "<html><head></head><body><div><p>hoge</p><p>fuga</p><p>bar</p></div></body></html>"
+                .to_string(),
+        );
 
         let dom = parser.parse();
         assert_eq!(dom.children[1].children[0].children.len(), 3);

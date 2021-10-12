@@ -31,6 +31,8 @@ pub fn fix_unit_to_px(value: String, window_height: f32) -> Option<f32> {
         return Some(vh * window_height);
     }
 
+    println!("value: {:?}", value);
+
     Some(value.parse::<f32>().unwrap())
 }
 

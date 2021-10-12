@@ -111,19 +111,30 @@ impl RenderObject {
         for style in styles {
             if style.declarations.get(&"padding".to_string()).is_some() {
                 let padding = style.declarations.get(&"padding".to_string()).unwrap();
+                let padding = padding.split(" ").collect::<Vec<&str>>();
 
                 // TODO
-                let padding = fix_unit_to_px(padding.to_string(), window_height);
+                let (_padding_width, _padding_height) = if padding.len() == 1 {
+                    (
+                        fix_unit_to_px(padding[0].to_string(), window_height).unwrap() * 2.0,
+                        fix_unit_to_px(padding[0].to_string(), window_height).unwrap() * 2.0,
+                    )
+                } else if padding.len() == 2 {
+                    (
+                        fix_unit_to_px(padding[1].to_string(), window_height).unwrap() * 2.0,
+                        fix_unit_to_px(padding[0].to_string(), window_height).unwrap() * 2.0,
+                    )
+                } else {
+                    (
+                        fix_unit_to_px(padding[1].to_string(), window_height).unwrap()
+                            + fix_unit_to_px(padding[3].to_string(), window_height).unwrap(),
+                        fix_unit_to_px(padding[0].to_string(), window_height).unwrap()
+                            + fix_unit_to_px(padding[2].to_string(), window_height).unwrap(),
+                    )
+                };
 
-                match padding {
-                    Some(_padding) => {
-                        paddinged_width = _padding.clone();
-                        paddinged_height = _padding.clone();
-                    }
-                    None => {
-                        panic!("TODO");
-                    }
-                }
+                paddinged_height = _padding_height;
+                paddinged_width = _padding_width;
             }
         }
 
@@ -336,7 +347,15 @@ impl RenderObject {
             if style.declarations.get(&"width".to_string()).is_some() {
                 let raw_width = style.declarations.get(&"width".to_string()).unwrap();
 
-                let raw_width = fix_unit_to_px(raw_width.to_string(), window_height);
+                let raw_width = if raw_width == "max-content" {
+                    // TODO
+                    Some(parent_width.clone())
+                } else if raw_width.ends_with("%") {
+                    let raw_width = raw_width.strip_suffix("%").unwrap();
+                    Some(parent_width.clone() * raw_width.parse::<f32>().unwrap() / 100.0)
+                } else {
+                    fix_unit_to_px(raw_width.to_string(), window_height)
+                };
 
                 match raw_width {
                     Some(_width) => {
@@ -350,9 +369,19 @@ impl RenderObject {
 
             if style.declarations.get(&"padding".to_string()).is_some() {
                 let padding = style.declarations.get(&"padding".to_string()).unwrap();
+                let padding = padding.split(" ").collect::<Vec<&str>>();
 
                 // TODO
-                let padding = fix_unit_to_px(padding.to_string(), window_height);
+                let padding = if padding.len() == 1 {
+                    fix_unit_to_px(padding[0].to_string(), window_height)
+                } else if padding.len() == 2 {
+                    Some(fix_unit_to_px(padding[1].to_string(), window_height).unwrap() * 2.0)
+                } else {
+                    Some(
+                        fix_unit_to_px(padding[1].to_string(), window_height).unwrap()
+                            + fix_unit_to_px(padding[3].to_string(), window_height).unwrap(),
+                    )
+                };
 
                 match padding {
                     Some(_padding) => {
@@ -444,9 +473,19 @@ impl RenderObject {
 
             if style.declarations.get(&"padding".to_string()).is_some() {
                 let padding = style.declarations.get(&"padding".to_string()).unwrap();
+                let padding = padding.split(" ").collect::<Vec<&str>>();
 
                 // TODO
-                let padding = fix_unit_to_px(padding.to_string(), window_height);
+                let padding = if padding.len() == 1 {
+                    Some(fix_unit_to_px(padding[0].to_string(), window_height).unwrap() * 2.0)
+                } else if padding.len() == 2 {
+                    Some(fix_unit_to_px(padding[0].to_string(), window_height).unwrap() * 2.0)
+                } else {
+                    Some(
+                        fix_unit_to_px(padding[0].to_string(), window_height).unwrap()
+                            + fix_unit_to_px(padding[2].to_string(), window_height).unwrap(),
+                    )
+                };
 
                 match padding {
                     Some(_padding) => {

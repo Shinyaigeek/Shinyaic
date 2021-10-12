@@ -33,40 +33,39 @@ pub struct Window {
 }
 
 fn prepare() -> RenderTree {
-    let mut parser = Parser {
-        pos: 0,
-        input: "<!doctype html>
-        <html>
-        <head>
-        <style>
-        h1 {
-            font-size: 24px;
-            padding:4px;
-        }
+    let mut parser = Parser::new(
+        "<!doctype html>
+    <html>
+    <head>
+    <style>
+    h1 {
+        font-size: 24px;
+        padding:4px;
+    }
 
-        body {
-            background: #ffffef;
-        }
+    body {
+        background: #ffffef;
+    }
 
-        #box {
-            background: #fff;
-            padding: 12px;
-            margin: 36px auto;
-        }
+    #box {
+        background: #fff;
+        padding: 12px;
+        margin: 36px auto;
+    }
 
-        </style>
-        </head>
-        <body>
-            <div id=\"box\">
-            <h1>Hello, Shinyaic Browser!</h1>
-            <p>
-                shinyaic is a browser made by @Shinyaigeek
-            </p>
-            </div>
-        </body>
-        </html>"
+    </style>
+    </head>
+    <body>
+        <div id=\"box\">
+        <h1>Hello, Shinyaic Browser!</h1>
+        <p>
+            shinyaic is a browser made by @Shinyaigeek
+        </p>
+        </div>
+    </body>
+    </html>"
             .to_string(),
-    };
+    );
 
     let dom = parser.parse();
     println!("------");
@@ -128,10 +127,7 @@ impl Sandbox for Window {
                 println!("{}", url);
                 let response = Client::get(url);
                 let body = response.body;
-                let mut parser = Parser {
-                    pos: 0,
-                    input: body,
-                };
+                let mut parser = Parser::new(body);
                 let dom = parser.parse();
                 println!("------");
                 println!("{:?}", dom);
