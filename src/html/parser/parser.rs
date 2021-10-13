@@ -97,15 +97,25 @@ impl Parser {
         let mut key = String::from("");
         let mut value = String::from("");
         let mut is_eating_key = true;
+        let mut is_quoted = false;
 
         loop {
             let next_token = self.eat();
             if !is_eating_key {
-                if next_token == '"' {
+                if next_token == '"' && is_quoted {
                     attributes.insert(key.to_string(), value.to_string());
                     key = String::from("");
                     value = String::from("");
                     is_eating_key = true;
+                    is_quoted = false;
+                } else if next_token == ' ' && !is_quoted {
+                    attributes.insert(key.to_string(), value.to_string());
+                    key = String::from("");
+                    value = String::from("");
+                    is_eating_key = true;
+                } else if next_token == '>' {
+                    attributes.insert(key.to_string(), value.to_string());
+                    break;
                 } else {
                     value.push(next_token as char);
                 }
@@ -113,9 +123,17 @@ impl Parser {
                 if next_token == '>' {
                     break;
                 }
-                if next_token == '"' {
+                if next_token == '=' {
+                    let next_token = self.peek();
+
+                    if next_token == '"' {
+                        is_quoted = true;
+                        self.eat();
+                    } else {
+                        is_quoted = false;
+                    }
                     is_eating_key = false;
-                } else if next_token == ' ' || next_token == '=' {
+                } else if next_token == ' ' {
                     // do nothing
                 } else {
                     key.push(next_token as char);
@@ -372,6 +390,46 @@ mod tests {
 
         let mut id: HashMap<String, String> = HashMap::new();
         id.insert("id".to_string(), "fuga".to_string());
+
+        let expected_dom = DOMNode::elem(
+            HTMLElements::HtmlElement,
+            HashMap::new(),
+            vec![
+                DOMNode::elem(HTMLElements::HeadElement, HashMap::new(), vec![]),
+                DOMNode::elem(
+                    HTMLElements::BodyElement,
+                    HashMap::new(),
+                    vec![
+                        DOMNode::elem(
+                            HTMLElements::ParagraphElement,
+                            id,
+                            vec![DOMNode::text(String::from("hoge"))],
+                        ),
+                        DOMNode::elem(
+                            HTMLElements::ParagraphElement,
+                            HashMap::new(),
+                            vec![DOMNode::text(String::from("asdf"))],
+                        ),
+                    ],
+                ),
+            ],
+        );
+
+        assert_eq!(dom, expected_dom);
+    }
+
+    #[test]
+    fn parser_works_with_attributes_with_no_quote() {
+        let mut parser = Parser::new(
+            "<html><head></head><body><p id=fuga class=hoge>hoge</p><p>asdf</p></body></html>"
+                .to_string(),
+        );
+
+        let dom = parser.parse();
+
+        let mut id: HashMap<String, String> = HashMap::new();
+        id.insert("id".to_string(), "fuga".to_string());
+        id.insert("class".to_string(), "hoge".to_string());
 
         let expected_dom = DOMNode::elem(
             HTMLElements::HtmlElement,
