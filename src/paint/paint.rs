@@ -4,6 +4,7 @@ use crate::css::parser::parser::Parser as CSSParser;
 use crate::html::parser::parser::Parser;
 use crate::paint::border::Border;
 use crate::paint::styling_handler::handle_background::handle_background;
+use crate::paint::util::load_default_css::load_default_css;
 use crate::paint::window_canvas::{create_block, create_text};
 use crate::paint::wrapper::Wrapper;
 use crate::render_tree::render_object::RenderObject;
@@ -71,21 +72,11 @@ fn prepare() -> RenderTree {
     println!("------");
     println!("{:?}", dom);
 
+    let default_css = load_default_css();
+
     let mut parser = CSSParser {
         pos: 0,
-        input: "h1 {
-            display: block;
-            font-size: 2em;
-            margin-top: 0.67em;
-            margin-bottom: 0.67em;
-            margin-left: 0;
-            margin-right: 0;
-            font-weight: bold;
-        }
-        body {
-            min-height: 100vh;
-        }"
-        .to_string(),
+        input: default_css,
     };
 
     let cssom = parser.parse();
@@ -132,22 +123,7 @@ impl Sandbox for Window {
                 println!("------");
                 println!("{:?}", dom);
                 let external_css = dom.get_external_css();
-                let mut css = "h1 {
-                    display: block;
-                    font-size: 2em;
-                    margin-top: 0.67em;
-                    margin-bottom: 0.67em;
-                    margin-left: 0;
-                    margin-right: 0;
-                    font-weight: bold;
-                }
-                body {
-                    min-height: 100vh;
-                }
-                header {
-                    display: block;
-                }"
-                .to_string();
+                let mut css = load_default_css();
                 css.push_str(&external_css);
                 // TODO link の css をちゃんと読む
                 let mut parser = CSSParser { pos: 0, input: css };
