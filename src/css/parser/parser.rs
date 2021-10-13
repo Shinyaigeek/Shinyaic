@@ -1,6 +1,6 @@
 use crate::css::cssom::cssom::{StylingRule, CSSOM};
 use crate::css::cssom::declarations::Declarations;
-use crate::css::cssom::selector::{Selector, SelectorChildren, SelectorElm};
+use crate::css::cssom::selector::{PseudoElements, Selector, SelectorChildren, SelectorElm};
 use std::collections::HashMap;
 
 pub struct Parser {
@@ -324,7 +324,7 @@ mod tests {
 
     #[test]
     fn parser_works_with_pseudo_elements() {
-        let css = "a:link { color: red; }";
+        let css = "a:hover { color: red; }";
         let mut parser = Parser {
             pos: 0,
             input: String::from(css),
@@ -338,8 +338,7 @@ mod tests {
                 selector: vec![Selector {
                     elm: SelectorElm::TagName("a".to_string()),
                     children: vec![],
-
-                    pseudo_elements: None
+                    pseudo_elements: Some(PseudoElements::Hover)
                 }],
                 declarations
             }]
