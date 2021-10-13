@@ -16,7 +16,7 @@ cargo run
 
 - [x] show simple html and css
 - [x] access web page with url with [konnnyaku](https://github.com/shinayigeek/konnnyaku)
-- [ ] show example.com
+- [x] show example.com
 - [ ] fetch resource such as picture or css
 - [ ] full support for html(all tag, fuzzy parser...)
 - [ ] full support for css (media query, css variables...)
