@@ -86,12 +86,15 @@ impl Parser {
 
         let mut selector_elm = self.parse_selector_elm();
 
+        let peseudo_elements = self.parse_pseudo_elements();
+
+        // TODO pseudo_elements
         loop {
             if self.peek() == '{' {
                 selectors.push(Selector {
                     elm: selector_elm.clone(),
                     children: selector_children,
-                    pseudo_elements: None,
+                    pseudo_elements: peseudo_elements,
                 });
                 break;
             }
@@ -111,7 +114,7 @@ impl Parser {
                 selectors.push(Selector {
                     elm: selector_elm.clone(),
                     children: vec![],
-                    pseudo_elements: None,
+                    pseudo_elements: peseudo_elements.clone(),
                 });
                 break;
             } else if separation_char == ',' {
@@ -119,7 +122,7 @@ impl Parser {
                 selectors.push(Selector {
                     elm: selector_elm.clone(),
                     children: selector_children,
-                    pseudo_elements: None,
+                    pseudo_elements: peseudo_elements.clone(),
                 });
                 selector_elm = self.parse_selector_elm();
                 selector_children = Vec::<SelectorChildren>::new();
@@ -151,6 +154,41 @@ impl Parser {
         selectors
     }
 
+    fn parse_pseudo_elements(&mut self) -> Option<PseudoElements> {
+        if self.peek() == ':' {
+            self.eat();
+            let mut pseudo_elements = String::from("");
+            loop {
+                let peeked_char = self.peek();
+
+                if peeked_char == ','
+                    || peeked_char == ' '
+                    || peeked_char == '>'
+                    || peeked_char == '{'
+                    || peeked_char == '~'
+                    || peeked_char == '+'
+                {
+                    break;
+                }
+                pseudo_elements.push(self.eat() as char);
+            }
+
+            let pseudo_elements: &str = &pseudo_elements;
+
+            let pseudo_elements = match pseudo_elements {
+                "hover" => PseudoElements::Hover,
+                _ => {
+                    // TODO
+                    panic!("TODO")
+                }
+            };
+
+            Some(pseudo_elements)
+        } else {
+            None
+        }
+    }
+
     // "."clas"s" { width: 80px }
     fn parse_selector_elm(&mut self) -> SelectorElm {
         self.goto_next_token();
@@ -167,6 +205,7 @@ impl Parser {
                 || peeked_char == '{'
                 || peeked_char == '~'
                 || peeked_char == '+'
+                || peeked_char == ':'
             {
                 break;
             }
