@@ -91,6 +91,7 @@ impl Parser {
                 selectors.push(Selector {
                     elm: selector_elm.clone(),
                     children: selector_children,
+                    pseudo_elements: None,
                 });
                 break;
             }
@@ -110,6 +111,7 @@ impl Parser {
                 selectors.push(Selector {
                     elm: selector_elm.clone(),
                     children: vec![],
+                    pseudo_elements: None,
                 });
                 break;
             } else if separation_char == ',' {
@@ -117,6 +119,7 @@ impl Parser {
                 selectors.push(Selector {
                     elm: selector_elm.clone(),
                     children: selector_children,
+                    pseudo_elements: None,
                 });
                 selector_elm = self.parse_selector_elm();
                 selector_children = Vec::<SelectorChildren>::new();
@@ -312,6 +315,31 @@ mod tests {
                 selector: vec![Selector {
                     elm: SelectorElm::TagName("body".to_string()),
                     children: vec![],
+                    pseudo_elements: None
+                }],
+                declarations
+            }]
+        );
+    }
+
+    #[test]
+    fn parser_works_with_pseudo_elements() {
+        let css = "a:link { color: red; }";
+        let mut parser = Parser {
+            pos: 0,
+            input: String::from(css),
+        };
+        let result = parser.parse();
+        let mut declarations = HashMap::new();
+        declarations.insert("color".to_string(), "red".to_string());
+        assert_eq!(
+            result,
+            vec![StylingRule {
+                selector: vec![Selector {
+                    elm: SelectorElm::TagName("a".to_string()),
+                    children: vec![],
+
+                    pseudo_elements: None
                 }],
                 declarations
             }]
@@ -345,13 +373,18 @@ mod tests {
                                             vec![Selector {
                                                 elm: SelectorElm::TagName("div".to_string()),
                                                 children: vec![],
+                                                pseudo_elements: None
                                             }]
-                                        )]
+                                        )],
+                                        pseudo_elements: None
                                     }
-                                ])]
+                                ])],
+                                pseudo_elements: None
                             }
-                        ])]
-                    }])]
+                        ])],
+                        pseudo_elements: None
+                    }])],
+                    pseudo_elements: None
                 }],
                 declarations
             }]
@@ -375,10 +408,14 @@ mod tests {
                     Selector {
                         elm: SelectorElm::Class("class1".to_string()),
                         children: vec![],
+
+                        pseudo_elements: None
                     },
                     Selector {
                         elm: SelectorElm::Class("class2".to_string()),
                         children: vec![],
+
+                        pseudo_elements: None
                     }
                 ],
                 declarations: declarations.clone(),
@@ -403,6 +440,7 @@ mod tests {
                 selector: vec![Selector {
                     elm: SelectorElm::TagName("body".to_string()),
                     children: vec![],
+                    pseudo_elements: None
                 }],
                 declarations
             }]
@@ -431,6 +469,7 @@ mod tests {
                     selector: vec![Selector {
                         elm: SelectorElm::TagName("body".to_string()),
                         children: vec![],
+                        pseudo_elements: None
                     }],
                     declarations: declarations_body.clone(),
                 },
@@ -438,6 +477,7 @@ mod tests {
                     selector: vec![Selector {
                         elm: SelectorElm::TagName("p".to_string()),
                         children: vec![],
+                        pseudo_elements: None
                     }],
                     declarations: declarations_p.clone(),
                 }

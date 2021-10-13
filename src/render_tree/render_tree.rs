@@ -331,7 +331,9 @@ mod test {
                             style: vec![StylingRule {
                                 selector: vec![Selector {
                                     elm: SelectorElm::Id("id1".to_string()),
-                                    children: vec![]
+                                    children: vec![],
+
+                                    pseudo_elements: None
                                 }],
                                 declarations: style_1
                             }],
@@ -348,7 +350,8 @@ mod test {
                             style: vec![StylingRule {
                                 selector: vec![Selector {
                                     elm: SelectorElm::Id("id2".to_string()),
-                                    children: vec![]
+                                    children: vec![],
+                                    pseudo_elements: None
                                 }],
                                 declarations: style_2
                             }],
@@ -365,7 +368,8 @@ mod test {
                             style: vec![StylingRule {
                                 selector: vec![Selector {
                                     elm: SelectorElm::Id("id3".to_string()),
-                                    children: vec![]
+                                    children: vec![],
+                                    pseudo_elements: None
                                 }],
                                 declarations: style_3
                             }],

@@ -17,10 +17,17 @@ pub enum SelectorChildren {
     AdjacentSiblingCombinator(Vec<Selector>),
 }
 
+// TODO
+#[derive(Debug, PartialEq, Clone, Eq, Hash)]
+pub enum PseudoElements {
+    Hover,
+}
+
 #[derive(Debug, PartialEq, Clone, Eq, Hash)]
 pub struct Selector {
     pub elm: SelectorElm,
     pub children: Vec<SelectorChildren>,
+    pub pseudo_elements: Option<PseudoElements>,
 }
 
 impl Selector {
@@ -150,6 +157,7 @@ mod test {
         let selector = Selector {
             elm: SelectorElm::TagName("div".to_string()),
             children: vec![],
+            pseudo_elements: None,
         };
 
         let elm = DOMNode {
@@ -170,7 +178,9 @@ mod test {
             children: vec![SelectorChildren::DescendantCombinator(vec![Selector {
                 elm: SelectorElm::Id("hoge".to_string()),
                 children: vec![],
+                pseudo_elements: None,
             }])],
+            pseudo_elements: None,
         };
 
         let mut attributes = HashMap::new();
@@ -223,7 +233,9 @@ mod test {
             children: vec![SelectorChildren::ChildCombinator(vec![Selector {
                 elm: SelectorElm::Id("hoge".to_string()),
                 children: vec![],
+                pseudo_elements: None,
             }])],
+            pseudo_elements: None,
         };
         let mut attributes = HashMap::new();
         attributes.insert("id".to_string(), "hoge".to_string());
