@@ -5,6 +5,7 @@
 - improve fix-unit-to-px logic
 - implement header
 - implement nav
+- implement pseudo elements parser for css parser
 
 ### 2021/10/8
 
