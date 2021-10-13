@@ -24,6 +24,18 @@ pub enum HTMLElements {
     ScriptElement,
     LinkElement,
     H1Element,
+    H2Element,
+    DelElement,
+    InsElement,
+    TimeElement,
+    NavElement,
+    FooterElement,
+    IframeElement,
+    HrElement,
+    UlElement,
+    LiElement,
+    MainElement,
+    SectionElement,
 }
 
 impl HTMLElements {
@@ -53,6 +65,18 @@ impl HTMLElements {
             HTMLElements::ScriptElement => "script",
             HTMLElements::LinkElement => "link",
             HTMLElements::H1Element => "h1",
+            HTMLElements::H2Element => "h2",
+            HTMLElements::DelElement => "del",
+            HTMLElements::InsElement => "ins",
+            HTMLElements::TimeElement => "time",
+            HTMLElements::NavElement => "nav",
+            HTMLElements::FooterElement => "footer",
+            HTMLElements::IframeElement => "iframe",
+            HTMLElements::HrElement => "hr",
+            HTMLElements::UlElement => "ul",
+            HTMLElements::LiElement => "li",
+            HTMLElements::MainElement => "main",
+            HTMLElements::SectionElement => "section",
         };
 
         tag_str.to_string()
@@ -63,6 +87,7 @@ impl HTMLElements {
             Self::MetaElement => false,
             Self::LinkElement => false,
             Self::ImgElement => false,
+            Self::HrElement => false,
             _ => true,
         }
     }
@@ -92,7 +117,19 @@ impl HTMLElements {
             "script" => Some(HTMLElements::ScriptElement),
             "link" => Some(HTMLElements::LinkElement),
             "h1" => Some(HTMLElements::H1Element),
+            "h2" => Some(HTMLElements::H2Element),
             "header" => Some(HTMLElements::HeaderElement),
+            "ins" => Some(HTMLElements::InsElement),
+            "del" => Some(HTMLElements::DelElement),
+            "time" => Some(HTMLElements::TimeElement),
+            "nav" => Some(HTMLElements::NavElement),
+            "footer" => Some(HTMLElements::FooterElement),
+            "iframe" => Some(HTMLElements::IframeElement),
+            "hr" => Some(HTMLElements::HrElement),
+            "ul" => Some(HTMLElements::UlElement),
+            "li" => Some(HTMLElements::LiElement),
+            "main" => Some(HTMLElements::MainElement),
+            "section" => Some(HTMLElements::SectionElement),
             _ => None,
         }
     }
