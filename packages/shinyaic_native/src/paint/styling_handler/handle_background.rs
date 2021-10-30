@@ -1,4 +1,4 @@
-use crate::css::cssom::cssom::StylingRule;
+use shinyaic_core::css::cssom::cssom::StylingRule;
 use iced::Color;
 
 pub fn handle_background(style: &StylingRule) -> Option<Color> {

@@ -1,0 +1,17 @@
+[package]
+name = "shinyaic-native"
+version = "0.1.0"
+authors = ["shinyaigeek <PhilisPaxil@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+core-text = "19.2.0"
+font-kit = "0.10.1"
+iced = "0.3"
+iced_native = "0.4"
+iced_graphics = "0.2"
+pathfinder_geometry = "0.5.1"
+shinyaic_core = { path = "../shinyaic_core" }
+konnnyaku_client = { git = "https://github.com/Shinyaigeek/konnnyaku", package = "konnnyaku-client" }

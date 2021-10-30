@@ -6,6 +6,41 @@ use iced_native::{
     Background, Color, HorizontalAlignment, Point, Rectangle, Size, VerticalAlignment,
 };
 
+struct InteractiveStyle {
+    shadow_offset: Vec<f32>,
+    background: Option<Background>,
+    border_radius: u16,
+    border_width: u16,
+    border_color: Color,
+    text_color: Color,
+}
+
+trait InteractiveBlock {
+    fn hovered(&self) -> InteractiveStyle {
+        InteractiveStyle {
+            shadow_offset: vec![0.0, 0.0],
+            background: None,
+            border_radius: 0,
+            border_width: 1,
+            border_color: Color::from_rgb(0.0, 0.0, 0.0),
+            text_color: Color::from_rgb(0.0, 0.0, 0.0),
+        }
+    }
+}
+
+impl InteractiveBlock for Primitive {
+    fn hovered(&self) -> InteractiveStyle {
+        InteractiveStyle {
+            shadow_offset: vec![0.0, 0.0],
+            background: None,
+            border_radius: 0,
+            border_width: 1,
+            border_color: Color::from_rgb(0.0, 0.0, 0.0),
+            text_color: Color::from_rgb(0.0, 0.0, 0.0),
+        }
+    }
+}
+
 pub fn create_block(color: Color, border: Border, rect: RenderObjectRectangle) -> Primitive {
     Primitive::Quad {
         bounds: Rectangle::new(

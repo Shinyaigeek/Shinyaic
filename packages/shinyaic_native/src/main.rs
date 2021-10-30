@@ -1,9 +1,7 @@
 use crate::paint::paint::paint;
 
-mod css;
-mod html;
-mod paint;
 mod render_tree;
+mod paint;
 
 fn main() {
     paint();
