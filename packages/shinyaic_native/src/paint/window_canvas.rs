@@ -1,6 +1,6 @@
 use crate::paint::border::Border;
 use crate::paint::font::{FontContext, PaintFont};
-use shinyaic_core::render_tree::rectangle::Rectangle as RenderObjectRectangle;
+use crate::render_tree::rectangle::Rectangle as RenderObjectRectangle;
 use iced_graphics::Primitive;
 use iced_native::{
     Background, Color, HorizontalAlignment, Point, Rectangle, Size, VerticalAlignment,

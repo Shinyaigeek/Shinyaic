@@ -2,13 +2,16 @@
 
 use shinyaic_core::css::parser::parser::Parser as CSSParser;
 use shinyaic_core::html::parser::parser::Parser;
+use shinyaic_core::html::dom::dom::DOMNode;
+use shinyaic_core::html::dom::dom::NodeType;
+use shinyaic_core::html::dom::elements::elements::HTMLElements;
 use crate::paint::border::Border;
 use crate::paint::styling_handler::handle_background::handle_background;
 use crate::paint::util::load_default_css::load_default_css;
 use crate::paint::window_canvas::{create_block, create_text};
 use crate::paint::wrapper::Wrapper;
-use shinyaic_core::render_tree::render_object::RenderObject;
-use shinyaic_core::render_tree::render_tree::RenderTree;
+use crate::render_tree::render_object::RenderObject;
+use crate::render_tree::render_tree::RenderTree;
 use iced::{
     scrollable, text_input, Color, Container, Element, Length, Sandbox, Scrollable, Settings,
     TextInput,
@@ -91,6 +94,33 @@ fn prepare() -> RenderTree {
     render_tree
 }
 
+fn get_external_css(dom: &DOMNode) -> String {
+    let mut css_source = String::from("");
+
+    match &dom.node_type {
+        NodeType::DomNode(dom_node) => match dom_node.tag_name {
+            HTMLElements::LinkElement => {
+                if dom_node.attributes.get("type").unwrap_or(&"".to_string()) == "text/css" {
+                    let external_css_href = dom_node.attributes.get("href").unwrap();
+                    let external_css_source = Client::get(external_css_href.to_string());
+                    let external_css_source = external_css_source.body;
+                    css_source.push_str(&external_css_source)
+                }
+            }
+            _ => {
+                for child in dom.children.clone() {
+                    css_source.push_str(&get_external_css(&child));
+                }
+            }
+        },
+        NodeType::TextNode(_) => {
+            return css_source;
+        }
+    };
+
+    css_source
+}
+
 impl Sandbox for Window {
     type Message = Message;
     fn new() -> Window {
@@ -122,7 +152,7 @@ impl Sandbox for Window {
                 let dom = parser.parse();
                 println!("------");
                 println!("{:?}", dom);
-                let external_css = dom.get_external_css();
+                let external_css = get_external_css(&dom);
                 let mut css = load_default_css();
                 css.push_str(&external_css);
                 // TODO link の css をちゃんと読む
