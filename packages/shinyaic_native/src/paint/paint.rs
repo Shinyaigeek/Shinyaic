@@ -1,14 +1,14 @@
 // TODO
 
-use crate::css::parser::parser::Parser as CSSParser;
-use crate::html::parser::parser::Parser;
+use shinyaic_core::css::parser::parser::Parser as CSSParser;
+use shinyaic_core::html::parser::parser::Parser;
 use crate::paint::border::Border;
 use crate::paint::styling_handler::handle_background::handle_background;
 use crate::paint::util::load_default_css::load_default_css;
 use crate::paint::window_canvas::{create_block, create_text};
 use crate::paint::wrapper::Wrapper;
-use crate::render_tree::render_object::RenderObject;
-use crate::render_tree::render_tree::RenderTree;
+use shinyaic_core::render_tree::render_object::RenderObject;
+use shinyaic_core::render_tree::render_tree::RenderTree;
 use iced::{
     scrollable, text_input, Color, Container, Element, Length, Sandbox, Scrollable, Settings,
     TextInput,
