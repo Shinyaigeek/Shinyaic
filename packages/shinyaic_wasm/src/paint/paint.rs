@@ -12,10 +12,20 @@ use shinyaic_core::html::dom::dom::DOMNode;
 use shinyaic_core::html::dom::dom::NodeType;
 use shinyaic_core::html::dom::elements::elements::HTMLElements;
 use shinyaic_core::html::parser::parser::Parser;
+use wasm_bindgen::prelude::*;
+use web_sys::CanvasRenderingContext2d;
+
+#[wasm_bindgen]
+extern "C" {
+    // Use `js_namespace` here to bind `console.log(..)` instead of just
+    // `log(..)`
+    #[wasm_bindgen(js_namespace = console)]
+    fn log(s: &str);
+}
 
 fn prepare() -> RenderTree {
     let mut parser = Parser::new(
-        "<!doctype html>
+        r#"<!doctype html>
     <html>
     <head>
     <style>
@@ -37,18 +47,20 @@ fn prepare() -> RenderTree {
     </style>
     </head>
     <body>
-        <div id=\"box\">
+        <div id="box">
         <h1>Hello, Shinyaic Browser!</h1>
         <p>
             shinyaic is a browser made by @Shinyaigeek
         </p>
         </div>
     </body>
-    </html>"
+    </html>"#
             .to_string(),
     );
 
     let dom = parser.parse();
+
+    log(&format!("{:?}", dom));
     println!("------");
     println!("{:?}", dom);
 
@@ -60,6 +72,7 @@ fn prepare() -> RenderTree {
     };
 
     let cssom = parser.parse();
+    log(&format!("{:?}", cssom));
     println!("------");
     println!("{:?}", cssom);
 
@@ -67,12 +80,14 @@ fn prepare() -> RenderTree {
     render_tree.constructor();
     println!("------");
     println!("{:#?}", render_tree);
+    log(&format!("{:?}", render_tree));
 
     render_tree
 }
 
 pub fn paint() {
     let render_tree = prepare();
+
     let rendering_objects = render_tree.prepare_iterator();
 
     let document = web_sys::window().unwrap().document().unwrap();

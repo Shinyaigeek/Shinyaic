@@ -22,4 +22,5 @@ features = [
   'Element',
   'HtmlCanvasElement',
   'Window',
+  'TextMetrics',
 ]
