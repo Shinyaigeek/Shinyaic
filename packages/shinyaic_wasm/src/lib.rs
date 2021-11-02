@@ -10,6 +10,6 @@ mod paint;
 mod render_tree;
 
 #[wasm_bindgen]
-pub fn greet(name: &str) {
-    a();
+pub fn browser(content: &str) {
+    a(content);
 }

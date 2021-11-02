@@ -179,7 +179,7 @@ impl Parser {
                 "hover" => PseudoElements::Hover,
                 _ => {
                     // TODO
-                    panic!("TODO")
+                    PseudoElements::Hover
                 }
             };
 

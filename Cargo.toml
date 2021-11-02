@@ -2,5 +2,7 @@
 members = [
     "packages/shinyaic_core",
     "packages/shinyaic_native",
+]
+exclude = [
     "packages/shinyaic_wasm",
 ]

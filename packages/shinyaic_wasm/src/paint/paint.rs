@@ -85,8 +85,22 @@ fn prepare() -> RenderTree {
     render_tree
 }
 
-pub fn paint() {
-    let render_tree = prepare();
+pub fn paint(content: &str) {
+    log(content.into());
+    let mut parser = Parser::new(content.to_string());
+    let dom = parser.parse();
+
+    let default_css = load_default_css();
+
+    let mut parser = CSSParser {
+        pos: 0,
+        input: default_css,
+    };
+
+    let cssom = parser.parse();
+
+    let mut render_tree = RenderTree::new(dom, cssom);
+    render_tree.constructor();
 
     let rendering_objects = render_tree.prepare_iterator();
 
@@ -97,7 +111,32 @@ pub fn paint() {
         .map_err(|_| ())
         .unwrap();
 
+    let virtual_canvas = document.get_element_by_id("virtual").unwrap();
+    let virtual_canvas: web_sys::HtmlCanvasElement = virtual_canvas
+        .dyn_into::<web_sys::HtmlCanvasElement>()
+        .map_err(|_| ())
+        .unwrap();
+
+    log(&format!("asdf: {:?}", rendering_objects[0]));
+
+    let body_rect = match rendering_objects[0].clone() {
+        RenderObject::ViewPort(render_object) => {
+            log(&format!("hoge: {:?}", render_object.children.len()));
+            match render_object.children[0].clone() {
+                RenderObject::Scroll(render_object) => render_object.rectangle,
+                _ => panic!("TODO"),
+            }
+        }
+        _ => panic!("TODO"),
+    };
+
     let context = canvas
+        .get_context("2d")
+        .unwrap()
+        .unwrap()
+        .dyn_into::<web_sys::CanvasRenderingContext2d>()
+        .unwrap();
+    let virtual_context = virtual_canvas
         .get_context("2d")
         .unwrap()
         .unwrap()
@@ -112,6 +151,14 @@ pub fn paint() {
                     text.rectangle.clone(),
                     text.font.clone(),
                     &context,
+                );
+
+                create_text(
+                    text.text.to_string(),
+                    "black".to_string(),
+                    text.rectangle.clone(),
+                    text.font.clone(),
+                    &virtual_context,
                 );
             }
             RenderObject::ViewPort(rendering_object)
@@ -141,6 +188,13 @@ pub fn paint() {
                     border,
                     rendering_object.rectangle.clone(),
                     &context,
+                );
+
+                create_block(
+                    background_color.to_string(),
+                    Border::new(None, None, None, None),
+                    rendering_object.rectangle.clone(),
+                    &virtual_context,
                 );
             }
         };

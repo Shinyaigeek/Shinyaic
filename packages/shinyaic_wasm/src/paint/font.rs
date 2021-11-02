@@ -46,11 +46,13 @@ impl PaintFont {
     }
 
     pub fn get_font_rendered_size(&self, width: f32, text: String) -> PaintFontRenderedRect {
+        self.canvas_context
+            .set_font(&format!("{:?}px {:?}", self.size, self.family_name));
         let rect = self.canvas_context.measure_text(&text).unwrap();
         let mut rendered_width = rect.width().clone();
         let mut rendered_height = 0.0;
         // TODO version update
-        let rect_height = self.canvas_context.measure_text("あ").unwrap().width();
+        let rect_height = rect.actual_bounding_box_descent() + rect.actual_bounding_box_ascent();
         if rendered_width < (width as f64) {
             return PaintFontRenderedRect {
                 x: 0.0,
@@ -68,7 +70,7 @@ impl PaintFont {
                         x: 0.0,
                         y: 0.0,
                         width: width as f64,
-                        height: (rendered_height + rect_height) as f64,
+                        height: (rendered_height + rect_height + rect_height) as f64,
                     };
                 }
             }
