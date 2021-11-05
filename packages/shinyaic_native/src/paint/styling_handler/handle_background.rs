@@ -1,5 +1,5 @@
-use shinyaic_core::css::cssom::cssom::StylingRule;
 use iced::Color;
+use shinyaic_core::css::cssom::cssom::StylingRule;
 
 pub fn handle_background(style: &StylingRule) -> Option<Color> {
     let background_color_value = {

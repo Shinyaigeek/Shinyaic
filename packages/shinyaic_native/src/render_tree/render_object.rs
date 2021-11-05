@@ -1,9 +1,9 @@
-use shinyaic_core::css::cssom::cssom::StylingRule;
-use shinyaic_core::html::dom::dom::{DOMNode, ElementType, NodeType};
-use shinyaic_core::html::dom::elements::elements::HTMLElements;
 use crate::paint::font::PaintFont;
 use crate::render_tree::rectangle::Rectangle;
 use crate::render_tree::window_size::WindowSize;
+use shinyaic_core::css::cssom::cssom::StylingRule;
+use shinyaic_core::html::dom::dom::{DOMNode, ElementType, NodeType};
+use shinyaic_core::html::dom::elements::elements::HTMLElements;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct _RenderObject {
@@ -402,18 +402,14 @@ impl RenderObject {
 
         for style in rendering_object.clone().style {
             if style.declarations.get(&"height".to_string()).is_some() {
-                let raw_height = style
-                    .declarations
-                    .get(&"height".to_string())
-                    .unwrap()
-                    .parse::<f32>();
-
-                match raw_height {
-                    Ok(_height) => {
+                let _height = style.declarations.get(&"height".to_string()).unwrap();
+                let _height = self.fix_unit_to_px(_height.to_string());
+                match _height {
+                    Some(_height) => {
                         height = Some(_height);
                     }
-                    Err(e) => {
-                        panic!("{:?}", e);
+                    None => {
+                        panic!("TODO");
                     }
                 }
             }

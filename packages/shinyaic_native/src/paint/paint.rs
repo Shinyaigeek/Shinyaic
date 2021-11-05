@@ -1,10 +1,5 @@
 // TODO
 
-use shinyaic_core::css::parser::parser::Parser as CSSParser;
-use shinyaic_core::html::parser::parser::Parser;
-use shinyaic_core::html::dom::dom::DOMNode;
-use shinyaic_core::html::dom::dom::NodeType;
-use shinyaic_core::html::dom::elements::elements::HTMLElements;
 use crate::paint::border::Border;
 use crate::paint::styling_handler::handle_background::handle_background;
 use crate::paint::util::load_default_css::load_default_css;
@@ -17,6 +12,11 @@ use iced::{
     TextInput,
 };
 use konnnyaku_client::Client;
+use shinyaic_core::css::parser::parser::Parser as CSSParser;
+use shinyaic_core::html::dom::dom::DOMNode;
+use shinyaic_core::html::dom::dom::NodeType;
+use shinyaic_core::html::dom::elements::elements::HTMLElements;
+use shinyaic_core::html::parser::parser::Parser;
 
 pub fn paint() {
     let mut settings = Settings {

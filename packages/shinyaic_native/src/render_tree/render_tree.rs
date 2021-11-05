@@ -1,12 +1,12 @@
+use crate::paint::font::PaintFont;
+use crate::render_tree::rectangle::Rectangle;
+use crate::render_tree::render_object::RenderObject;
+use crate::render_tree::window_size::WindowSize;
 use shinyaic_core::css::cssom::cssom::{StylingRule, CSSOM};
 use shinyaic_core::css::cssom::selector::Selector;
 use shinyaic_core::css::parser::parser::Parser as CSSParser;
 use shinyaic_core::html::dom::dom::{DOMNode, NodeType};
 use shinyaic_core::html::dom::elements::elements::HTMLElements;
-use crate::paint::font::PaintFont;
-use crate::render_tree::rectangle::Rectangle;
-use crate::render_tree::render_object::RenderObject;
-use crate::render_tree::window_size::WindowSize;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct RenderTree {
@@ -259,9 +259,9 @@ impl RenderTree {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::render_tree::render_object::_RenderObject;
     use shinyaic_core::css::cssom::selector::SelectorElm;
     use shinyaic_core::html::parser::parser::Parser as HTMLParser;
-    use crate::render_tree::render_object::_RenderObject;
     use std::collections::HashMap;
 
     #[test]
