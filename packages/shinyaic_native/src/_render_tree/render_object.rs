@@ -263,8 +263,6 @@ mod tests {
         let rendering_object = RenderObject::Block(_RenderObject {
             children: vec![],
             style: vec![],
-            rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
-            window_size: WindowSize::new(0.0, 0.0),
         });
 
         assert_eq!(
@@ -278,8 +276,6 @@ mod tests {
         let rendering_object = RenderObject::Block(_RenderObject {
             children: vec![],
             style: vec![],
-            rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
-            window_size: WindowSize::new(0.0, 0.0),
         });
         assert_eq!(
             rendering_object.fix_unit_to_px("10".to_string()),
