@@ -1,6 +1,4 @@
 use crate::paint::font::PaintFont;
-use crate::render_tree::rectangle::Rectangle;
-use crate::render_tree::window_size::WindowSize;
 use shinyaic_core::css::cssom::cssom::StylingRule;
 use shinyaic_core::html::dom::dom::{DOMNode, ElementType, NodeType};
 use shinyaic_core::html::dom::elements::elements::HTMLElements;
