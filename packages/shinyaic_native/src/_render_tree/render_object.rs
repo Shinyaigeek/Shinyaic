@@ -46,40 +46,7 @@ impl RenderObject {
             None => None,
         };
 
-        let parent_rectangle = match parent_node.clone() {
-            Self::Text(_) => panic!("TODO"),
-            Self::Scroll(parent_node)
-            | Self::ViewPort(parent_node)
-            | Self::Block(parent_node)
-            | Self::Inline(parent_node) => parent_node.rectangle,
-        };
-
-        let big_brother_rectangle = match big_brother_node.clone() {
-            None => None,
-            Some(big_brother_node_) => match big_brother_node_ {
-                Self::Text(_) => panic!("TODO"),
-                Self::Scroll(big_brother)
-                | Self::ViewPort(big_brother)
-                | Self::Inline(big_brother)
-                | Self::Block(big_brother) => Some(big_brother.rectangle),
-            },
-        };
-
-        self.calc_rectangle(
-            &parent_rectangle,
-            &big_brother_rectangle,
-            pad_left,
-            if big_brother_node.is_none() {
-                pad_top
-            } else {
-                None
-            },
-        );
-
         let parent = self.clone();
-
-        let mut paddinged_width = 0.0;
-        let mut paddinged_height = 0.0;
 
         let styles = match self {
             Self::Text(_) => {
@@ -118,55 +85,6 @@ impl RenderObject {
 
                 paddinged_height = _padding_height;
                 paddinged_width = _padding_width;
-            }
-        }
-
-        match self {
-            Self::Text(_) => return,
-            Self::Block(rendering_object)
-            | Self::Inline(rendering_object)
-            | Self::Scroll(rendering_object)
-            | Self::ViewPort(rendering_object) => {
-                let mut big_brother_node: Option<Self> = None;
-
-                let mut i = 0;
-
-                let children_length = rendering_object.children.len();
-
-                while i < children_length {
-                    let child = rendering_object.children.get_mut(i).unwrap();
-
-                    child.layouting_node(
-                        parent.clone(),
-                        big_brother_node.clone(),
-                        Some(paddinged_width),
-                        Some(paddinged_height),
-                    );
-                    println!("child: {:?}", child);
-                    println!("---------");
-                    big_brother_node = Some(child.clone());
-                    i += 1;
-                }
-            }
-        }
-    }
-
-    pub fn prepare_iterator(&self, iterator: &mut Vec<Self>) {
-        iterator.push(self.clone());
-
-        let rendering_object = match self {
-            Self::Text(_) => {
-                return;
-            }
-            Self::Block(rendering_object)
-            | Self::Inline(rendering_object)
-            | Self::Scroll(rendering_object)
-            | Self::ViewPort(rendering_object) => rendering_object,
-        };
-
-        if rendering_object.children.len() > 0 {
-            for child in &rendering_object.children {
-                child.prepare_iterator(iterator);
             }
         }
     }
