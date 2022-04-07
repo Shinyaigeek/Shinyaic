@@ -114,7 +114,7 @@ impl RenderObject {
                     style: vec![],
                 }))
             }
-            HTMLElements::AnchorElement | HTMLElements::SpanElement => {
+            HTMLElements::AnchorElement | HTMLElements::SpanElement | HTMLElements::ImgElement => {
                 Some(Self::Inline(_RenderObject {
                     children: vec![],
                     style: vec![],
@@ -136,6 +136,7 @@ impl RenderObject {
             || tag == &HTMLElements::AnchorElement
             || tag == &HTMLElements::SpanElement
             || tag == &HTMLElements::H1Element
+            || tag == &HTMLElements::ImgElement
     }
 
     pub fn can_init_text(dom_node: &DOMNode) -> bool {
