@@ -11,6 +11,7 @@ pub struct _LayoutObject {
     pub style: Vec<StylingRule>,
     pub rectangle: Rectangle,
     pub window_size: WindowSize,
+    pub img_href: Option<String>,
 }
 
 #[derive(Debug, PartialEq, Clone)]

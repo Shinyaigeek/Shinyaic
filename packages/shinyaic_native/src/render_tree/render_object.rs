@@ -11,6 +11,7 @@ pub struct _RenderObject {
     pub style: Vec<StylingRule>,
     pub rectangle: Rectangle,
     pub window_size: WindowSize,
+    pub img_href: Option<String>
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -36,6 +37,7 @@ impl RenderObject {
             style: vec![],
             rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
             window_size: WindowSize::new(0.0, 0.0),
+            img_href: None,
         })
     }
 
@@ -603,6 +605,7 @@ impl RenderObject {
                 style: vec![],
                 rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
                 window_size: WindowSize::new(window_width, window_height),
+                img_href: None,
             })),
             HTMLElements::DivElement | HTMLElements::ParagraphElement | HTMLElements::H1Element => {
                 Some(Self::Block(_RenderObject {
@@ -610,6 +613,7 @@ impl RenderObject {
                     style: vec![],
                     rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
                     window_size: WindowSize::new(window_width, window_height),
+                    img_href: None,
                 }))
             }
             HTMLElements::AnchorElement | HTMLElements::SpanElement | HTMLElements::ImgElement => {
@@ -618,6 +622,7 @@ impl RenderObject {
                     style: vec![],
                     rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
                     window_size: WindowSize::new(window_width, window_height),
+                    img_href: None,
                 }))
             }
             _ => None,
@@ -658,6 +663,18 @@ impl RenderObject {
         };
     }
 
+    pub fn set_img_href(&mut self, href: String) {
+        match self {
+            Self::Text(_) => {
+                panic!("RenderObject::set_img_href should not be called with text")
+            }
+            Self::ViewPort(render_object)
+            | Self::Scroll(render_object)
+            | Self::Inline(render_object)
+            | Self::Block(render_object) => render_object.img_href = Some(href),
+        };
+    }
+
     pub fn replace_style(&mut self, rules: Vec<StylingRule>) {
         match self {
             Self::Text(_) => {
@@ -682,6 +699,7 @@ mod tests {
             style: vec![],
             rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
             window_size: WindowSize::new(0.0, 0.0),
+            img_href: None,
         });
 
         assert_eq!(
@@ -697,6 +715,7 @@ mod tests {
             style: vec![],
             rectangle: Rectangle::new(0.0, 0.0, 0.0, 0.0),
             window_size: WindowSize::new(0.0, 0.0),
+            img_href: None,
         });
         assert_eq!(
             rendering_object.fix_unit_to_px("10".to_string()),

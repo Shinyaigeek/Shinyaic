@@ -7,6 +7,7 @@ use shinyaic_core::html::dom::elements::elements::HTMLElements;
 pub struct _RenderObject {
     pub children: Vec<RenderObject>,
     pub style: Vec<StylingRule>,
+    pub img_href: Option<String>
 }
 
 #[derive(Debug, PartialEq, Clone)]

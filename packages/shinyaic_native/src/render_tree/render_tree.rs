@@ -303,6 +303,7 @@ mod test {
                     width: 900.0,
                     height: 700.0,
                 },
+                img_href: None,
                 children: vec![RenderObject::Scroll(_RenderObject {
                     rectangle: Rectangle {
                         x: 0.0,
@@ -310,6 +311,7 @@ mod test {
                         width: 900.0,
                         height: 270.0,
                     },
+                    img_href: None,
                     children: vec![
                         RenderObject::Block(_RenderObject {
                             rectangle: Rectangle {
@@ -318,6 +320,7 @@ mod test {
                                 width: 120.0,
                                 height: 90.0,
                             },
+                            img_href: None,
                             children: vec![RenderObject::init_with_text(
                                 "hello browser!".to_string(),
                                 Some(Rectangle {
@@ -346,6 +349,7 @@ mod test {
                                 width: 120.0,
                                 height: 90.0,
                             },
+                            img_href: None,
                             children: vec![],
                             style: vec![StylingRule {
                                 selector: vec![Selector {
@@ -364,6 +368,7 @@ mod test {
                                 width: 120.0,
                                 height: 90.0,
                             },
+                            img_href: None,
                             children: vec![],
                             style: vec![StylingRule {
                                 selector: vec![Selector {
