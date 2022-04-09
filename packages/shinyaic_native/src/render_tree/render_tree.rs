@@ -153,7 +153,8 @@ impl RenderTree {
                 };
 
                 let raw_render_object = RenderObject::init_with_element(
-                    element_type,
+                    // TODO
+                    element_type.clone(),
                     self.window_size.width,
                     self.window_size.height,
                 );
@@ -164,6 +165,16 @@ impl RenderTree {
                         panic!("traverse_single_dom")
                     }
                 };
+
+                if element_type.tag_name == HTMLElements::ImgElement {
+                    let img_href = dom_node.get_attribute("src");
+                    match img_href {
+                        Some(img_href) => raw_render_object.set_img_href(img_href),
+                        None => {
+                            // do nothing
+                        }
+                    };
+                }
 
                 let mut style = vec![];
 

@@ -34,6 +34,16 @@ impl DOMNode {
             }),
         }
     }
+
+    pub fn get_attribute(&self, attr: &str) -> Option<String> {
+        match &self.node_type {
+            NodeType::DomNode(dom_node) => match dom_node.attributes.get(attr) {
+                Some(value) => Some(value.to_string()),
+                None => None,
+            },
+            NodeType::TextNode(_) => None,
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]
