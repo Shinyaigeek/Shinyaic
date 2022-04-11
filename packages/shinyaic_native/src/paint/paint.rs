@@ -17,6 +17,7 @@ use shinyaic_core::html::dom::dom::DOMNode;
 use shinyaic_core::html::dom::dom::NodeType;
 use shinyaic_core::html::dom::elements::elements::HTMLElements;
 use shinyaic_core::html::parser::parser::Parser;
+use std::str;
 
 pub fn paint() {
     let mut settings = Settings {
@@ -104,7 +105,8 @@ fn get_external_css(dom: &DOMNode) -> String {
                     let external_css_href = dom_node.attributes.get("href").unwrap();
                     let external_css_source = Client::get(external_css_href.to_string());
                     let external_css_source = external_css_source.body;
-                    css_source.push_str(&external_css_source)
+                    let external_css_source = str::from_utf8(&external_css_source[..]).unwrap_or("");
+                    css_source.push_str(external_css_source)
                 }
             }
             _ => {
@@ -148,7 +150,9 @@ impl Sandbox for Window {
                 println!("{}", url);
                 let response = Client::get(url);
                 let body = response.body;
-                let mut parser = Parser::new(body);
+                // TODO
+                let html = str::from_utf8(&body[..]).unwrap_or("");
+                let mut parser = Parser::new(html.to_string());
                 let dom = parser.parse();
                 println!("------");
                 println!("{:?}", dom);
